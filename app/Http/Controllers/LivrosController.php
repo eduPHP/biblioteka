@@ -14,6 +14,11 @@ class LivrosController extends Controller
         return view('livros.index', compact('livros'));
     }
 
+    public function show(Livro $livro)
+    {
+        return view('livros.show', compact('livro'));
+    }
+
     public function create()
     {
         return view('livros.create');
@@ -28,6 +33,23 @@ class LivrosController extends Controller
 
         Livro::create($dados);
 
+        return redirect(url('/livros'))->with('success', 'Livro adicionado');
+    }
 
+    public function edit(Livro $livro)
+    {
+        return view('livros.edit', compact('livro'));
+    }
+
+    public function update(Livro $livro, Request $request)
+    {
+        $dados = $request->validate([
+            'titulo' => 'required',
+            'isbn' => 'required',
+        ]);
+
+        $livro->update($dados);
+
+        return redirect(url('/livros'))->with('success', 'Livro modificado');
     }
 }

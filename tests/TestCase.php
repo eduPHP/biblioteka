@@ -10,8 +10,10 @@ abstract class TestCase extends BaseTestCase
 
     public function logIn($usuario = null)
     {
-        if (!$usuario){
+        if ( !$usuario) {
             $usuario = factory('App\Usuario')->create();
         }
+
+        auth()->login($usuario);
     }
 }

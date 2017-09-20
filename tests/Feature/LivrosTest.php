@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
-class CriarLivroTest extends TestCase
+class LivrosTest extends TestCase
 {
     use DatabaseMigrations, InteractsWithExceptionHandling;
 
@@ -27,7 +27,7 @@ class CriarLivroTest extends TestCase
         ]);
 
         //então o livro deve estar presente no banco
-        $resposta->assertStatus(200);
+        $resposta->assertStatus(302)->assertRedirect(url('/livros'));
         $this->assertDatabaseHas('livros', $dados);
     }
 
@@ -48,5 +48,40 @@ class CriarLivroTest extends TestCase
         }
     }
 
+    /** @test */
+    function um_usuario_pode_editar_um_livro()
+    {
+        $this->withoutExceptionHandling();
+        //sendo que temos um livro cadastrado
+        $livro = factory('App\Livro')->create();
 
+        // devemos ter uma pagina de edição deste livro
+        $this->get("/livros/{$livro->id}/edit")->assertStatus(200);
+
+        //quando enviamos as novas informações para o endpoint
+        $resposta = $this->patch("/livros/{$livro->id}", [
+            'titulo' => $novoTitulo = 'Um novo Título',
+            'isbn' => $livro->isbn,
+        ]);
+
+        //então devemos ter as informações atualizadas
+        $resposta->assertStatus(302)->assertRedirect(url('/livros'));
+        $this->assertDatabaseHas('livros', [
+            'id' => $livro->id,
+            'titulo' => $novoTitulo,
+        ]);
+    }
+
+    /** @test */
+    function um_usuario_pode_visualizar_um_livro()
+    {
+        //sendo que temos um livro
+        $livro = factory('App\Livro')->create();
+
+        //quando acessar o link de visualizacao
+        $resposta = $this->get("/livros/{$livro->id}/edit")->assertStatus(200);
+
+        //então devemos ter as informações do livro
+        $resposta->assertSee($livro->titulo);
+    }
 }

@@ -22,3 +22,6 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::post('/livros', 'LivrosController@store');
 Route::get('/livros', 'LivrosController@index');
 Route::get('/livros/create', 'LivrosController@create');
+Route::get('/livros/{livro}', 'LivrosController@show');
+Route::get('/livros/{livro}/edit', 'LivrosController@edit');
+Route::patch('/livros/{livro}', 'LivrosController@update');
