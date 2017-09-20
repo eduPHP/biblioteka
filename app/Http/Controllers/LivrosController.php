@@ -52,4 +52,11 @@ class LivrosController extends Controller
 
         return redirect(url('/livros'))->with('success', 'Livro modificado');
     }
+
+    public function destroy(Livro $livro)
+    {
+        $livro->delete();
+
+        return redirect(url('/livros'))->with('success', 'Livro removido');
+    }
 }
