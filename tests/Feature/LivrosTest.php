@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class LivrosTest extends TestCase
 {
-    use DatabaseMigrations, InteractsWithExceptionHandling;
+    use DatabaseMigrations;
 
     /** @test */
     function um_usuario_pode_adicionar_um_livro()
@@ -39,7 +39,6 @@ class LivrosTest extends TestCase
     /** @test */
     function um_usuario_pode_editar_um_livro()
     {
-        $this->withoutExceptionHandling();
         $livro = factory('App\Livro')->create();
 
         $this->get("/livros/{$livro->id}/edit")->assertStatus(200);

@@ -1,34 +1,36 @@
 {!! csrf_field() !!}
 
 <!-- Input Matricula -->
-<div class="form-group{{ $errors->has('matricula') ? ' has-error' : '' }}">
-    <label for="matricula" class="col-sm-2 control-label">Matricula</label>
-    <div class="col-sm-10">
-        <input type="text" class="form-control" id="matricula" name="matricula" value="{{
-            old('matricula',  isset($estudante) ? $estudante->matricula : null)
-        }}">
-        {!! $errors->first('matricula', '<span class="label label-danger">:message</span>') !!}
+<div class="field">
+    <label class="label" for="matricula">Matricula</label>
+    <div class="control{{ $errors->has('matricula') ? ' has-icons-right' : '' }}">
+        <input class="input{{ $errors->has('matricula') ? ' is-danger' : '' }}"
+               name="matricula" id="matricula" value="{{
+                    old('matricula',  isset($estudante) ? $estudante->matricula : null)
+                }}">
+        {!! $errors->has('matricula') ? '<span class="icon is-small is-right"><i class="fa fa-warning"></i></span>' : ''  !!}
     </div>
+    {!! $errors->first('matricula', '<p class="help is-danger">:message</p>') !!}
 </div>
-
-
 <!-- Input Nome -->
-<div class="form-group{{ $errors->has('nome') ? ' has-error' : '' }}">
-    <label for="nome" class="col-sm-2 control-label">Nome</label>
-    <div class="col-sm-10">
-        <input type="text" class="form-control" id="nome" name="nome" value="{{
-            old('nome',  isset($estudante) ? $estudante->nome : null)
-        }}">
-        {!! $errors->first('nome', '<span class="label label-danger">:message</span>') !!}
+<div class="field">
+    <label class="label" for="nome">Nome</label>
+    <div class="control{{ $errors->has('nome') ? ' has-icons-right' : '' }}">
+        <input class="input{{ $errors->has('nome') ? ' is-danger' : '' }}"
+               name="nome" id="nome" value="{{
+                    old('nome',  isset($estudante) ? $estudante->nome : null)
+                }}">
+        {!! $errors->has('nome') ? '<span class="icon is-small is-right"><i class="fa fa-warning"></i></span>' : ''  !!}
     </div>
+    {!! $errors->first('nome', '<p class="help is-danger">:message</p>') !!}
 </div>
-
-
 
 <!-- Form Submit -->
-<div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-{{isset($estudante)?'success':'info'}}">Gravar</button>
-        <button type="reset" class="btn btn-default">Reset</button>
+<div class="field is-grouped">
+    <div class="control">
+        <button class="button is-{{isset($estudante)?'success':'info'}}">Gravar</button>
+    </div>
+    <div class="control">
+        <button type="reset" class="button">Reset</button>
     </div>
 </div>

@@ -20,7 +20,7 @@ class CreateEmprestimosTable extends Migration
             $table->dateTime('devolucao');
 
             $table->dateTime('emprestado_em');
-            $table->dateTime('devolvido_em');
+            $table->dateTime('devolvido_em')->nullable();
         });
     }
 

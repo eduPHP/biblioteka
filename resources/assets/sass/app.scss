@@ -1,9 +1,34 @@
-
+@charset "UTF-8";
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
-
+//@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
 // Variables
-@import "variables";
-
+//@import "variables";
 // Bootstrap
-@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+//@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+@import "~bulma/sass/utilities/initial-variables";
+
+$footer-padding : 3rem 1.5rem 1rem;
+@import "~bulma";
+@import "~bulma-checkradio/checkradio.sass";
+
+body, html {
+  height : 100%;
+}
+
+.hero-body {
+  padding : 1rem 1.5rem;
+}
+
+#app {
+  display        : flex;
+  flex-direction : column;
+  min-height         : 100%;
+}
+
+.is-flex-1 {
+  flex : 1;
+}
+
+.footer {
+  padding : 3rem 1.5rem 1rem;
+}

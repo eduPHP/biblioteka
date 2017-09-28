@@ -4,77 +4,130 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
-
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+    <style>
+        .table th:last-child {
+            width      : 5rem;
+            text-align : center;
+        }
+
+        .table tr td form {
+            display    : flex;
+            text-align : center;
+        }
+
+        .table tr td form .button {
+            margin : 0.1rem;
+        }
+
+        .table tr td:last-child {
+            display    : flex;
+            text-align : center;
+        }
+
+        .table tr td:last-child .button {
+            margin : 0.1rem;
+        }
+    </style>
 </head>
 <body>
-    <div id="app">
-        <nav class="navbar navbar-default navbar-static-top">
-            <div class="container">
-                <div class="navbar-header">
+<div id="app">
 
-                    <!-- Collapsed Hamburger -->
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
-                        <span class="sr-only">Toggle Navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-
-                    <!-- Branding Image -->
-                    <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
-                    </a>
-                </div>
-
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="nav navbar-nav">
-                        &nbsp;
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                    <ul class="nav navbar-nav navbar-right">
+    <section class="hero is-info">
+        <!-- Hero header: will stick at the top -->
+        <div class="hero-head">
+            <header class="nav">
+                <div class="container">
+                    <div class="nav-left">
+                        <a class="nav-item"> <img src="/images/logo.png" alt="Logo"> {{ config('app.name') }} </a>
+                    </div>
+                    <span class="nav-toggle">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+                    <div class="nav-right nav-menu">
                         <!-- Authentication Links -->
                         @guest
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a href="{{ route('register') }}">Register</a></li>
+                            <a class="nav-item" href="{{ route('login') }}">Login</a>
                         @else
-                            <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
+                            <div class="dropdown is-active">
+                                <div class="dropdown-trigger">
+                                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                                        <span>{{ Auth::user()->name }}</span> <span class="icon is-small">
+        <i class="fa fa-angle-down" aria-hidden="true"></i>
+      </span>
+                                    </button>
+                                </div>
+                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                                    <div class="dropdown-content">
+                                        <a href="{{ route('logout') }}" class="dropdown-item"
+                                           onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();"> Logout </a>
 
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
-                                    </li>
-                                </ul>
-                            </li>
+                                    </div>
+                                </div>
+                            </div>
                         @endguest
+                    </div>
+                </div>
+            </header>
+        </div>
+
+        <!-- Hero footer: will stick at the bottom -->
+        <div class="hero-foot">
+            <nav class="tabs is-boxed">
+                <div class="container">
+                    <ul>
+                        <li{!! request()->is('livros*')?' class="is-active"':'' !!}>
+                            <a href="/livros">Livros</a>
+                        </li>
+                        <li{!! request()->is('estudantes*')?' class="is-active"':'' !!}>
+                            <a href="/estudantes">Estudantes</a>
+                        </li>
+                        <li{!! request()->is('emprestimos*')?' class="is-active"':'' !!}>
+                            <a href="/emprestimos">Empréstimos</a>
+                        </li>
+                        <li{!! request()->is('info*')?' class="is-active"':'' !!}>
+                            <a href="/info">Info</a>
+                        </li>
                     </ul>
                 </div>
+            </nav>
+        </div>
+    </section>
+    <section class="section is-flex-1">
+        <div class="container">
+            @include('partials.message')
+            @yield('content')
+        </div>
+    </section>
+    <footer class="footer">
+        <div class="container">
+            <div class="content has-text-centered">
+                <p>
+                    <strong>{{config('app.name')}}</strong> by <a href="https://rdo.blog.br">Eduardo Dalla Vecchia</a>. The website content is licensed
+                    <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
+                </p>
+                <p>
+                    <a class="icon" href="https://github.com/swalker2"> <i class="fa fa-github"></i> </a>
+                </p>
             </div>
-        </nav>
+        </div>
+    </footer>
+</div>
 
-        @yield('content')
-    </div>
-
-    <!-- Scripts -->
+<!-- Scripts -->
+@section('javascript')
     <script src="{{ asset('js/app.js') }}"></script>
+@show
 </body>
 </html>

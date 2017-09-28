@@ -1,28 +1,21 @@
 @extends('layouts.app')
 @section('content')
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-
-            <ol class="breadcrumb">
-                <li><a href="{{ url('/') }}">{{ config('app.name', 'Laravel') }}</a></li>
-                <li><a href="{{ url('/estudantes') }}">Estudantes</a></li>
-                <li class="active">{{$estudante->nome}}</li>
-            </ol>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-10 col-md-offset-1">
-            <div class="panel panel-default">
-                <div class="panel-heading">Estudante {{$estudante->nome}}</div>
-
-                <div class="panel-body">
-                    <div class="list-group">
-                        <p><strong>Nome:</strong> {{$estudante->nome}}</p>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li>
+                <a href="{{ url('/') }}"> <span class="icon is-small"><i class="fa fa-home"></i></span>
+                    <span>{{ config('app.name') }}</span> </a>
+            </li>
+            <li>
+                <a href="{{ url('/estudantes') }}"> <span class="icon is-small"><i class="fa fa-book"></i></span> <span>Estudantes</span>
+                </a>
+            </li>
+            <li class="is-active">
+                <span class="icon is-small"><i class="fa fa-plus"></i></span>Estudante {{$estudante->nome}}
+            </li>
+        </ul>
+    </nav>
+    <h1 class="title">Estudante {{$estudante->nome}}</h1>
+    <p><strong>Matricula:</strong> {{$estudante->matricula}}</p>
+    <p><strong>Nome:</strong> {{$estudante->nome}}</p>
 @endsection

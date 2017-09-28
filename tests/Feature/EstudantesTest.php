@@ -96,7 +96,6 @@ class EstudantesTest extends TestCase
     /** @test */
     function um_usuario_pode_remover_um_estudante()
     {
-        $this->withoutExceptionHandling();
         $estudante = factory('App\Estudante')->create();
 
         $resposta = $this->delete("/estudantes/{$estudante->id}");
