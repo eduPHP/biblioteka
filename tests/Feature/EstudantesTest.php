@@ -10,7 +10,7 @@ class EstudantesTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    function um_usuario_pode_adicionar_um_estudante()
+    function devemos_poder_adicionar_um_estudante()
     {
         $dados = [
             'nome' => 'Eduardo',
@@ -51,7 +51,7 @@ class EstudantesTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_editar_um_estudante()
+    function devemos_poder_editar_um_estudante()
     {
         $estudante = factory('App\Estudante')->create();
 
@@ -70,7 +70,7 @@ class EstudantesTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_visualizar_a_lista_de_estudantes_cadastrados()
+    function devemos_poder_visualizar_a_lista_de_estudantes_cadastrados()
     {
         $estudantes = factory('App\Estudante', 3)->create();
 
@@ -84,7 +84,7 @@ class EstudantesTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_visualizar_um_estudante()
+    function devemos_poder_visualizar_um_estudante()
     {
         $estudante = factory('App\Estudante')->create();
 
@@ -94,7 +94,7 @@ class EstudantesTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_remover_um_estudante()
+    function devemos_poder_remover_um_estudante()
     {
         $estudante = factory('App\Estudante')->create();
 
@@ -104,4 +104,15 @@ class EstudantesTest extends TestCase
         $this->assertDatabaseMissing('estudantes', ['id' => $estudante->id]);
     }
 
+    /** @test */
+    function devemos_poder_consultar_um_estudante_pelo_nome()
+    {
+        factory('App\Estudante', 3)->create();
+        factory('App\Estudante')->create(['nome' => 'Alfalfa']);
+
+        $resposta = $this->getJson('/api/estudantes?q=alfalfa');
+
+        $resposta->assertStatus(200);
+        $this->assertEquals(1, $resposta->json()['meta']['total']);
+    }
 }

@@ -9,31 +9,31 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     <!-- Styles -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <style>
-        .table th:last-child {
-            width      : 5rem;
-            text-align : center;
-        }
+    @section('style')
+        <link href="{{ mix('css/app.css') }}" rel="stylesheet">
+        <style>
+            .table.crud th:last-child {
+                width      : 5rem;
+                text-align : center;
+            }
 
-        .table tr td form {
-            display    : flex;
-            text-align : center;
-        }
+            .table td.has-buttons {
+                padding    : 0;
+            }
 
-        .table tr td form .button {
-            margin : 0.1rem;
-        }
+            .table tr td form .button, .table tr td:last-child .button {
+                margin : 0.1rem;
+            }
 
-        .table tr td:last-child {
-            display    : flex;
-            text-align : center;
-        }
+            .mr-1 {
+                margin-right : 1em;
+            }
 
-        .table tr td:last-child .button {
-            margin : 0.1rem;
-        }
-    </style>
+            .input:focus {
+                outline: none;
+            }
+        </style>
+    @show
 </head>
 <body>
 <div id="app">

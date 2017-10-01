@@ -39,13 +39,14 @@
                         <form action="{{url("/livros/{$livro->id}")}}" method="POST">
                             {!! method_field("DELETE") !!}
                             {!! csrf_field() !!}
-                            <button class="button is-danger is-small remover">
-                                <i class="fa fa-trash"></i>
-                            </button>
-
-                            <a href="{{url("/livros/{$livro->id}/edit")}}"
-                               class="button is-info is-small"><i
-                                        class="fa fa-pencil"></i></a>
+                            <div class="level">
+                                <a href="{{url("/livros/{$livro->id}/edit")}}"
+                                   class="button is-info is-small level-left"><i
+                                            class="fa fa-pencil"></i></a>
+                                <button class="button is-danger is-small remover level-right">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
                         </form>
                     </td>
                 </tr>

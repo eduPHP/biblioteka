@@ -10,7 +10,7 @@ class RenovacoesController extends Controller
     {
         $emprestimo->renovar();
 
-        $devolucao = ucfirst($emprestimo->fresh()->devolucao->diffForHumans());
+        $devolucao = ucfirst($emprestimo->fresh()->devolucao->toDateTimeString());
 
         return response(compact('devolucao'), 200);
     }

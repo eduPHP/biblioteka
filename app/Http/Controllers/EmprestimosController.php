@@ -9,9 +9,7 @@ class EmprestimosController extends Controller
 {
     public function index()
     {
-        $emprestimos = Emprestimo::with(['estudante', 'livro'])->orderBy('emprestado_em', 'desc')->paginate();
-
-        return view('emprestimos.index', compact('emprestimos'));
+        return view('emprestimos.index');
     }
 
     public function store(Request $request)

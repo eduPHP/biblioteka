@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
@@ -11,7 +10,7 @@ class LivrosTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    function um_usuario_pode_adicionar_um_livro()
+    function devemos_poder_adicionar_um_livro()
     {
         $this->get("/livros/create")->assertStatus(200);
 
@@ -25,7 +24,7 @@ class LivrosTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_listar_livros()
+    function devemos_poder_listar_livros()
     {
         $livros = factory('App\Livro', 3)->create();
 
@@ -37,7 +36,7 @@ class LivrosTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_editar_um_livro()
+    function devemos_poder_editar_um_livro()
     {
         $livro = factory('App\Livro')->create();
 
@@ -56,7 +55,7 @@ class LivrosTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_visualizar_um_livro()
+    function devemos_poder_visualizar_um_livro()
     {
         $livro = factory('App\Livro')->create();
 
@@ -66,7 +65,7 @@ class LivrosTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_remover_um_livro()
+    function devemos_poder_remover_um_livro()
     {
         $livro = factory('App\Livro')->create();
 
@@ -74,5 +73,24 @@ class LivrosTest extends TestCase
 
         $resposta->assertRedirect('/livros');
         $this->assertDatabaseMissing('livros', ['id' => $livro->id]);
+    }
+
+    /** @test */
+    function devemos_poder_consultar_um_livro_por_isbn()
+    {
+        factory('App\Livro')->create(['isbn' => 4321]);
+
+        $resposta = $this->getJson('/api/livros/4321');
+
+        $resposta->assertStatus(200);
+        $this->assertEquals(4321, $resposta->json()['livro']['isbn']);
+    }
+
+    /** @test */
+    function ao_consultar_um_isbn_nao_cadastrado_deve_retornar_four_oh_four()
+    {
+        $resposta = $this->getJson('/api/livros/4321');
+
+        $resposta->assertStatus(404);
     }
 }

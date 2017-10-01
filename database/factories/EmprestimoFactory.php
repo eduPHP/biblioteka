@@ -3,6 +3,8 @@
 use Faker\Generator as Faker;
 
 $factory->define(\App\Emprestimo::class, function (Faker $faker) {
+    $now = Carbon\Carbon::now()->subDay(rand(1,5));
+
     return [
         'livro_id' => function () {
             return factory('App\Livro')->create();
@@ -10,7 +12,7 @@ $factory->define(\App\Emprestimo::class, function (Faker $faker) {
         'estudante_id' => function () {
             return factory('App\Estudante')->create();
         },
-        'devolucao' => Carbon\Carbon::now()->addWeek(),
-        'emprestado_em' => Carbon\Carbon::now(),
+        'devolucao' => $now->addWeek(),
+        'emprestado_em' => $now,
     ];
 });

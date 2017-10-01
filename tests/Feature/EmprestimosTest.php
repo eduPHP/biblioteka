@@ -12,7 +12,7 @@ class EmprestimosTest extends TestCase
     use DatabaseMigrations, InteractsWithExceptionHandling;
 
     /** @test */
-    function um_usuario_pode_cadastrar_um_emprestimo()
+    function devemos_poder_cadastrar_um_emprestimo()
     {
         $this->get("/emprestimos/create")->assertStatus(200);
 
@@ -33,7 +33,7 @@ class EmprestimosTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_cadastrar_emprestimo_de_multiplos_livros()
+    function devemos_poder_cadastrar_emprestimo_de_multiplos_livros()
     {
         $livros = factory('App\Livro', 3)->create();
         $estudante = factory('App\Estudante')->create();
@@ -53,22 +53,22 @@ class EmprestimosTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_realizar_devolucao_de_um_emprestimo()
+    function devemos_poder_realizar_devolucao_de_um_emprestimo()
     {
         $emprestimo = factory('App\Emprestimo')->create();
 
-        $resposta = $this->patch("/emprestimos/{$emprestimo->id}/devolver");
+        $resposta = $this->patch("/api/emprestimos/{$emprestimo->id}/devolver");
 
         $resposta->assertStatus(202);
         $this->assertNotNull($emprestimo->fresh()->devolvido_em);
     }
 
     /** @test */
-    function um_usuario_pode_realizar_renovacao_de_um_emprestimo()
+    function devemos_poder_realizar_renovacao_de_um_emprestimo()
     {
         $emprestimo = factory('App\Emprestimo')->create();
 
-        $response = $this->post("/emprestimos/{$emprestimo->id}/renovar");
+        $response = $this->post("/api/emprestimos/{$emprestimo->id}/renovar");
 
         $response->assertStatus(200)->assertJsonStructure(['devolucao']);
         $this->assertDatabaseHas('emprestimos', [
@@ -77,17 +77,100 @@ class EmprestimosTest extends TestCase
     }
 
     /** @test */
-    function um_usuario_pode_listar_os_livros_emprestados()
+    function devemos_poder_listar_os_livros_emprestados()
     {
         $emprestimos = factory('App\Emprestimo', 3)->create();
 
-        $resposta = $this->get('/emprestimos');
+        $resposta = $this->get('/api/emprestimos');
 
         $resposta->assertStatus(200);
         foreach ($emprestimos as $emprestimo) {
-            $resposta->assertSee(e($emprestimo->estudante->nome));
-            $resposta->assertSee(e($emprestimo->livro->titulo));
+            $resposta->assertJsonFragment([e($emprestimo->estudante->nome)]);
+            $resposta->assertJsonFragment([e($emprestimo->livro->titulo)]);
         }
     }
 
+    /** @test */
+    function devemos_poder_filtrar_a_lista_de_emprestimos_por_uma_keyword()
+    {
+        $emprestimos = factory('App\Emprestimo', 3)->create();
+        $emprestimos[1]->livro->update(['titulo' => 'foobar', 'isbn' => 123456]);
+        $emprestimos[0]->estudante->update(['nome' => 'johndoe']);
+        $emprestimos[1]->estudante->update(['nome' => 'johndoe']);
+
+        $resposta = $this->getJson('/api/emprestimos?q=foobar');
+
+        $this->assertEquals(1, $resposta->json()['meta']['total']);
+
+        $resposta = $this->getJson('/api/emprestimos?q=johndoe');
+
+        $this->assertEquals(2, $resposta->json()['meta']['total']);
+
+        $resposta = $this->getJson('/api/emprestimos?q=123456');
+
+        $this->assertEquals(1, $resposta->json()['meta']['total']);
+    }
+
+    /** @test */
+    function devemos_poder_ordenar_emprestimos_por_titulo_do_livro()
+    {
+        $emprestimos = factory('App\Emprestimo', 3)->create();
+        $emprestimos[0]->livro->update(['titulo'=>'bbb']);
+        $emprestimos[1]->livro->update(['titulo'=>'ccc']);
+        $emprestimos[2]->livro->update(['titulo'=>'aaa']);
+
+        $resposta = $this->getJson('/api/emprestimos?orderby=livro')->json();
+
+        $this->assertSame('aaa',$resposta['emprestimos'][0]['livro']['titulo']);
+        $this->assertSame('bbb',$resposta['emprestimos'][1]['livro']['titulo']);
+        $this->assertSame('ccc',$resposta['emprestimos'][2]['livro']['titulo']);
+
+        $resposta = $this->getJson('/api/emprestimos?orderby=livro,desc')->json();
+
+        $this->assertSame('ccc', $resposta['emprestimos'][0]['livro']['titulo']);
+        $this->assertSame('bbb', $resposta['emprestimos'][1]['livro']['titulo']);
+        $this->assertSame('aaa', $resposta['emprestimos'][2]['livro']['titulo']);
+    }
+
+    /** @test */
+    function devemos_poder_ordenar_emprestimos_por_nome_do_estudante()
+    {
+        $emprestimos = factory('App\Emprestimo', 3)->create();
+        $emprestimos[0]->estudante->update(['nome'=>'bbb']);
+        $emprestimos[1]->estudante->update(['nome'=>'ccc']);
+        $emprestimos[2]->estudante->update(['nome'=>'aaa']);
+
+        $resposta = $this->getJson('/api/emprestimos?orderby=estudante')->json();
+
+        $this->assertSame('aaa',$resposta['emprestimos'][0]['estudante']['nome']);
+        $this->assertSame('bbb',$resposta['emprestimos'][1]['estudante']['nome']);
+        $this->assertSame('ccc',$resposta['emprestimos'][2]['estudante']['nome']);
+
+        $resposta = $this->getJson('/api/emprestimos?orderby=estudante,desc')->json();
+
+        $this->assertSame('ccc', $resposta['emprestimos'][0]['estudante']['nome']);
+        $this->assertSame('bbb', $resposta['emprestimos'][1]['estudante']['nome']);
+        $this->assertSame('aaa', $resposta['emprestimos'][2]['estudante']['nome']);
+    }
+
+    /** @test */
+    function devemos_poder_ordenar_emprestimos_por_data_de_devolucao()
+    {
+        $emprestimos = factory('App\Emprestimo', 3)->create();
+        $emprestimos[2]->update(['devolucao' => $primeiro = Carbon::now()->addDays(1)]);
+        $emprestimos[0]->update(['devolucao' => $segundo = Carbon::now()->addDays(2)]);
+        $emprestimos[1]->update(['devolucao' => $terceiro = Carbon::now()->addDays(3)]);
+
+        $resposta = $this->getJson('/api/emprestimos?orderby=devolucao')->json();
+
+        $this->assertSame($primeiro->toDateTimeString(), $resposta['emprestimos'][0]['devolucao']);
+        $this->assertSame($segundo->toDateTimeString(), $resposta['emprestimos'][1]['devolucao']);
+        $this->assertSame($terceiro->toDateTimeString(), $resposta['emprestimos'][2]['devolucao']);
+
+        $resposta = $this->getJson('/api/emprestimos?orderby=devolucao,desc')->json();
+
+        $this->assertSame($terceiro->toDateTimeString(), $resposta['emprestimos'][0]['devolucao']);
+        $this->assertSame($segundo->toDateTimeString(), $resposta['emprestimos'][1]['devolucao']);
+        $this->assertSame($primeiro->toDateTimeString(), $resposta['emprestimos'][2]['devolucao']);
+    }
 }

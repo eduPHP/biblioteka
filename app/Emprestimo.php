@@ -36,7 +36,7 @@ class Emprestimo extends Model
             });
         }
 
-        return $query->paginate();
+        return $query->paginate(request('perpage', 10));
     }
 
     public function devolver()
