@@ -8,8 +8,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/livros/{livro}', 'LivrosController@show');
-Route::get('/api/livros/busca-isbn/{isbn}', 'Api\BuscaISBNController@show');
 Route::get('/api/livros/{isbn}', 'Api\LivrosController@show');
+Route::get('/api/livros/busca-isbn/{isbn}', 'Api\BuscaISBNController@show');
 Route::patch('/livros/{livro}', 'LivrosController@update');
 Route::delete('/livros/{livro}', 'LivrosController@destroy');
 Route::get('/livros/{livro}/edit', 'LivrosController@edit');
@@ -28,7 +28,7 @@ Route::post('/estudantes', 'EstudantesController@store');
 
 Route::get('/emprestimos', 'EmprestimosController@index');
 Route::get('/api/emprestimos', 'Api\EmprestimosController@index');
-Route::post('/emprestimos', 'EmprestimosController@store');
+Route::post('/api/emprestimos', 'Api\EmprestimosController@store');
 Route::patch('/api/emprestimos/{emprestimo}/devolver', 'EmprestimosController@update');
 Route::post('/api/emprestimos/{emprestimo}/renovar', 'RenovacoesController@store');
 Route::get('/emprestimos/create', 'EmprestimosController@create');

@@ -115,4 +115,17 @@ class EstudantesTest extends TestCase
         $resposta->assertStatus(200);
         $this->assertEquals(1, $resposta->json()['meta']['total']);
     }
+
+    /** @test */
+    function devemos_poder_consultar_um_estudante_pela_matricula()
+    {
+        $this->withoutExceptionHandling();
+        factory('App\Estudante', 3)->create();
+        factory('App\Estudante')->create(['matricula' => 545454]);
+
+        $resposta = $this->getJson('/api/estudantes?q=545454');
+
+        $resposta->assertStatus(200);
+        $this->assertEquals(1, $resposta->json()['meta']['total']);
+    }
 }

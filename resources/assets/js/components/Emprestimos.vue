@@ -21,7 +21,7 @@
             </div>
 
         </div>
-
+        <hr />
         <div class="has-text-centered" v-if="loading">
             <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i> <span class="sr-only">Loading...</span>
         </div>
@@ -202,7 +202,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     .level-left {
         display : block;
     }

@@ -15,9 +15,8 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-// Vue.component('example', require('./components/Example.vue'));
 Vue.component('emprestimos-grid', require('./components/Emprestimos.vue'));
-Vue.component('datepicker', require('./components/Datepicker.vue'));
+Vue.component('criar-emprestimo', require('./components/CriarEmprestimo.vue'));
 
 const app = new Vue({
     el: '#app'

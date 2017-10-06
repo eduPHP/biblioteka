@@ -16,7 +16,7 @@ class Estudante extends Model
         $query = self::ordered();
 
         if ($search = request('q')) {
-            $query->whereRaw('UPPER(nome) like ?', [strtoupper("%$search%")]);
+            $query->whereRaw('(UPPER(nome) like ? or matricula = ?)', [strtoupper("%$search%"), $search]);
         }
 
         return $query->paginate(request('perpage', 10));

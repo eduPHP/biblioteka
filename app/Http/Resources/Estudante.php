@@ -14,6 +14,10 @@ class Estudante extends Resource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id'=>$this->id,
+            'matricula'=>$this->matricula,
+            'nome'=>$this->nome,
+        ];
     }
 }

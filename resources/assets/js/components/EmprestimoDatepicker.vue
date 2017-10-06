@@ -1,49 +1,61 @@
 <template>
     <div class="datepicker">
         <div class="field">
-
-            <div class="control has-icon has-icon-right">
-                <input class="input" value="10/10/2010" :name="name" :placeholder="placeholder" type="text" v-model="interVal" ref="picker">
-                <span class="icon is-small is-right"><i class="fa fa-calendar"></i></span>
+            <div class="control">
+                <input class="input"
+                       :options="options"
+                       :name="name"
+                       :value="interVal"
+                       :placeholder="placeholder"
+                       type="hidden"
+                       v-model="interVal"
+                       ref="pickrInput">
             </div>
         </div>
-
     </div>
 </template>
 <script>
     import Flatpickr from 'flatpickr';
     import Portugues from "flatpickr/src/l10n/pt";
-
-    let moment = require('moment');
+    import moment from 'moment';
     import 'moment/locale/pt-br';
 
     export default {
         props: {
             name: String,
             placeholder: String,
+            val: String,
             value: String
         },
 
         data() {
-            let plusSeven = moment().add(8, 'days');
             return {
                 interVal: this.value,
                 flatPickr: null,
                 options: {
-                    locale: Portugues.pt,
-                    inline: true,
                     dateFormat: 'd/m/Y',
+                    inline: true,
+                    defaultDate: this.getDefaultValue(),
                     minDate: 'today',
+                    maxDate: moment().add(14, 'days').format('DD/MM/YYYY'),
+                    locale: Portugues.pt,
                     disable: [
                         function (date) {
                             return date.getDay() === 0;
                         }
                     ],
-                }
+                },
             };
         },
 
         methods: {
+            getDefaultValue(){
+                let value = this.value ? moment(this.value, "DD/MM/YYYY"):moment().add(7,'days');
+                if(value.day() === 0){
+                    value = value.day(1);
+                }
+                return value.format("DD/MM/YYYY");
+            },
             changeVal() {
                 this.$emit('input', this.interVal);
             },
@@ -53,18 +65,15 @@
         },
 
         watch: {
-            interVal() {
-                this.defaultDate = this.interVal;
-//                this.flatPickr.setDate(new Date(2015, 0, 10), '', this.options.dateFormat);
-//                console.log(this.interVal);
-//                this.flatPickr.redraw();
+            interVal(val) {
+                this.interVal = val;
                 this.$emit('input', this.interVal);
             },
         },
 
         mounted() {
-            const pickerEl = this.$refs.picker;
-            this.flatPickr = new Flatpickr(pickerEl, this.options);
+            const pickrEl = this.$refs.pickrInput;
+            this.flatPickr = new Flatpickr(pickrEl, this.options);
         },
 
         beforeDestroy() {
@@ -75,3 +84,10 @@
         },
     };
 </script>
+<style>
+
+    .flatpickr-calendar {
+        position : inherit;
+    }
+
+</style>
