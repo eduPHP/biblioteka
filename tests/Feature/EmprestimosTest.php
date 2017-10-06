@@ -115,15 +115,15 @@ class EmprestimosTest extends TestCase
     function devemos_poder_ordenar_emprestimos_por_titulo_do_livro()
     {
         $emprestimos = factory('App\Emprestimo', 3)->create();
-        $emprestimos[0]->livro->update(['titulo'=>'bbb']);
-        $emprestimos[1]->livro->update(['titulo'=>'ccc']);
-        $emprestimos[2]->livro->update(['titulo'=>'aaa']);
+        $emprestimos[0]->livro->update(['titulo' => 'bbb']);
+        $emprestimos[1]->livro->update(['titulo' => 'ccc']);
+        $emprestimos[2]->livro->update(['titulo' => 'aaa']);
 
         $resposta = $this->getJson('/api/emprestimos?orderby=livro')->json();
 
-        $this->assertSame('aaa',$resposta['emprestimos'][0]['livro']['titulo']);
-        $this->assertSame('bbb',$resposta['emprestimos'][1]['livro']['titulo']);
-        $this->assertSame('ccc',$resposta['emprestimos'][2]['livro']['titulo']);
+        $this->assertSame('aaa', $resposta['emprestimos'][0]['livro']['titulo']);
+        $this->assertSame('bbb', $resposta['emprestimos'][1]['livro']['titulo']);
+        $this->assertSame('ccc', $resposta['emprestimos'][2]['livro']['titulo']);
 
         $resposta = $this->getJson('/api/emprestimos?orderby=livro,desc')->json();
 
@@ -136,15 +136,15 @@ class EmprestimosTest extends TestCase
     function devemos_poder_ordenar_emprestimos_por_nome_do_estudante()
     {
         $emprestimos = factory('App\Emprestimo', 3)->create();
-        $emprestimos[0]->estudante->update(['nome'=>'bbb']);
-        $emprestimos[1]->estudante->update(['nome'=>'ccc']);
-        $emprestimos[2]->estudante->update(['nome'=>'aaa']);
+        $emprestimos[0]->estudante->update(['nome' => 'bbb']);
+        $emprestimos[1]->estudante->update(['nome' => 'ccc']);
+        $emprestimos[2]->estudante->update(['nome' => 'aaa']);
 
         $resposta = $this->getJson('/api/emprestimos?orderby=estudante')->json();
 
-        $this->assertSame('aaa',$resposta['emprestimos'][0]['estudante']['nome']);
-        $this->assertSame('bbb',$resposta['emprestimos'][1]['estudante']['nome']);
-        $this->assertSame('ccc',$resposta['emprestimos'][2]['estudante']['nome']);
+        $this->assertSame('aaa', $resposta['emprestimos'][0]['estudante']['nome']);
+        $this->assertSame('bbb', $resposta['emprestimos'][1]['estudante']['nome']);
+        $this->assertSame('ccc', $resposta['emprestimos'][2]['estudante']['nome']);
 
         $resposta = $this->getJson('/api/emprestimos?orderby=estudante,desc')->json();
 
@@ -172,5 +172,20 @@ class EmprestimosTest extends TestCase
         $this->assertSame($terceiro->toDateTimeString(), $resposta['emprestimos'][0]['devolucao']);
         $this->assertSame($segundo->toDateTimeString(), $resposta['emprestimos'][1]['devolucao']);
         $this->assertSame($primeiro->toDateTimeString(), $resposta['emprestimos'][2]['devolucao']);
+    }
+
+    /** @test */
+    function emprestimos_devolvidos_devem_ir_para_o_final_da_lista()
+    {
+        $devolvido = factory('App\Emprestimo')->create([
+            'devolucao' => Carbon::now()->addDay(),
+            'devolvido_em' => Carbon::now(),
+        ]);
+        $naoDevolvido = factory('App\Emprestimo')->create(['devolucao' => Carbon::now()->addWeek()]);
+
+        $resposta = $this->getJson('/api/emprestimos');
+
+        $this->assertSame($naoDevolvido->id,$resposta->json()['emprestimos'][0]['id']);
+        $this->assertSame($devolvido->id,$resposta->json()['emprestimos'][1]['id']);
     }
 }
