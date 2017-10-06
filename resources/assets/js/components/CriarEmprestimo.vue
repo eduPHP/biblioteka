@@ -6,7 +6,7 @@
                 <!-- Input Estudante_id -->
                 <div class="field">
                     <label for="estudante_id" class="label is-large">Estudante</label>
-                    <span class="tag" v-if="estudante">
+                    <span class="tag is-large" v-if="estudante">
                         {{ estudante.nome }}
                         <button class="delete is-small" @click="estudante = null"></button>
                     </span>
@@ -103,6 +103,31 @@
             </div>
         </div>
 
+        <div class="modal" :class="{ 'is-active': estudantes.length }">
+            <div class="modal-content">
+                <article class="message" style="border: 1px solid #faf2cc">
+                    <div class="message-header">
+                        <p>Busca Estudante contendo "{{estudanteSearch}}"</p>
+                        <button class="delete" aria-label="delete"></button>
+                    </div>
+                    <div class="message-body">
+                        <div class="field row">
+                            <div class="control has-icons-right">
+                                <input class="input" autocomplete="off" v-model="estudanteSearch" @keyup="searchEstudante()">
+                                <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
+                            </div>
+                            <p class="help is-info">Exibindo n de um total de x</p>
+                        </div>
+                        <ul>
+                            <li v-for="item in estudantes">
+                                <a class="button is-link" @click="selectEstudante(item)">{{item.matricula}} - {{item.nome}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -165,30 +190,30 @@
                 if (!this.estudante) {
                     this.errors.add('estudante_id', 'Selecione um Estudante');
                 }
-                if (!this.livros.length){
+                if (!this.livros.length) {
                     this.errors.add('livros', 'Selecione ao menos um Livro.');
                 }
 
                 return this.errors.any();
             },
+            selectEstudante(estudante){
+                this.estudante = estudante;
+                this.estudantes = [];
+                this.estudanteSearch = '';
+            },
             searchEstudante() {
                 this.estudantesLoading = true;
-
                 axios.get(`/api/estudantes?q=${this.estudanteSearch}`).then(({data}) => {
-                    this.estudantesLoading = false;
                     if (data.meta.total === 1) {
-                        this.estudante = data.estudantes[0];
+                        this.selectEstudante(data.estudantes[0]);
                         return;
                     }
-                    if (data.meta.total === 0){
+                    if (data.meta.total === 0) {
                         this.errors.add('estudante_id', `Nenhum Estudante emcontrado contendo "${this.estudanteSearch}".`)
                     }
-                    this.estudanteSearch = '';
                     this.estudantes = data.estudantes;
-                    // mostra modal
-                }).catch(error => {
-                    //mostra errors
                 });
+                this.estudantesLoading = false;
             },
             searchLivro() {
                 this.livrosLoading = true;
@@ -214,7 +239,7 @@
             },
             enviar() {
 
-                if (this.validation()){
+                if (this.validation()) {
                     return;
                 }
 

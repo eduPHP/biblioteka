@@ -21,7 +21,7 @@ class EmprestimosController extends Controller
         $dados = $request->validate([
             'livros' => 'required|exists:livros,id',
             'estudante_id' => 'required|exists:estudantes,id',
-            'devolucao' => 'nullable|date',
+            'devolucao' => 'nullable|date_format:d/m/Y',
         ]);
 
         foreach (array_wrap($dados['livros']) as $livro) {

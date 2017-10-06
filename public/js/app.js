@@ -1736,6 +1736,31 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1814,28 +1839,28 @@ var Errors = function () {
 
             return this.errors.any();
         },
+        selectEstudante: function selectEstudante(estudante) {
+            this.estudante = estudante;
+            this.estudantes = [];
+            this.estudanteSearch = '';
+        },
         searchEstudante: function searchEstudante() {
             var _this = this;
 
             this.estudantesLoading = true;
-
             axios.get("/api/estudantes?q=" + this.estudanteSearch).then(function (_ref) {
                 var data = _ref.data;
 
-                _this.estudantesLoading = false;
                 if (data.meta.total === 1) {
-                    _this.estudante = data.estudantes[0];
+                    _this.selectEstudante(data.estudantes[0]);
                     return;
                 }
                 if (data.meta.total === 0) {
                     _this.errors.add('estudante_id', "Nenhum Estudante emcontrado contendo \"" + _this.estudanteSearch + "\".");
                 }
-                _this.estudanteSearch = '';
                 _this.estudantes = data.estudantes;
-                // mostra modal
-            }).catch(function (error) {
-                //mostra errors
             });
+            this.estudantesLoading = false;
         },
         searchLivro: function searchLivro() {
             var _this2 = this;
@@ -38432,7 +38457,7 @@ var staticRenderFns = [
       { staticClass: "button is-info", attrs: { href: "/emprestimos/create" } },
       [
         _c("span", { staticClass: "icon" }, [
-          _c("i", { staticClass: "fa fa-plus" })
+          _c("i", { attrs: { classw: "fa fa-plus" } })
         ]),
         _vm._v(" "),
         _c("span", [_vm._v("Adicionar")])
@@ -38549,7 +38574,7 @@ var render = function() {
           ),
           _vm._v(" "),
           _vm.estudante
-            ? _c("span", { staticClass: "tag" }, [
+            ? _c("span", { staticClass: "tag is-large" }, [
                 _vm._v(
                   "\n                    " +
                     _vm._s(_vm.estudante.nome) +
@@ -38819,7 +38844,100 @@ var render = function() {
       ]),
       _vm._v(" "),
       _vm._m(5)
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "modal", class: { "is-active": _vm.estudantes.length } },
+      [
+        _c("div", { staticClass: "modal-content" }, [
+          _c(
+            "article",
+            {
+              staticClass: "message",
+              staticStyle: { border: "1px solid #faf2cc" }
+            },
+            [
+              _c("div", { staticClass: "message-header" }, [
+                _c("p", [
+                  _vm._v(
+                    'Busca Estudante contendo "' +
+                      _vm._s(_vm.estudanteSearch) +
+                      '"'
+                  )
+                ]),
+                _vm._v(" "),
+                _c("button", {
+                  staticClass: "delete",
+                  attrs: { "aria-label": "delete" }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "message-body" }, [
+                _c("div", { staticClass: "field row" }, [
+                  _c("div", { staticClass: "control has-icons-right" }, [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.estudanteSearch,
+                          expression: "estudanteSearch"
+                        }
+                      ],
+                      staticClass: "input",
+                      attrs: { autocomplete: "off" },
+                      domProps: { value: _vm.estudanteSearch },
+                      on: {
+                        keyup: function($event) {
+                          _vm.searchEstudante()
+                        },
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.estudanteSearch = $event.target.value
+                        }
+                      }
+                    }),
+                    _vm._v(" "),
+                    _vm._m(6)
+                  ]),
+                  _vm._v(" "),
+                  _c("p", { staticClass: "help is-info" }, [
+                    _vm._v("Exibindo n de um total de x")
+                  ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "ul",
+                  _vm._l(_vm.estudantes, function(item) {
+                    return _c("li", [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "button is-link",
+                          on: {
+                            click: function($event) {
+                              _vm.selectEstudante(item)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            _vm._s(item.matricula) + " - " + _vm._s(item.nome)
+                          )
+                        ]
+                      )
+                    ])
+                  })
+                )
+              ])
+            ]
+          )
+        ])
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -38887,6 +39005,14 @@ var staticRenderFns = [
       _c("button", { staticClass: "button", attrs: { type: "button" } }, [
         _vm._v("Reset")
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "icon is-small is-right" }, [
+      _c("i", { staticClass: "fa fa-search" })
     ])
   }
 ]

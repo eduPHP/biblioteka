@@ -29,6 +29,14 @@
                 margin-right : 1em;
             }
 
+            .ml-1 {
+                margin-left : 1em;
+            }
+
+            .row{
+                padding : 0 .8em;
+            }
+
             .input:focus {
                 outline: none;
             }

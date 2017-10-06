@@ -17,7 +17,7 @@
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
                 <a href="/emprestimos/create" class="button is-info">
-                    <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
+                    <span class="icon"><i classw="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
         </div>

@@ -17,7 +17,7 @@ class Emprestimo extends Model
 
     public static function emprestar($dados)
     {
-        $dados['devolucao'] = isset($dados['devolucao']) ? Carbon::parse($dados['devolucao']) : Carbon::now()->addWeek();
+        $dados['devolucao'] = isset($dados['devolucao']) ? Carbon::createFromFormat('d/m/Y',$dados['devolucao']) : Carbon::now()->addWeek();
         $dados['emprestado_em'] = Carbon::now();
         unset($dados['livros']);
 
