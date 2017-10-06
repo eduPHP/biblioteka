@@ -1736,8 +1736,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //
 //
 //
-//
-//
 
 
 
@@ -38570,7 +38568,7 @@ var render = function() {
                     staticClass: "input",
                     class: { "is-danger": _vm.errors.has("estudante_id") },
                     attrs: {
-                      autocomplete: "false",
+                      autocomplete: "off",
                       id: "estudante_id",
                       placeholder:
                         "Informe a matricula ou parte do nome e pressione enter"
@@ -38584,7 +38582,6 @@ var render = function() {
                         ) {
                           return null
                         }
-                        $event.preventDefault()
                         _vm.searchEstudante($event)
                       },
                       keydown: function($event) {
@@ -38646,7 +38643,7 @@ var render = function() {
               staticClass: "input",
               class: { "is-danger": _vm.errors.has("livros") },
               attrs: {
-                autocomplete: "false",
+                autocomplete: "off",
                 id: "livros",
                 placeholder: "Informe o ISBN e pressione enter"
               },
@@ -38659,7 +38656,6 @@ var render = function() {
                   ) {
                     return null
                   }
-                  $event.preventDefault()
                   _vm.searchLivro($event)
                 },
                 input: function($event) {

@@ -11,8 +11,7 @@
                         <button class="delete is-small" @click="estudante = null"></button>
                     </span>
                     <div class="control has-icons-right has-icons-left" v-else>
-                        <input class="input" @keyup.prevent.enter="searchEstudante" v-model="estudanteSearch"
-                               autocomplete="off"
+                        <input class="input" @keyup.enter="searchEstudante" v-model="estudanteSearch" autocomplete="off"
                                :class="{ 'is-danger': errors.has('estudante_id') }" @keydown="errors.remove('estudante_id')"
                                id="estudante_id" placeholder="Informe a matricula ou parte do nome e pressione enter">
                         <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
@@ -25,9 +24,8 @@
                     <label for="livros" class="label is-large">Livros <span v-if="livros.length" class="subtitle is-6">({{ livros.length
                                                                                                                        }})</span></label>
                     <div class="control has-icons-right has-icons-left">
-                        <input class="input" @keyup.enter.prevent="searchLivro" v-model="livroSearch"
-                               autocomplete="off"
-                               :class="{ 'is-danger': errors.has('livros') }"
+                        <input class="input" @keyup.enter="searchLivro" v-model="livroSearch"
+                               autocomplete="off" :class="{ 'is-danger': errors.has('livros') }"
                                id="livros" placeholder="Informe o ISBN e pressione enter">
                         <span class="icon is-small is-left"><i class="fa fa-barcode"></i></span>
                         <span class="icon is-small is-right" v-if="errors.has('livros')"><i class="fa fa-warning"></i></span>
@@ -205,7 +203,6 @@
                 this.livros.splice(this.livros.indexOf(livro), 1);
             },
             enviar() {
-
                 axios.post('/api/emprestimos', {
                     livros: this.livros.map(livro => {
                         return livro.id;
