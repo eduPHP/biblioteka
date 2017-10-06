@@ -1,7 +1,7 @@
 <template>
     <div class="datepicker">
         <div class="field">
-            <div class="control">
+            <div class="control has-icons-left">
                 <input class="input"
                        :options="options"
                        :name="name"
@@ -10,7 +10,9 @@
                        type="hidden"
                        v-model="interVal"
                        ref="pickrInput">
+                <span class="icon is-small is-left"><i class="fa fa-calendar"></i></span>
             </div>
+
         </div>
     </div>
 </template>
@@ -84,10 +86,3 @@
         },
     };
 </script>
-<style>
-
-    .flatpickr-calendar {
-        position : inherit;
-    }
-
-</style>

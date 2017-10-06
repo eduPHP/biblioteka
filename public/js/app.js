@@ -1767,7 +1767,7 @@ var Errors = function () {
     }, {
         key: "add",
         value: function add(field, message) {
-            this.errors[field] = [message];
+            window.Vue.set(this.errors, field, [message]);
         }
     }, {
         key: "remove",
@@ -1804,8 +1804,15 @@ var Errors = function () {
     },
 
     methods: {
-        validation: function validation(field) {
-            return this.errors[field];
+        validation: function validation() {
+            if (!this.estudante) {
+                this.errors.add('estudante_id', 'Selecione um Estudante');
+            }
+            if (!this.livros.length) {
+                this.errors.add('livros', 'Selecione ao menos um Livro.');
+            }
+
+            return this.errors.any();
         },
         searchEstudante: function searchEstudante() {
             var _this = this;
@@ -1816,11 +1823,14 @@ var Errors = function () {
                 var data = _ref.data;
 
                 _this.estudantesLoading = false;
-                _this.estudanteSearch = '';
                 if (data.meta.total === 1) {
                     _this.estudante = data.estudantes[0];
                     return;
                 }
+                if (data.meta.total === 0) {
+                    _this.errors.add('estudante_id', "Nenhum Estudante emcontrado contendo \"" + _this.estudanteSearch + "\".");
+                }
+                _this.estudanteSearch = '';
                 _this.estudantes = data.estudantes;
                 // mostra modal
             }).catch(function (error) {
@@ -1853,6 +1863,10 @@ var Errors = function () {
         },
         enviar: function enviar() {
             var _this3 = this;
+
+            if (this.validation()) {
+                return;
+            }
 
             axios.post('/api/emprestimos', {
                 livros: this.livros.map(function (livro) {
@@ -1887,6 +1901,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_moment__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment_locale_pt_br__ = __webpack_require__("./node_modules/moment/locale/pt-br.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment_locale_pt_br___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_moment_locale_pt_br__);
+//
+//
 //
 //
 //
@@ -2219,21 +2235,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     }
 });
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1c4d5a10\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/EmprestimoDatepicker.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "\n.flatpickr-calendar {\n    position : inherit;\n}\n\n", ""]);
-
-// exports
-
 
 /***/ }),
 
@@ -38086,7 +38087,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "datepicker" }, [
     _c("div", { staticClass: "field" }, [
-      _c("div", { staticClass: "control" }, [
+      _c("div", { staticClass: "control has-icons-left" }, [
         _c("input", {
           directives: [
             {
@@ -38113,12 +38114,23 @@ var render = function() {
               _vm.interVal = $event.target.value
             }
           }
-        })
+        }),
+        _vm._v(" "),
+        _vm._m(0)
       ])
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "icon is-small is-left" }, [
+      _c("i", { staticClass: "fa fa-calendar" })
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -38885,33 +38897,6 @@ if (false) {
   if (module.hot.data) {
      require("vue-hot-reload-api").rerender("data-v-684120e5", module.exports)
   }
-}
-
-/***/ }),
-
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1c4d5a10\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/EmprestimoDatepicker.vue":
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1c4d5a10\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/EmprestimoDatepicker.vue");
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("3da37870", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1c4d5a10\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EmprestimoDatepicker.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1c4d5a10\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EmprestimoDatepicker.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
 }
 
 /***/ }),
@@ -49620,17 +49605,13 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-1c4d5a10\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/EmprestimoDatepicker.vue")
-}
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
 var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/EmprestimoDatepicker.vue")
 /* template */
 var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-1c4d5a10\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/EmprestimoDatepicker.vue")
 /* styles */
-var __vue_styles__ = injectStyle
+var __vue_styles__ = null
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */

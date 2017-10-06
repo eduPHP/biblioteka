@@ -25,7 +25,7 @@ class Emprestimo extends Resource
                 'isbn'=> $this->livro->isbn,
                 'titulo'=> $this->livro->titulo,
             ],
-            'devolucao'=>$this->devolucao->toDateTimeString(),
+            'devolucao'=>optional($this->devolucao)->toDateTimeString(),
             'devolvido'=>$this->devolvido,
             'devolvido_em'=>optional($this->devolvido_em)->toDateTimeString(),
         ];

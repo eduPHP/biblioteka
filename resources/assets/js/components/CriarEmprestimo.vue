@@ -130,7 +130,7 @@
         }
 
         add(field, message) {
-            this.errors[field] = [message];
+            window.Vue.set(this.errors, field, [message]);
         }
 
         remove(field) {
@@ -161,19 +161,29 @@
             }
         },
         methods: {
-            validation(field) {
-                return this.errors[field];
+            validation() {
+                if (!this.estudante) {
+                    this.errors.add('estudante_id', 'Selecione um Estudante');
+                }
+                if (!this.livros.length){
+                    this.errors.add('livros', 'Selecione ao menos um Livro.');
+                }
+
+                return this.errors.any();
             },
             searchEstudante() {
                 this.estudantesLoading = true;
 
                 axios.get(`/api/estudantes?q=${this.estudanteSearch}`).then(({data}) => {
                     this.estudantesLoading = false;
-                    this.estudanteSearch = '';
                     if (data.meta.total === 1) {
                         this.estudante = data.estudantes[0];
                         return;
                     }
+                    if (data.meta.total === 0){
+                        this.errors.add('estudante_id', `Nenhum Estudante emcontrado contendo "${this.estudanteSearch}".`)
+                    }
+                    this.estudanteSearch = '';
                     this.estudantes = data.estudantes;
                     // mostra modal
                 }).catch(error => {
@@ -203,6 +213,11 @@
                 this.livros.splice(this.livros.indexOf(livro), 1);
             },
             enviar() {
+
+                if (this.validation()){
+                    return;
+                }
+
                 axios.post('/api/emprestimos', {
                     livros: this.livros.map(livro => {
                         return livro.id;
