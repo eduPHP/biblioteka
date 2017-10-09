@@ -1761,6 +1761,16 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -1813,61 +1823,90 @@ var Errors = function () {
     components: {
         "emprestimo-datepicker": __WEBPACK_IMPORTED_MODULE_0__components_EmprestimoDatepicker_vue___default.a
     },
+    mounted: function mounted() {
+        this.$refs.estudante.focus();
+    },
     data: function data() {
         return {
             devolucao: __WEBPACK_IMPORTED_MODULE_1_moment___default()().add(7, 'days').format('DD/MM/YYYY'),
             estudante: null,
             estudanteSearch: '',
             livroSearch: '',
-            estudantes: [],
+            estudantesList: { meta: {}, estudantes: {} },
             livros: [],
             errors: new Errors({}),
             estudantesLoading: false,
             livrosLoading: false,
-            isbnNotFound: false
+            isbnNotFound: false,
+            modalEnable: false
         };
     },
 
+    watch: {
+        livrosLoading: function livrosLoading(flag) {
+            console.log("livrosLoading mudou para " + flag);
+        }
+    },
     methods: {
         validation: function validation() {
             if (!this.estudante) {
                 this.errors.add('estudante_id', 'Selecione um Estudante');
             }
+
             if (!this.livros.length) {
                 this.errors.add('livros', 'Selecione ao menos um Livro.');
             }
 
             return this.errors.any();
         },
-        selectEstudante: function selectEstudante(estudante) {
-            this.estudante = estudante;
-            this.estudantes = [];
-            this.estudanteSearch = '';
-        },
-        searchEstudante: function searchEstudante() {
+        removeEstudante: function removeEstudante() {
             var _this = this;
 
+            this.estudante = null;
+            this.$nextTick(function () {
+                return _this.$refs.estudante.focus();
+            });
+        },
+        selectEstudante: function selectEstudante(estudante) {
+            this.estudante = estudante;
+            this.estudantesList = { meta: {}, estudantes: {} };
+            this.estudanteSearch = '';
+            this.errors.remove('estudante_id');
+            this.modalEnable = false;
+            this.$refs.livros.focus();
+        },
+        searchEstudante: function searchEstudante() {
+            var _this2 = this;
+
             this.estudantesLoading = true;
+
             axios.get("/api/estudantes?q=" + this.estudanteSearch).then(function (_ref) {
                 var data = _ref.data;
 
-                if (data.meta.total === 1) {
-                    _this.selectEstudante(data.estudantes[0]);
+                if (data.meta.total === 1 && !_this2.modalEnable) {
+                    _this2.selectEstudante(data.estudantes[0]);
                     return;
                 }
                 if (data.meta.total === 0) {
-                    _this.errors.add('estudante_id', "Nenhum Estudante emcontrado contendo \"" + _this.estudanteSearch + "\".");
+                    _this2.errors.add('estudante_id', "Nenhum Estudante emcontrado contendo \"" + _this2.estudanteSearch + "\".");
+                    _this2.$refs.estudante.focus();
+                    _this2.modalEnable = false;
+                    return;
                 }
-                _this.estudantes = data.estudantes;
+                _this2.estudantesList = data;
+                _this2.modalEnable = true;
+                _this2.$nextTick(function () {
+                    return _this2.$refs.modalInput.focus();
+                });
             });
             this.estudantesLoading = false;
         },
         searchLivro: function searchLivro() {
-            var _this2 = this;
+            var _this3 = this;
 
-            this.livrosLoading = true;
             this.isbnNotFound = false;
             this.errors.remove('livros');
+            this.livrosLoading = true;
 
             axios.get("/api/livros/" + this.livroSearch, {
                 validateStatus: function validateStatus(status) {
@@ -1875,9 +1914,9 @@ var Errors = function () {
                 }
             }).then(function (response) {
                 if (response.status === 404) {
-                    return _this2.isbnNotFound = response.data;
+                    return _this3.isbnNotFound = response.data;
                 }
-                _this2.livros.unshift(response.data.livro);
+                _this3.livros.unshift(response.data.livro);
             });
 
             this.livrosLoading = false;
@@ -1887,7 +1926,7 @@ var Errors = function () {
             this.livros.splice(this.livros.indexOf(livro), 1);
         },
         enviar: function enviar() {
-            var _this3 = this;
+            var _this4 = this;
 
             if (this.validation()) {
                 return;
@@ -1900,12 +1939,11 @@ var Errors = function () {
                 estudante_id: this.estudante ? this.estudante.id : null,
                 devolucao: this.devolucao
             }).then(function (response) {
-                _this3.livros = [];
-                _this3.estudante = null;
-                console.log(response);
+                _this4.livros = [];
+                _this4.estudante = null;
             }).catch(function (error) {
                 console.log(error.response.data.errors);
-                _this3.errors.record(error.response.data.errors);
+                _this4.errors.record(error.response.data.errors);
             });
         }
     }
@@ -38584,14 +38622,17 @@ var render = function() {
                   staticClass: "delete is-small",
                   on: {
                     click: function($event) {
-                      _vm.estudante = null
+                      _vm.removeEstudante()
                     }
                   }
                 })
               ])
             : _c(
                 "div",
-                { staticClass: "control has-icons-right has-icons-left" },
+                {
+                  staticClass: "control has-icons-right has-icons-left",
+                  class: { "is-loading": _vm.estudantesLoading }
+                },
                 [
                   _c("input", {
                     directives: [
@@ -38602,6 +38643,7 @@ var render = function() {
                         expression: "estudanteSearch"
                       }
                     ],
+                    ref: "estudante",
                     staticClass: "input",
                     class: { "is-danger": _vm.errors.has("estudante_id") },
                     attrs: {
@@ -38619,7 +38661,7 @@ var render = function() {
                         ) {
                           return null
                         }
-                        _vm.searchEstudante($event)
+                        _vm.searchEstudante()
                       },
                       keydown: function($event) {
                         _vm.errors.remove("estudante_id")
@@ -38658,7 +38700,7 @@ var render = function() {
             "label",
             { staticClass: "label is-large", attrs: { for: "livros" } },
             [
-              _vm._v("Livros "),
+              _vm._v("\n                    Livros "),
               _vm.livros.length
                 ? _c("span", { staticClass: "subtitle is-6" }, [
                     _vm._v("(" + _vm._s(_vm.livros.length) + ")")
@@ -38667,51 +38709,59 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _c("div", { staticClass: "control has-icons-right has-icons-left" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.livroSearch,
-                  expression: "livroSearch"
-                }
-              ],
-              staticClass: "input",
-              class: { "is-danger": _vm.errors.has("livros") },
-              attrs: {
-                autocomplete: "off",
-                id: "livros",
-                placeholder: "Informe o ISBN e pressione enter"
-              },
-              domProps: { value: _vm.livroSearch },
-              on: {
-                keyup: function($event) {
-                  if (
-                    !("button" in $event) &&
-                    _vm._k($event.keyCode, "enter", 13)
-                  ) {
-                    return null
+          _c(
+            "div",
+            {
+              staticClass: "control has-icons-right has-icons-left",
+              class: { "is-loading": _vm.livrosLoading }
+            },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.livroSearch,
+                    expression: "livroSearch"
                   }
-                  _vm.searchLivro($event)
+                ],
+                ref: "livros",
+                staticClass: "input",
+                class: { "is-danger": _vm.errors.has("livros") },
+                attrs: {
+                  autocomplete: "off",
+                  id: "livros",
+                  placeholder: "Informe o ISBN e pressione enter"
                 },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+                domProps: { value: _vm.livroSearch },
+                on: {
+                  keyup: function($event) {
+                    if (
+                      !("button" in $event) &&
+                      _vm._k($event.keyCode, "enter", 13)
+                    ) {
+                      return null
+                    }
+                    _vm.searchLivro($event)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.livroSearch = $event.target.value
                   }
-                  _vm.livroSearch = $event.target.value
                 }
-              }
-            }),
-            _vm._v(" "),
-            _vm._m(1),
-            _vm._v(" "),
-            _vm.errors.has("livros")
-              ? _c("span", { staticClass: "icon is-small is-right" }, [
-                  _c("i", { staticClass: "fa fa-warning" })
-                ])
-              : _vm._e()
-          ]),
+              }),
+              _vm._v(" "),
+              _vm._m(1),
+              _vm._v(" "),
+              _vm.errors.has("livros")
+                ? _c("span", { staticClass: "icon is-small is-right" }, [
+                    _c("i", { staticClass: "fa fa-warning" })
+                  ])
+                : _vm._e()
+            ]
+          ),
           _vm._v(" "),
           _vm.errors.has("livros")
             ? _c("p", {
@@ -38846,98 +38896,113 @@ var render = function() {
       _vm._m(5)
     ]),
     _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "modal", class: { "is-active": _vm.estudantes.length } },
-      [
-        _c("div", { staticClass: "modal-content" }, [
-          _c(
-            "article",
-            {
-              staticClass: "message",
-              staticStyle: { border: "1px solid #faf2cc" }
-            },
-            [
-              _c("div", { staticClass: "message-header" }, [
-                _c("p", [
-                  _vm._v(
-                    'Busca Estudante contendo "' +
-                      _vm._s(_vm.estudanteSearch) +
-                      '"'
-                  )
-                ]),
-                _vm._v(" "),
-                _c("button", {
-                  staticClass: "delete",
-                  attrs: { "aria-label": "delete" }
-                })
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "message-body" }, [
-                _c("div", { staticClass: "field row" }, [
-                  _c("div", { staticClass: "control has-icons-right" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.estudanteSearch,
-                          expression: "estudanteSearch"
-                        }
-                      ],
-                      staticClass: "input",
-                      attrs: { autocomplete: "off" },
-                      domProps: { value: _vm.estudanteSearch },
-                      on: {
-                        keyup: function($event) {
-                          _vm.searchEstudante()
-                        },
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.estudanteSearch = $event.target.value
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm._m(6)
+    _vm.modalEnable
+      ? _c("div", { staticClass: "modal is-active" }, [
+          _c("div", { staticClass: "modal-content" }, [
+            _c(
+              "article",
+              {
+                staticClass: "message",
+                staticStyle: { border: "1px solid #faf2cc" }
+              },
+              [
+                _c("div", { staticClass: "message-header" }, [
+                  _c("p", [
+                    _vm._v(
+                      'Busca Estudante contendo "' +
+                        _vm._s(_vm.estudanteSearch) +
+                        '"'
+                    )
                   ]),
                   _vm._v(" "),
-                  _c("p", { staticClass: "help is-info" }, [
-                    _vm._v("Exibindo n de um total de x")
-                  ])
+                  _c("button", {
+                    staticClass: "delete",
+                    attrs: { "aria-label": "delete" },
+                    on: {
+                      click: function($event) {
+                        _vm.modalEnable = false
+                      }
+                    }
+                  })
                 ]),
                 _vm._v(" "),
-                _c(
-                  "ul",
-                  _vm._l(_vm.estudantes, function(item) {
-                    return _c("li", [
-                      _c(
-                        "a",
-                        {
-                          staticClass: "button is-link",
-                          on: {
-                            click: function($event) {
-                              _vm.selectEstudante(item)
-                            }
+                _c("div", { staticClass: "message-body" }, [
+                  _c("div", { staticClass: "field row" }, [
+                    _c("div", { staticClass: "control has-icons-right" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.estudanteSearch,
+                            expression: "estudanteSearch"
                           }
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(item.matricula) + " - " + _vm._s(item.nome)
-                          )
-                        ]
+                        ],
+                        ref: "modalInput",
+                        staticClass: "input",
+                        attrs: { autocomplete: "off" },
+                        domProps: { value: _vm.estudanteSearch },
+                        on: {
+                          keyup: function($event) {
+                            _vm.searchEstudante()
+                          },
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.estudanteSearch = $event.target.value
+                          }
+                        }
+                      }),
+                      _vm._v(" "),
+                      _vm._m(6)
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "help is-info" }, [
+                      _vm._v(
+                        "\n                            Exibindo\n                            " +
+                          _vm._s(
+                            _vm.estudantesList.meta.per_page <
+                            _vm.estudantesList.meta.total
+                              ? _vm.estudantesList.meta.per_page
+                              : _vm.estudantesList.meta.total
+                          ) +
+                          "\n                            de um total de " +
+                          _vm._s(_vm.estudantesList.meta.total) +
+                          "\n                        "
                       )
                     ])
-                  })
-                )
-              ])
-            ]
-          )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "ul",
+                    _vm._l(_vm.estudantesList.estudantes, function(item) {
+                      return _c("li", [
+                        _c(
+                          "a",
+                          {
+                            staticClass: "button is-link",
+                            on: {
+                              click: function($event) {
+                                _vm.selectEstudante(item)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              _vm._s(item.matricula) + " - " + _vm._s(item.nome)
+                            )
+                          ]
+                        )
+                      ])
+                    })
+                  )
+                ])
+              ]
+            )
+          ])
         ])
-      ]
-    )
+      : _vm._e()
   ])
 }
 var staticRenderFns = [
@@ -49624,7 +49689,6 @@ module.exports = function(module) {
 
 /***/ "./resources/assets/js/app.js":
 /***/ (function(module, exports, __webpack_require__) {
-
 
 /**
  * First we will load all of this project's JavaScript dependencies which

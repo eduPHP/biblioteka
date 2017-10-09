@@ -19,13 +19,11 @@ class EmprestimosTest extends TestCase
         $livro = factory('App\Livro')->create();
         $estudante = factory('App\Estudante')->create();
 
-        $resposta = $this->post("/emprestimos", $data = [
+        $this->post("/api/emprestimos", $data = [
             'livros' => $livro->id,
             'estudante_id' => $estudante->id,
         ]);
 
-        $resposta->assertRedirect("/emprestimos");
-        $resposta->assertSessionHas('success');
         $this->assertDatabaseHas('emprestimos', [
             'livro_id' => $livro->id,
             'estudante_id' => $estudante->id,
@@ -38,12 +36,11 @@ class EmprestimosTest extends TestCase
         $livros = factory('App\Livro', 3)->create();
         $estudante = factory('App\Estudante')->create();
 
-        $resposta = $this->post("/emprestimos", $data = [
+        $this->post("/api/emprestimos", $data = [
             'livros' => [$livros[0]->id, $livros[1]->id, $livros[2]->id,],
             'estudante_id' => $estudante->id,
         ]);
 
-        $resposta->assertRedirect('/emprestimos');
         foreach ($livros as $livro) {
             $this->assertDatabaseHas('emprestimos', [
                 'livro_id' => $livro->id,

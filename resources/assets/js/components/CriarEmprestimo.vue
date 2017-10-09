@@ -8,10 +8,11 @@
                     <label for="estudante_id" class="label is-large">Estudante</label>
                     <span class="tag is-large" v-if="estudante">
                         {{ estudante.nome }}
-                        <button class="delete is-small" @click="estudante = null"></button>
+                        <button class="delete is-small" @click="removeEstudante()"></button>
                     </span>
-                    <div class="control has-icons-right has-icons-left" v-else>
-                        <input class="input" @keyup.enter="searchEstudante" v-model="estudanteSearch" autocomplete="off"
+                    <div class="control has-icons-right has-icons-left" :class="{ 'is-loading': loading.has('estudante') }" v-else>
+                        <input class="input" @keyup.enter="searchEstudante()" v-model="estudanteSearch" autocomplete="off"
+                               ref="estudante"
                                :class="{ 'is-danger': errors.has('estudante_id') }" @keydown="errors.remove('estudante_id')"
                                id="estudante_id" placeholder="Informe a matricula ou parte do nome e pressione enter">
                         <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
@@ -21,10 +22,11 @@
                 </div>
                 <!-- Input Livros -->
                 <div class="field">
-                    <label for="livros" class="label is-large">Livros <span v-if="livros.length" class="subtitle is-6">({{ livros.length
-                                                                                                                       }})</span></label>
-                    <div class="control has-icons-right has-icons-left">
-                        <input class="input" @keyup.enter="searchLivro" v-model="livroSearch"
+                    <label for="livros" class="label is-large">
+                        Livros <span v-if="livros.length" class="subtitle is-6">({{ livros.length }})</span>
+                    </label>
+                    <div class="control has-icons-right has-icons-left" :class="{'is-loading': loading.has('livros')}">
+                        <input class="input" @keyup.enter="searchLivro" v-model="livroSearch" ref="livros"
                                autocomplete="off" :class="{ 'is-danger': errors.has('livros') }"
                                id="livros" placeholder="Informe o ISBN e pressione enter">
                         <span class="icon is-small is-left"><i class="fa fa-barcode"></i></span>
@@ -47,7 +49,7 @@
                         </div>
                     </div>
 
-                    <div class="card-content has-border-bottom" v-if="!livros.length && !isbnNotFound && !livrosLoading">
+                    <div class="card-content has-border-bottom" v-if="!livros.length && !isbnNotFound && !loading.has('livros')">
                         <div class="content">
                             <h3>Informe um ISBN para pesquisar... <i class="fa fa-arrow-up"></i></h3>
                         </div>
@@ -68,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div class="card-content has-border-bottom" v-if="livrosLoading">
+                    <div class="card-content has-border-bottom" v-if="loading.has('livros')">
                         <div class="level">
                             <div class="level-left">
                                 <div>
@@ -103,23 +105,31 @@
             </div>
         </div>
 
-        <div class="modal" :class="{ 'is-active': estudantes.length }">
+        <div class="modal is-active" v-if="modalEnable">
             <div class="modal-content">
                 <article class="message" style="border: 1px solid #faf2cc">
                     <div class="message-header">
                         <p>Busca Estudante contendo "{{estudanteSearch}}"</p>
-                        <button class="delete" aria-label="delete"></button>
+                        <button class="delete" aria-label="delete" @click="modalEnable = false"></button>
                     </div>
                     <div class="message-body">
                         <div class="field row">
                             <div class="control has-icons-right">
-                                <input class="input" autocomplete="off" v-model="estudanteSearch" @keyup="searchEstudante()">
+                                <input class="input" autocomplete="off" v-model="estudanteSearch" @keyup="searchEstudante()" ref="modalInput">
                                 <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                             </div>
-                            <p class="help is-info">Exibindo n de um total de x</p>
+                            <p class="help is-info">
+                                Exibindo
+                                {{
+                                    estudantesList.meta.per_page < estudantesList.meta.total ?
+                                    estudantesList.meta.per_page :
+                                    estudantesList.meta.total
+                                }}
+                                de um total de {{estudantesList.meta.total}}
+                            </p>
                         </div>
                         <ul>
-                            <li v-for="item in estudantes">
+                            <li v-for="item in estudantesList.estudantes">
                                 <a class="button is-link" @click="selectEstudante(item)">{{item.matricula}} - {{item.nome}}</a>
                             </li>
                         </ul>
@@ -167,9 +177,30 @@
         }
     }
 
+    class LoadingState {
+        constructor(){
+            this.loading = {};
+        }
+
+        set(field){
+            window.Vue.set(this.loading, field, true);
+        }
+
+        has(field) {
+            return this.loading.hasOwnProperty(field);
+        }
+
+        done(field){
+            delete this.loading[field];
+        }
+    }
+
     export default {
         components: {
             "emprestimo-datepicker": EmprestimoDatepicker
+        },
+        mounted(){
+            this.$refs.estudante.focus();
         },
         data() {
             return {
@@ -177,12 +208,17 @@
                 estudante: null,
                 estudanteSearch: '',
                 livroSearch: '',
-                estudantes: [],
+                estudantesList: {meta:{},estudantes:{}},
                 livros: [],
                 errors: new Errors({}),
-                estudantesLoading: false,
-                livrosLoading: false,
+                loading: new LoadingState(),
                 isbnNotFound: false,
+                modalEnable: false
+            }
+        },
+        watch:{
+            livrosLoading(flag){
+                console.log("livrosLoading mudou para "+flag);
             }
         },
         methods: {
@@ -190,35 +226,49 @@
                 if (!this.estudante) {
                     this.errors.add('estudante_id', 'Selecione um Estudante');
                 }
+
                 if (!this.livros.length) {
                     this.errors.add('livros', 'Selecione ao menos um Livro.');
                 }
 
                 return this.errors.any();
             },
-            selectEstudante(estudante){
+            removeEstudante(){
+                this.estudante = null;
+                this.$nextTick(() => this.$refs.estudante.focus());
+            },
+            selectEstudante(estudante) {
                 this.estudante = estudante;
-                this.estudantes = [];
+                this.estudantesList = {meta: {}, estudantes: {}};
                 this.estudanteSearch = '';
+                this.errors.remove('estudante_id');
+                this.modalEnable = false;
+                this.$refs.livros.focus();
             },
             searchEstudante() {
-                this.estudantesLoading = true;
+                this.loading.set('estudante');
+                
                 axios.get(`/api/estudantes?q=${this.estudanteSearch}`).then(({data}) => {
-                    if (data.meta.total === 1) {
+                    if (data.meta.total === 1 && !this.modalEnable) {
                         this.selectEstudante(data.estudantes[0]);
                         return;
                     }
                     if (data.meta.total === 0) {
-                        this.errors.add('estudante_id', `Nenhum Estudante emcontrado contendo "${this.estudanteSearch}".`)
+                        this.errors.add('estudante_id', `Nenhum Estudante emcontrado contendo "${this.estudanteSearch}".`);
+                        this.$refs.estudante.focus();
+                        this.modalEnable = false;
+                        return;
                     }
-                    this.estudantes = data.estudantes;
+                    this.estudantesList = data;
+                    this.modalEnable = true;
+                    this.$nextTick(() => this.$refs.modalInput.focus());
+                    this.loading.dene('estudante');
                 });
-                this.estudantesLoading = false;
             },
             searchLivro() {
-                this.livrosLoading = true;
                 this.isbnNotFound = false;
                 this.errors.remove('livros');
+                this.livrosLoading = true;
 
                 axios.get(`/api/livros/${this.livroSearch}`, {
                     validateStatus: function (status) {
@@ -252,7 +302,6 @@
                 }).then(response => {
                     this.livros = [];
                     this.estudante = null;
-                    console.log(response);
                 }).catch(error => {
                     console.log(error.response.data.errors);
                     this.errors.record(error.response.data.errors);

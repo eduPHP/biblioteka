@@ -4,8 +4,8 @@
 $footer-padding : 3rem 1.5rem 1rem;
 @import "~bulma";
 @import "~bulma-checkradio/checkradio.sass";
-//@import "~bulma-badge/badge.sass";
 @import 'datepicker';
+@import "~font-awesome/scss/font-awesome.scss";
 
 body, html {
   height : 100%;
