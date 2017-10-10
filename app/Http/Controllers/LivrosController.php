@@ -49,7 +49,7 @@ class LivrosController extends Controller
             'descricao' => 'nullable',
             'edicao' => 'nullable|numeric',
             'quantidade' => 'required|numeric|min:1',
-            'ano' => 'required|year',
+            'ano' => 'required|date_format:Y',
             'editora_id' => 'required|exists:editoras,id',
             'secao_id' => 'required|exists:secoes,id',
         ]);
