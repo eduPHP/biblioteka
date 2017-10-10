@@ -15,8 +15,14 @@ class CreateTableLivros extends Migration
     {
         Schema::create('livros', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('isbn')->unique();
             $table->string('titulo');
-            $table->string('isbn');
+            $table->text('descricao')->nullable();
+            $table->integer('quantidade')->default(1);
+            $table->integer('ano');
+            $table->string('edicao')->nullable();
+            $table->unsignedInteger('secao_id')->references('id')->on('secoes');
+            $table->unsignedInteger('editora_id')->references('id')->on('editoras');
 
             $table->timestamps();
         });

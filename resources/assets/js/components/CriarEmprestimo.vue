@@ -10,7 +10,7 @@
                         {{ estudante.nome }}
                         <button class="delete is-small" @click="removeEstudante()"></button>
                     </span>
-                    <div class="control has-icons-right has-icons-left" :class="{ 'is-loading': loadingStates.has('estudante') }" v-else>
+                    <div class="control has-icons-right has-icons-left" :class="{ 'is-loading': loading.has('estudante') }" v-else>
                         <input class="input" @keyup.enter="searchEstudante()" v-model="estudanteSearch" autocomplete="off"
                                ref="estudante"
                                :class="{ 'is-danger': errors.has('estudante_id') }" @keydown="errors.remove('estudante_id')"
@@ -25,9 +25,9 @@
                     <label for="livros" class="label is-large">
                         Livros <span v-if="livros.length" class="subtitle is-6">({{ livros.length }})</span>
                     </label>
-                    <div class="control has-icons-right has-icons-left" :class="{'is-loading': loadingStates.has('livros')}">
+                    <div class="control has-icons-right has-icons-left" :class="{'is-loading': loading.has('livros')}">
                         <input class="input" @keyup.enter="searchLivro" v-model="livroSearch" ref="livros"
-                               autocomplete="off" :class="{ 'is-danger': errors.has('livros') }"
+                               autocomplete="off" :class="{ 'is-danger': errors.has('livros') }" type="number"
                                id="livros" placeholder="Informe o ISBN e pressione enter">
                         <span class="icon is-small is-left"><i class="fa fa-barcode"></i></span>
                         <span class="icon is-small is-right" v-if="errors.has('livros')"><i class="fa fa-warning"></i></span>
@@ -40,7 +40,7 @@
                         <div class="level">
                             <div class="level-left">
                                 <div>
-                                    <h4 class="title is-5 has-text-danger">ISBN {{ isbnNotFound }} não encontrado</h4>
+                                    <h4 class="title is-5 has-text-danger">ISBN "{{ isbnNotFound }}" não encontrado</h4>
                                 </div>
                             </div>
                         </div>
@@ -49,7 +49,7 @@
                         </div>
                     </div>
 
-                    <div class="card-content has-border-bottom" v-if="!livros.length && !isbnNotFound && !loadingStates.has('livros')">
+                    <div class="card-content has-border-bottom" v-if="!livros.length && !isbnNotFound && !loading.has('livros')">
                         <div class="content">
                             <h3>Informe um ISBN para pesquisar... <i class="fa fa-arrow-up"></i></h3>
                         </div>
@@ -60,7 +60,7 @@
                             <div class="level-left">
                                 <div>
                                     <h4 class="title is-5">{{ livro.titulo }}</h4>
-                                    <span class="subtitile is-7"> Eduardo</span>
+                                    <span class="subtitile is-7">{ Autores aqui }</span>
                                 </div>
                             </div>
                             <button class="delete level-right" type="button" @click="remove(livro)"></button>
@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div class="card-content has-border-bottom" v-if="loadingStates.has('livros')">
+                    <div class="card-content has-border-bottom" v-if="loading.has('livros')">
                         <div class="level">
                             <div class="level-left">
                                 <div>
@@ -96,9 +96,12 @@
         </div>
 
         <!-- Form Submit -->
+        <div class="has-text-centered" v-if="errors.has('form')">
+            <p class="help is-danger" v-text="errors.first('form')"></p>
+        </div>
         <div class="field is-grouped is-grouped-centered">
             <div class="control">
-                <button class="button is-info" @click="enviar">Gravar</button>
+                <button class="button is-info" :class="{'is-loading':loading.any()}" @click="enviar" :disabled="errors.any()">Gravar</button>
             </div>
             <div class="control">
                 <button class="button" type="button">Reset</button>
@@ -121,7 +124,7 @@
                             <p class="help is-info">
                                 Exibindo
                                 {{
-                                    estudantesList.meta.per_page < estudantesList.meta.total ?
+                                estudantesList.meta.per_page < estudantesList.meta.total ?
                                     estudantesList.meta.per_page :
                                     estudantesList.meta.total
                                 }}
@@ -137,7 +140,6 @@
                 </article>
             </div>
         </div>
-
     </div>
 </template>
 
@@ -155,7 +157,7 @@
         }
 
         any() {
-            return Object.keys(this.errors).length;
+            return !!Object.keys(this.errors).length;
         }
 
         first(field) {
@@ -178,23 +180,24 @@
     }
 
     class LoadingState {
-        constructor(){
+        constructor() {
             this.loading = {};
         }
 
-        set(field){
+        set(field) {
             window.Vue.set(this.loading, field, true);
-            console.log('setando '+ field + ' como ' + true);
         }
 
         has(field) {
-            console.log('verificando se ' + field + ' existe:' + this.loading.hasOwnProperty(field));
             return this.loading.hasOwnProperty(field);
         }
 
-        done(field){
-            console.log('removendo ' + field);
+        done(field) {
             delete this.loading[field];
+        }
+
+        any() {
+            return Object.keys(this.loading).length;
         }
     }
 
@@ -202,7 +205,7 @@
         components: {
             "emprestimo-datepicker": EmprestimoDatepicker
         },
-        mounted(){
+        mounted() {
             this.$refs.estudante.focus();
         },
         data() {
@@ -211,17 +214,17 @@
                 estudante: null,
                 estudanteSearch: '',
                 livroSearch: '',
-                estudantesList: {meta:{},estudantes:{}},
+                estudantesList: {meta: {}, estudantes: {}},
                 livros: [],
                 errors: new Errors({}),
-                loadingStates: new LoadingState(),
+                loading: new LoadingState(),
                 isbnNotFound: false,
                 modalEnable: false
             }
         },
-        watch:{
-            livrosLoading(flag){
-                console.log("livrosLoading mudou para "+flag);
+        watch: {
+            livrosLoading(flag) {
+                console.log("livrosLoading mudou para " + flag);
             }
         },
         methods: {
@@ -234,9 +237,13 @@
                     this.errors.add('livros', 'Selecione ao menos um Livro.');
                 }
 
+                if (this.loading.any()) {
+                    this.errors.add('form', 'Existem transações pendentes.');
+                }
+
                 return this.errors.any();
             },
-            removeEstudante(){
+            removeEstudante() {
                 this.estudante = null;
                 this.$nextTick(() => this.$refs.estudante.focus());
             },
@@ -249,9 +256,14 @@
                 this.$refs.livros.focus();
             },
             searchEstudante() {
-                this.loadingStates.set('estudante');
-                
+                if (!this.estudanteSearch.length) {
+                    return;
+                }
+
+                this.loading.set('estudante');
+
                 axios.get(`/api/estudantes?q=${this.estudanteSearch}`).then(({data}) => {
+                    this.loading.done('estudante');
                     if (data.meta.total === 1 && !this.modalEnable) {
                         this.selectEstudante(data.estudantes[0]);
                         return;
@@ -267,11 +279,16 @@
                     this.estudantesList = data;
                     this.modalEnable = true;
                     this.$nextTick(() => this.$refs.modalInput.focus());
-                    this.loadingStates.done('estudante');
                 });
             },
             searchLivro() {
-                this.loadingStates.set('livros');
+
+                if (!this.livroSearch.length) {
+                    return;
+                }
+
+
+                this.loading.set('livros');
                 this.isbnNotFound = false;
                 this.errors.remove('livros');
 
@@ -280,7 +297,7 @@
                         return status !== 200 || status !== 404;
                     }
                 }).then(response => {
-                    this.loadingStates.done('livros');
+                    this.loading.done('livros');
                     if (response.status === 404) {
                         return this.isbnNotFound = response.data;
                     }
@@ -307,28 +324,40 @@
                 }).then(response => {
                     this.livros = [];
                     this.estudante = null;
+                    flash(response.data);
+//                    console.log(response.data);
                 }).catch(error => {
                     console.log(error.response.data.errors);
                     this.errors.record(error.response.data.errors);
+                    flash('Erro ao tentar adicionar empréstimo', 'erro');
                 });
             }
         }
     };
 </script>
-<style>
+<style scoped>
     .card-content {
-        padding : 0.3rem 0.7rem;
+        padding: 0.3rem 0.7rem;
     }
 
     .level:not(:last-child) {
-        margin-bottom : 0;
+        margin-bottom: 0;
     }
 
     .title:not(:last-child) {
-        margin-bottom : 0.2rem;
+        margin-bottom: 0.2rem;
     }
 
     .has-border-bottom {
-        border-bottom : 1px solid #dbdbdb;
+        border-bottom: 1px solid #dbdbdb;
+    }
+
+    input[type='number'] {
+        -moz-appearance: textfield;
+    }
+
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
     }
 </style>

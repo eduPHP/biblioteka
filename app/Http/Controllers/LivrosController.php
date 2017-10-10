@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Editora;
 use App\Livro;
+use App\Secao;
 use Illuminate\Http\Request;
 
 class LivrosController extends Controller
@@ -26,7 +28,10 @@ class LivrosController extends Controller
      */
     public function create()
     {
-        return view('livros.create');
+        $secoes = Secao::all();
+        $editoras = Editora::all();
+
+        return view('livros.create', compact('secoes', 'editoras'));
     }
 
     /**
@@ -41,6 +46,12 @@ class LivrosController extends Controller
         $data = $request->validate([
             'isbn' => 'required',
             'titulo' => 'required',
+            'descricao' => 'nullable',
+            'edicao' => 'nullable|numeric',
+            'quantidade' => 'required|numeric|min:1',
+            'ano' => 'required|year',
+            'editora_id' => 'required|exists:editoras,id',
+            'secao_id' => 'required|exists:secoes,id',
         ]);
 
         Livro::create($data);
@@ -69,7 +80,10 @@ class LivrosController extends Controller
      */
     public function edit(Livro $livro)
     {
-        return view('livros.edit', compact('livro'));
+        $secoes = Secao::all();
+        $editoras = Editora::all();
+
+        return view('livros.edit', compact('livro', 'secoes', 'editoras'));
     }
 
     /**

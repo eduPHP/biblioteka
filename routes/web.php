@@ -6,6 +6,7 @@ Route::get('/teste', "IndexController@vue");
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/info', 'HomeController@info');
 
 Route::get('/livros/{livro}', 'LivrosController@show');
 Route::get('/api/livros/{isbn}', 'Api\LivrosController@show');
@@ -32,3 +33,19 @@ Route::post('/api/emprestimos', 'Api\EmprestimosController@store');
 Route::patch('/api/emprestimos/{emprestimo}/devolver', 'EmprestimosController@update');
 Route::post('/api/emprestimos/{emprestimo}/renovar', 'RenovacoesController@store');
 Route::get('/emprestimos/create', 'EmprestimosController@create');
+
+Route::get('/secoes','SecoesController@index');
+Route::post('/secoes','SecoesController@store');
+Route::get('/secoes/{secao}','SecoesController@show');
+Route::get('/secoes/create','SecoesController@create');
+Route::patch('/secoes/{secao}','SecoesController@update');
+Route::get('/secoes/{secao}/edit','SecoesController@edit');
+Route::delete('/secoes/{secao}','SecoesController@destroy');
+
+Route::get('/editoras', 'EditorasController@index');
+Route::post('/editoras', 'EditorasController@store');
+Route::get('/editoras/{editora}', 'EditorasController@show');
+Route::get('/editoras/create', 'EditorasController@create');
+Route::patch('/editoras/{editora}', 'EditorasController@update');
+Route::get('/editoras/{editora}/edit', 'EditorasController@edit');
+Route::delete('/editoras/{editora}', 'EditorasController@destroy');

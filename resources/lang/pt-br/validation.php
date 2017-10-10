@@ -118,7 +118,13 @@ return [
     */
 
     'attributes' => [
-        'estudante_id'=>'Estudante'
+        'estudante_id'=>'Estudante',
+        'editora_id'=>'Editora',
+        'secao_id'=>'Seção',
+        'titulo'=>'Título',
+        'descricao'=>'Descrição',
+        'edicao'=>'Edição',
+        'isbn'=>'ISBN',
     ],
 
 ];

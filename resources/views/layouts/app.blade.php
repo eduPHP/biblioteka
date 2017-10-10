@@ -36,9 +36,6 @@
                 padding : 0 .8em;
             }
 
-            .input:focus {
-                outline: none;
-            }
         </style>
     @show
 </head>
@@ -51,7 +48,7 @@
             <header class="nav">
                 <div class="container">
                     <div class="nav-left">
-                        <a class="nav-item"> <img src="/images/logo.png" alt="Logo"> {{ config('app.name') }} </a>
+                        <a class="nav-item title is-4" href="/">  {{ config('app.name') }} </a>
                     </div>
                     <span class="nav-toggle">
           <span></span>
@@ -61,7 +58,7 @@
                     <div class="nav-right nav-menu">
                         <!-- Authentication Links -->
                         @guest
-                            <a class="nav-item" href="{{ route('login') }}">Login</a>
+                            {{--<a class="nav-item" href="{{ route('login') }}">Login</a>--}}
                         @else
                             <div class="dropdown is-active">
                                 <div class="dropdown-trigger">
@@ -91,29 +88,12 @@
 
         <!-- Hero footer: will stick at the bottom -->
         <div class="hero-foot">
-            <nav class="tabs is-boxed">
-                <div class="container">
-                    <ul>
-                        <li{!! request()->is('livros*')?' class="is-active"':'' !!}>
-                            <a href="/livros">Livros</a>
-                        </li>
-                        <li{!! request()->is('estudantes*')?' class="is-active"':'' !!}>
-                            <a href="/estudantes">Estudantes</a>
-                        </li>
-                        <li{!! request()->is('emprestimos*')?' class="is-active"':'' !!}>
-                            <a href="/emprestimos">Empréstimos</a>
-                        </li>
-                        <li{!! request()->is('info*')?' class="is-active"':'' !!}>
-                            <a href="/info">Info</a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            @include('layouts.menu')
         </div>
     </section>
     <section class="section is-flex-1">
         <div class="container">
-            @include('partials.message')
+            {{--@include('partials.message')--}}
             @yield('content')
         </div>
     </section>
@@ -130,6 +110,9 @@
             </div>
         </div>
     </footer>
+
+    <flash mensagem="{{ session('success') }}"></flash>
+    <flash mensagem="{{ session('error') }}" tipo="erro"></flash>
 </div>
 
 <!-- Scripts -->

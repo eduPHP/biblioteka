@@ -7,6 +7,8 @@ $footer-padding : 3rem 1.5rem 1rem;
 @import 'datepicker';
 @import "~font-awesome/scss/font-awesome.scss";
 
+@import "table-col";
+
 body, html {
   height : 100%;
 }
