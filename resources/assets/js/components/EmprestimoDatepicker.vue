@@ -18,7 +18,7 @@
 </template>
 <script>
     import Flatpickr from 'flatpickr';
-    import Portugues from "flatpickr/src/l10n/pt";
+    import Portugues from "flatpickr/dist/l10n/pt";
     import moment from 'moment';
     import 'moment/locale/pt-br';
 

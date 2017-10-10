@@ -10,7 +10,7 @@
                         {{ estudante.nome }}
                         <button class="delete is-small" @click="removeEstudante()"></button>
                     </span>
-                    <div class="control has-icons-right has-icons-left" :class="{ 'is-loading': loading.has('estudante') }" v-else>
+                    <div class="control has-icons-right has-icons-left" :class="{ 'is-loading': loadingStates.has('estudante') }" v-else>
                         <input class="input" @keyup.enter="searchEstudante()" v-model="estudanteSearch" autocomplete="off"
                                ref="estudante"
                                :class="{ 'is-danger': errors.has('estudante_id') }" @keydown="errors.remove('estudante_id')"
@@ -25,7 +25,7 @@
                     <label for="livros" class="label is-large">
                         Livros <span v-if="livros.length" class="subtitle is-6">({{ livros.length }})</span>
                     </label>
-                    <div class="control has-icons-right has-icons-left" :class="{'is-loading': loading.has('livros')}">
+                    <div class="control has-icons-right has-icons-left" :class="{'is-loading': loadingStates.has('livros')}">
                         <input class="input" @keyup.enter="searchLivro" v-model="livroSearch" ref="livros"
                                autocomplete="off" :class="{ 'is-danger': errors.has('livros') }"
                                id="livros" placeholder="Informe o ISBN e pressione enter">
@@ -49,7 +49,7 @@
                         </div>
                     </div>
 
-                    <div class="card-content has-border-bottom" v-if="!livros.length && !isbnNotFound && !loading.has('livros')">
+                    <div class="card-content has-border-bottom" v-if="!livros.length && !isbnNotFound && !loadingStates.has('livros')">
                         <div class="content">
                             <h3>Informe um ISBN para pesquisar... <i class="fa fa-arrow-up"></i></h3>
                         </div>
@@ -70,7 +70,7 @@
                         </div>
                     </div>
 
-                    <div class="card-content has-border-bottom" v-if="loading.has('livros')">
+                    <div class="card-content has-border-bottom" v-if="loadingStates.has('livros')">
                         <div class="level">
                             <div class="level-left">
                                 <div>
@@ -184,13 +184,16 @@
 
         set(field){
             window.Vue.set(this.loading, field, true);
+            console.log('setando '+ field + ' como ' + true);
         }
 
         has(field) {
+            console.log('verificando se ' + field + ' existe:' + this.loading.hasOwnProperty(field));
             return this.loading.hasOwnProperty(field);
         }
 
         done(field){
+            console.log('removendo ' + field);
             delete this.loading[field];
         }
     }
@@ -211,7 +214,7 @@
                 estudantesList: {meta:{},estudantes:{}},
                 livros: [],
                 errors: new Errors({}),
-                loading: new LoadingState(),
+                loadingStates: new LoadingState(),
                 isbnNotFound: false,
                 modalEnable: false
             }
@@ -246,42 +249,44 @@
                 this.$refs.livros.focus();
             },
             searchEstudante() {
-                this.loading.set('estudante');
+                this.loadingStates.set('estudante');
                 
                 axios.get(`/api/estudantes?q=${this.estudanteSearch}`).then(({data}) => {
                     if (data.meta.total === 1 && !this.modalEnable) {
                         this.selectEstudante(data.estudantes[0]);
                         return;
                     }
+
                     if (data.meta.total === 0) {
                         this.errors.add('estudante_id', `Nenhum Estudante emcontrado contendo "${this.estudanteSearch}".`);
                         this.$refs.estudante.focus();
                         this.modalEnable = false;
                         return;
                     }
+
                     this.estudantesList = data;
                     this.modalEnable = true;
                     this.$nextTick(() => this.$refs.modalInput.focus());
-                    this.loading.dene('estudante');
+                    this.loadingStates.done('estudante');
                 });
             },
             searchLivro() {
+                this.loadingStates.set('livros');
                 this.isbnNotFound = false;
                 this.errors.remove('livros');
-                this.livrosLoading = true;
 
                 axios.get(`/api/livros/${this.livroSearch}`, {
                     validateStatus: function (status) {
                         return status !== 200 || status !== 404;
                     }
                 }).then(response => {
+                    this.loadingStates.done('livros');
                     if (response.status === 404) {
                         return this.isbnNotFound = response.data;
                     }
                     this.livros.unshift(response.data.livro);
                 });
 
-                this.livrosLoading = false;
                 this.livroSearch = '';
             },
             remove(livro) {
