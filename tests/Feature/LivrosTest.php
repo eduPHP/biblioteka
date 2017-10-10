@@ -14,10 +14,9 @@ class LivrosTest extends TestCase
     {
         $this->get("/livros/create")->assertStatus(200);
 
-        $resposta = $this->post("/livros", $dados = [
-            'titulo' => 'A volta dos que não foram',
-            'isbn' => 12345,
-        ]);
+        $novoLivro = factory('App\Livro')->make();
+
+        $resposta = $this->post("/livros", $dados = $novoLivro->toArray());
 
         $resposta->assertStatus(302)->assertRedirect(url('/livros'));
         $this->assertDatabaseHas('livros', $dados);
