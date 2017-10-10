@@ -1,0 +1,23 @@
+@extends('layouts.app')
+@section('content')
+    <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li>
+                <a href="{{ url('/') }}"> <span class="icon is-small"><i class="fa fa-home"></i></span>
+                    <span>{{ config('app.name') }}</span> </a>
+            </li>
+            <li>
+                <a href="{{ url('/autores') }}"> <span class="icon is-small"><i class="fa fa-book"></i></span> <span>Autores</span>
+                </a>
+            </li>
+            <li class="is-active">
+                <span class="icon is-small"><i class="fa fa-plus"></i></span> Editar Autor {{$autor->nome}}
+            </li>
+        </ul>
+    </nav>
+    <h1 class="title">Editar Autor {{$autor->nome}}</h1>
+    <form action="{{ url("/autores/{$autor->id}") }}" method="POST" class="form-horizontal">
+        {!! method_field("PATCH") !!}
+        @include('autores.form')
+    </form>
+@endsection

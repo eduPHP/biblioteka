@@ -31,6 +31,23 @@
     </div>
 </div>
 
+<!-- Select Autores -->
+<div class="field">
+    <label class="label" for="autores">Autores <span class="subtitle is-7">Não implementado</span></label>
+    <div class="control{{ $errors->has('autores') ? ' has-icons-left' : '' }}">
+        <div class="select{{ $errors->has('autores') ? ' is-danger' : '' }}">
+            <bulma-select
+                    label="nome"
+                    v-model="autor"
+                    @type="searchAutor"
+                    :search="true"
+                    :options="autores"></bulma-select>
+        </div>
+        {!! $errors->has('autores') ? '<span class="icon is-small is-left"><i class="fa fa-warning"></i></span>' : ''  !!}
+    </div>
+    {!! $errors->first('autores', '<p class="help is-danger">:message</p>') !!}
+</div>
+
 <!-- Input Titulo -->
 <div class="field">
     <label class="label" for="titulo">Título</label>

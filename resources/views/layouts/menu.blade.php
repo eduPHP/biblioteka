@@ -7,6 +7,9 @@
             <li{!! request()->is('livros*')?' class="is-active"':'' !!}>
                 <a href="/livros">Livros</a>
             </li>
+            <li{!! request()->is('autores*')?' class="is-active"':'' !!}>
+                <a href="/autores">Autores</a>
+            </li>
             <li{!! request()->is('estudantes*')?' class="is-active"':'' !!}>
                 <a href="/estudantes">Estudantes</a>
             </li>

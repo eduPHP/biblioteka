@@ -8,13 +8,13 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/info', 'HomeController@info');
 
+Route::get('/livros/create', 'LivrosController@create');
 Route::get('/livros/{livro}', 'LivrosController@show');
 Route::get('/api/livros/{isbn}', 'Api\LivrosController@show');
 Route::get('/api/livros/busca-isbn/{isbn}', 'Api\BuscaISBNController@show');
 Route::patch('/livros/{livro}', 'LivrosController@update');
 Route::delete('/livros/{livro}', 'LivrosController@destroy');
 Route::get('/livros/{livro}/edit', 'LivrosController@edit');
-Route::get('/livros/create', 'LivrosController@create');
 Route::get('/livros', 'LivrosController@index');
 Route::post('/livros', 'LivrosController@store');
 
@@ -49,3 +49,12 @@ Route::get('/editoras/create', 'EditorasController@create');
 Route::patch('/editoras/{editora}', 'EditorasController@update');
 Route::get('/editoras/{editora}/edit', 'EditorasController@edit');
 Route::delete('/editoras/{editora}', 'EditorasController@destroy');
+
+Route::get('/autores/create', 'AutoresController@create');
+Route::get('/api/autores','Api\AutoresController@index');
+Route::get('/autores', 'AutoresController@index');
+Route::post('/autores', 'AutoresController@store');
+Route::get('/autores/{autor}', 'AutoresController@show');
+Route::patch('/autores/{autor}', 'AutoresController@update');
+Route::get('/autores/{autor}/edit', 'AutoresController@edit');
+Route::delete('/autores/{autor}', 'AutoresController@destroy');
