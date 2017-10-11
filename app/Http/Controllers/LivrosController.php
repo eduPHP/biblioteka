@@ -52,9 +52,10 @@ class LivrosController extends Controller
             'ano' => 'required|date_format:Y',
             'editora_id' => 'required|exists:editoras,id',
             'secao_id' => 'required|exists:secoes,id',
+            'autores' => 'required|array'
         ]);
 
-        Livro::create($data);
+        Livro::adicionar($data);
 
         return $this->redirectToIndex("Livro adicionado");
     }

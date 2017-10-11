@@ -12,4 +12,19 @@ class Livro extends Model
     {
         return self::whereIsbn($isbn)->first();
     }
+
+    public static function adicionar($data)
+    {
+        $autores = array_pull($data,'autores');
+
+        $livro = self::create($data);
+        $livro->autores()->sync($autores);
+
+        return $livro;
+    }
+
+    public function autores()
+    {
+        return $this->belongsToMany(Autor::class, 'autor_livros');
+    }
 }

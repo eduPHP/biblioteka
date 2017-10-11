@@ -26,6 +26,12 @@ class CreateTableLivros extends Migration
 
             $table->timestamps();
         });
+
+        Schema::create('autor_livros', function (Blueprint $table) {
+            $table->increments('id');
+            $table->unsignedInteger('livro_id')->references('id')->on('livros');
+            $table->unsignedInteger('autor_id')->references('id')->on('autores');
+        });
     }
 
     /**

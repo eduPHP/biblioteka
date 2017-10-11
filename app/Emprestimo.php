@@ -14,6 +14,7 @@ class Emprestimo extends Model
     protected $dates = ['emprestado_em', 'devolvido_em', 'devolucao'];
     protected $guarded = [];
     protected $appends = ['devolvido'];
+    protected $orderby = 'devolucao';
 
     public static function emprestar($dados)
     {

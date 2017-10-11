@@ -12,14 +12,17 @@ class LivrosTest extends TestCase
     /** @test */
     function devemos_poder_adicionar_um_livro()
     {
+        $this->withoutExceptionHandling();
         $this->get("/livros/create")->assertStatus(200);
 
-        $novoLivro = factory('App\Livro')->make();
+        $novoLivro = factory('App\Livro')->make()->toArray();
+        factory('App\Autor')->create();
 
-        $resposta = $this->post("/livros", $dados = $novoLivro->toArray());
+        $resposta = $this->post("/livros", array_merge($novoLivro, ['autores'=>[1]]));
 
         $resposta->assertStatus(302)->assertRedirect(url('/livros'));
-        $this->assertDatabaseHas('livros', $dados);
+        $this->assertDatabaseHas('livros', $novoLivro);
+        $this->assertCount(1,\App\Livro::first()->autores);
     }
 
     /** @test */

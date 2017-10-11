@@ -14,6 +14,11 @@ class EmprestimoSort extends Sort
         return $this->query->orderBy('livros.titulo', $direction);
     }
 
+    public function devolucao($direction)
+    {
+        return $this->query->orderBy('devolvido_em',$direction)->orderBy('devolucao', $direction);
+    }
+
     public function estudante($direction)
     {
         $this->query->select('emprestimos.*');

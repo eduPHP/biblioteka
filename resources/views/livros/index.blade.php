@@ -23,15 +23,15 @@
         <table class="table is-fullwidth">
             <thead>
             <tr>
-                <th class="is-1">#</th>
-                <th>Titulo</th>
+                <th class="is-1">ISBN</th>
+                <th>Título</th>
                 <th class="is-1">Ação</th>
             </tr>
             </thead>
             <tbody>
             @forelse($livros as $livro)
                 <tr>
-                    <td>{{$livro->id}}</td>
+                    <td>{{$livro->isbn}}</td>
                     <td>
                         <a href="{{url("/livros/{$livro->id}")}}">{{$livro->titulo}}</a>
                     </td>
