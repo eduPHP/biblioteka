@@ -35,6 +35,7 @@ Route::post('/api/emprestimos/{emprestimo}/renovar', 'RenovacoesController@store
 Route::get('/emprestimos/create', 'EmprestimosController@create');
 
 Route::get('/secoes','SecoesController@index');
+Route::get('/api/secoes', 'Api\SecoesController@index');
 Route::post('/secoes','SecoesController@store');
 Route::get('/secoes/{secao}','SecoesController@show');
 Route::get('/secoes/create','SecoesController@create');
@@ -43,6 +44,7 @@ Route::get('/secoes/{secao}/edit','SecoesController@edit');
 Route::delete('/secoes/{secao}','SecoesController@destroy');
 
 Route::get('/editoras', 'EditorasController@index');
+Route::get('/api/editoras', 'Api\EditorasController@index');
 Route::post('/editoras', 'EditorasController@store');
 Route::get('/editoras/{editora}', 'EditorasController@show');
 Route::get('/editoras/create', 'EditorasController@create');

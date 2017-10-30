@@ -2,12 +2,12 @@
     <div>
         <div class="select2-multi">
             <div class="input-addon">
-                <span class="tag tag-default" v-for="autor in selected" :class="{'is-success':!autor.id}">
-                    <i class="fa fa-plus" v-if="!autor.id"> </i>
-                    {{ autor.nome }} <a class="delete is-small" @click="removeAutor(autor)"></a>
+                <span class="tag is-large tag-default" v-if="selected" :class="{'is-success':!selected.id}">
+                    <i class="fa fa-plus" v-if="!selected.id"> </i>
+                    {{ selected.nome }} <a class="delete is-small" @click="unselect"></a>
                 </span>
             </div>
-            <input class="input" @blur="close" @focus="open"
+            <input class="input" v-if="!selected" @blur="close" @focus="open"
                    @keyup="search(1, $event)"
                    @keydown.down.prevent="typeAheadDown"
                    @keydown.up.prevent="typeAheadUp"
@@ -23,10 +23,10 @@
                     @blur="close"
                     :class="{'is-info':optionSelected===0}"
                     @click="select({nome: searchFor})">Add "{{ searchFor }}"</button>
-            <button type="button" class="button is-white option" v-for="(autor, index) in options"
+            <button type="button" class="button is-white option" v-for="(editora, index) in options"
                     :class="{'is-info':index===optionSelected}"
                     @blur="close"
-                    @click="select(autor)" v-text="autor.nome"></button>
+                    @click="select(editora)" v-text="editora.nome"></button>
             <span class="help is-info" v-if="meta.total > 10 && opened">
                 Exibindo {{ meta.from }} a {{ meta.to }} de um total de {{ meta.total }} resultados
             </span>
@@ -38,10 +38,10 @@
 
     export default {
         mixins: [typeAheadPointer],
-        name: 'select-autores',
+        name: 'select-editoras',
         data(){
             return {
-                selected: [],
+                selected: null,
                 options: [],
                 meta: {},
                 opened: false,
@@ -65,27 +65,24 @@
                     this.opened = true;
                 }
             },
-            removeAutor(autor){
-                let i = this.selected.findIndex(i => i.nome === autor.nome);
-                this.selected.splice(i, 1);
+            unselect(){
+                this.selected = null;
             },
-            select(autor){
+            select(editora){
                 if (this.optionSelected === -1 && this.options.length === 1) {
-                    autor = this.options[0];
+                    editora = this.options[0];
                 }
 
-                if (typeof autor === 'undefined'){
+                if (typeof editora === 'undefined'){
                     // mensagem de erro: selecione um dos resultados
                     return;
                 }
 
-                if (!autor.nome.trim().length){
+                if (!editora.nome.trim().length){
                     return;
                 }
 
-                if (this.selected.findIndex(i => i.nome === autor.nome) === -1){
-                    this.selected.push(autor);
-                }
+                this.selected = editora;
 
                 this.typeAheadEscape();
 
@@ -105,13 +102,13 @@
                     return;
                 }
                 this.searching = true;
-                axios.get(`/api/autores?q=${this.searchFor}&page=${page}`).then(({data}) => {
+                axios.get(`/api/editoras?q=${this.searchFor}&page=${page}`).then(({data}) => {
                     this.searching = false;
-                    this.options = data.autores;
+                    this.options = data.editoras;
                     this.meta = data.meta;
                 }).catch(() => {
                     this.searching = false;
-                    flash('Erro ao buscar autores','danger')
+                    flash('Erro ao buscar editoras','danger')
                 });
             }
         }

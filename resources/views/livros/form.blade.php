@@ -31,7 +31,7 @@
     </div>
 </div>
 <div class="columns">
-    <div class="column is-half">
+    <div class="column is-half-tablet">
         <!-- Select Autores -->
         <div class="field">
             <label class="label is-marginless" for="autores">Autores <span class="subtitle is-7">(0)</span></label>
@@ -76,17 +76,7 @@
         <div class="field">
             <label class="label" for="editora_id">Editora</label>
             <div class="control{{ $errors->has('editora_id') ? ' has-icons-left' : '' }}">
-                <div class="select{{ $errors->has('editora_id') ? ' is-danger' : '' }}">
-                    <select id="editora_id" name="editora_id">
-                        <option value="0">Selecione...</option>
-                        @foreach($editoras as $editora)
-                            <option value="{{$editora->id}}"{!!
-                            old('editora_id',  isset($livro) ? $livro->editora_id : null) == $editora->id?
-                            ' selected' : ''
-                            !!}>{{$editora->nome}}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <select-editoras></select-editoras>
                 {!! $errors->has('editora_id') ? '<span class="icon is-small is-left"><i class="fa fa-warning"></i></span>' : ''  !!}
             </div>
             {!! $errors->first('editora_id', '<p class="help is-danger">:message</p>') !!}
@@ -98,17 +88,7 @@
         <div class="field">
             <label class="label" for="secao_id">Seção</label>
             <div class="control{{ $errors->has('secao_id') ? ' has-icons-left' : '' }}">
-                <div class="select{{ $errors->has('secao_id') ? ' is-danger' : '' }}">
-                    <select id="secao_id" name="secao_id">
-                        <option value="0">Selecione...</option>
-                        @foreach($secoes as $secao)
-                            <option value="{{$secao->id}}"{!!
-                            old('secao_id',  isset($livro) ? $livro->secao_id : null) == $secao->id?
-                            ' selected' : ''
-                            !!}>{{$secao->descricao}}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <select-secoes></select-secoes>
                 {!! $errors->has('secao_id') ? '<span class="icon is-small is-left"><i class="fa fa-warning"></i></span>' : ''  !!}
             </div>
             {!! $errors->first('secao_id', '<p class="help is-danger">:message</p>') !!}

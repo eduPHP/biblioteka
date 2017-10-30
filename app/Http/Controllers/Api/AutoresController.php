@@ -11,7 +11,7 @@ class AutoresController extends Controller
 {
     public function index(Request $request)
     {
-        $autores = Autor::whereRaw('UPPER(nome) LIKE ?',[strtoupper("%{$request->q}%")])->paginate();
+        $autores = Autor::whereRaw('UPPER(nome) LIKE ?',[strtoupper("%{$request->q}%")])->paginate(10);
 
         return new AutorCollection($autores);
     }
