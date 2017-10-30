@@ -1,5 +1,11 @@
 #Projeto Biblioteka
 
+## Versão 0.3
+### Cadastro de Livros
+- Componende de busca/adição de autores
+- Componende de busca/adição de editoras
+- Componende de busca/adição de seções
+
 ## Versão 0.2
 ### Geral
 - Componente Select2
