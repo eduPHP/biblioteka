@@ -2397,13 +2397,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['meta'],
     data: function data() {
         return {
             page: 1,
-            lastPage: 1
+            total: 0,
+            lastPage: 1,
+            perPage: 10,
+            pages: []
         };
     },
 
@@ -2411,9 +2420,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         meta: function meta() {
             this.page = this.meta.current_page;
             this.lastPage = this.meta.last_page;
+            this.perPage = this.meta.per_page;
+            this.parsePages();
         },
         page: function page() {
             this.$emit('changed', this.page);
+        }
+    },
+    methods: {
+        parsePages: function parsePages() {
+            this.pages = [];
+
+            if (this.lastPage < this.perPage * 2 + 6) {
+                for (var i = 1; i < this.lastPage + 1; i++) {
+                    this.pages.push(i);
+                }
+            } else if (this.page < this.perPage * 2 + 1) {
+                for (var _i = 1; _i < this.perPage * 2 + 4; _i++) {
+                    this.pages.push(_i);
+                }
+                this.pages.push('...');
+                this.pages.push(this.lastPage);
+            } else if (this.page > this.lastPage - this.perPage * 2) {
+                this.pages.push(1);
+                this.pages.push('...');
+                for (var _i2 = this.lastPage - this.perPage * 2 - 2; _i2 < this.lastPage + 1; _i2++) {
+                    this.pages.push(_i2);
+                }
+            } else {
+                this.pages.push(1);
+                this.pages.push('...');
+                for (var _i3 = this.page - this.perPage; _i3 < this.page + this.perPage + 1; _i3++) {
+                    this.pages.push(_i3);
+                }
+                this.pages.push('...');
+                this.pages.push(this.lastPage);
+            }
         }
     }
 });
@@ -2876,7 +2918,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.pagination-list {\n    -webkit-box-pack : end;\n        -ms-flex-pack : end;\n            justify-content : flex-end;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*.pagination-list {*/\n    /*justify-content : flex-end;*/\n/*}*/\n", ""]);
 
 // exports
 
@@ -39144,10 +39186,6 @@ var render = function() {
                 [_vm._v("Anterior")]
               ),
           _vm._v(" "),
-          _c("p", { staticClass: "pagination-list" }, [
-            _vm._v("Página " + _vm._s(_vm.page) + " de " + _vm._s(_vm.lastPage))
-          ]),
-          _vm._v(" "),
           _vm.page < _vm.lastPage
             ? _c(
                 "a",
@@ -39169,7 +39207,47 @@ var render = function() {
                   attrs: { title: "This is the last page", disabled: "" }
                 },
                 [_vm._v("Próxima")]
-              )
+              ),
+          _vm._v(" "),
+          _c(
+            "ul",
+            { staticClass: "pagination-list" },
+            _vm._l(_vm.pages, function(pg) {
+              return _c("li", [
+                pg === "..."
+                  ? _c("span", { staticClass: "pagination-ellipsis" }, [
+                      _vm._v("…")
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                pg === _vm.page
+                  ? _c(
+                      "a",
+                      {
+                        staticClass: "pagination-link is-current",
+                        attrs: { "aria-current": "page" }
+                      },
+                      [_vm._v(_vm._s(pg))]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                pg !== _vm.page && pg !== "..."
+                  ? _c(
+                      "a",
+                      {
+                        staticClass: "pagination-link",
+                        on: {
+                          click: function($event) {
+                            _vm.page = pg
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(pg))]
+                    )
+                  : _vm._e()
+              ])
+            })
+          )
         ]
       )
     : _vm._e()
