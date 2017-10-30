@@ -1,0 +1,126 @@
+<template>
+    <div>
+        <div class="select2-multi">
+            <div class="input-addon">
+                <span class="tag tag-default" v-for="autor in selected" :class="{'is-success':!autor.id}">
+                    <i class="fa fa-plus" v-if="!autor.id"> </i>
+                    {{ autor.nome }} <a class="delete is-small" @click="removeAutor(autor)"></a>
+                </span>
+            </div>
+            <input class="input" @blur="close" @focus="open"
+                   @keyup="search"
+                   @keydown.down.prevent="typeAheadDown"
+                   @keydown.up.prevent="typeAheadUp"
+                   @keydown.esc.prevent="typeAheadEscape"
+                   @keydown.enter.prevent="select(options.length?options[optionSelected]:{nome:searchFor})"
+                   v-model="searchFor"
+                   ref="search"
+                   placeholder="Digite o nome para pesquisar">
+        </div>
+        <div class="select2-search" v-if="opened">
+            <button type="button" class="button" disabled v-if="searching">Buscando "{{searchFor}}"...</button>
+            <button type="button" class="button is-white option" v-if="noMatches"
+                    @blur="close"
+                    :class="{'is-info':optionSelected===0}"
+                    @click="select({nome: searchFor})">Add "{{ searchFor }}"</button>
+            <button type="button" class="button is-white option" v-for="(autor, index) in options"
+                    :class="{'is-info':index===optionSelected}"
+                    @blur="close"
+                    @click="select(autor)" v-text="autor.nome"></button>
+        </div>
+    </div>
+</template>
+<script>
+    import typeAheadPointer from '../mixins/typeAheadPointer';
+
+    export default {
+        mixins: [typeAheadPointer],
+        name: 'select-autores',
+        data(){
+            return {
+                selected: [],
+                options: [],
+                opened: false,
+                searchFor:'',
+                searching: false
+            }
+        },
+        watch: {
+            searchFor(){
+                this.open();
+            },
+            opened(val){
+                if (!val){
+                    this.searchFor = '';
+                }
+            }
+        },
+        methods: {
+            open() {
+                if (this.searchFor.length > 1) {
+                    this.opened = true;
+                }
+            },
+            removeAutor(autor){
+                let i = this.selected.findIndex(i => i.nome === autor.nome);
+                this.selected.splice(i, 1);
+            },
+            select(autor){
+                if (!autor.nome.trim().length){
+                    return;
+                }
+                if (this.selected.findIndex(i => i.nome === autor.nome) === -1){
+                    this.selected.push(autor);
+                }
+
+                this.typeAheadEscape();
+
+                this.$refs.search.focus();
+            },
+            close(e){
+                if (e.relatedTarget){
+                    let classes = e.relatedTarget.getAttribute('class');
+                    this.opened = !!classes.match(/option/);
+                }
+            },
+            search(e){
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Escape'){
+                    return;
+                }
+                if (this.searching || this.searchFor.length < 2){
+                    return;
+                }
+                this.searching = true;
+                axios.get(`/api/autores?q=${this.searchFor}`).then(({data}) => {
+                    this.searching = false;
+                    this.options = data.autores;
+                }).catch(() => {
+                    this.searching = false;
+                    flash('Erro ao buscar autores','danger')
+                });
+            }
+        }
+    }
+</script>
+
+<style lang="sass" scoped>
+    .input-addon
+        margin : 0 0 0.5em
+    .select2-search
+        border : 1px solid #d4d4d4
+        background : #fff
+        width : 100%
+        position : absolute
+        left : 0
+        border-top : none
+        display : flex
+        flex-direction : column
+        align-items : baseline
+        z-index: 1
+        .button
+            width: 100%
+            justify-content: left
+    .tag, .tag .fa
+            margin-right : 0.5em
+
+</style>

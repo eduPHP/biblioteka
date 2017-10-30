@@ -27,6 +27,22 @@
             .mr-1 {
                 margin-right : 1em;
             }
+            .mr-2 {
+                margin-right : 2em;
+            }
+            .is-borderless{
+                border: none;
+                outline: none;
+            }
+            .blended-input{
+                font-size : 1rem;
+                height      : 2.23em;
+                line-height : 1.4;
+                background: transparent;
+            }
+            .input > .tag > i {
+                margin-right: .3rem;
+            }
 
             .ml-1 {
                 margin-left : 1em;
