@@ -128,7 +128,6 @@
     </footer>
 
     <flash mensagem="{{ session('success') }}"></flash>
-    <flash mensagem="{{ session('error') }}" tipo="erro"></flash>
 </div>
 
 <!-- Scripts -->

@@ -16,8 +16,6 @@
         </ul>
     </nav>
     <h1 class="title">Adicionar Livro</h1>
-    <form action="{{ url('/livros') }}" method="POST" class="form-horizontal">
-        {!! method_field("POST") !!}
-        @include('livros.form')
-    </form>
+    <form-livro></form-livro>
+
 @endsection

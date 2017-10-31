@@ -140,5 +140,6 @@
             padding-left: 1em
     .tag, .tag .fa
             margin-right : 0.5em
-
+    .is-danger .input
+        border-color : #ff3860
 </style>

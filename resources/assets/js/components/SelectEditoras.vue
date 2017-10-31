@@ -85,8 +85,12 @@
                 this.selected = editora;
 
                 this.typeAheadEscape();
-
-                this.$refs.search.focus();
+                let secao = document.getElementById("secao_id");
+                if (secao){
+                    secao.focus();
+                } else {
+                    document.getElementById('ano').focus();
+                }
             },
             close(e){
                 if (e.relatedTarget){
@@ -137,5 +141,7 @@
             padding-left: 1em
     .tag, .tag .fa
             margin-right : 0.5em
+    .is-danger .input
+        border-color : #ff3860
 
 </style>

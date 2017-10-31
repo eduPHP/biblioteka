@@ -18,11 +18,11 @@ class LivrosTest extends TestCase
         $novoLivro = factory('App\Livro')->make()->toArray();
         factory('App\Autor')->create();
 
-        $resposta = $this->post("/livros", array_merge($novoLivro, ['autores'=>[1]]));
+        $resposta = $this->post("/livros", array_merge($novoLivro, ['autores' => [1]]));
 
         $resposta->assertStatus(302)->assertRedirect(url('/livros'));
         $this->assertDatabaseHas('livros', $novoLivro);
-        $this->assertCount(1,\App\Livro::first()->autores);
+        $this->assertCount(1, \App\Livro::first()->autores);
     }
 
     /** @test */
@@ -40,14 +40,15 @@ class LivrosTest extends TestCase
     /** @test */
     function devemos_poder_editar_um_livro()
     {
+        $this->withoutExceptionHandling();
         $livro = factory('App\Livro')->create();
 
         $this->get("/livros/{$livro->id}/edit")->assertStatus(200);
 
-        $resposta = $this->patch("/livros/{$livro->id}", [
-            'titulo' => $novoTitulo = 'Um novo Título',
-            'isbn' => $livro->isbn,
-        ]);
+        $data = $livro->toArray();
+        $data['titulo'] = $novoTitulo = 'Um novo Título';
+        $data['autores'] = ['Novo Autor'];
+        $resposta = $this->patch("/livros/{$livro->id}", $data);
 
         $resposta->assertStatus(302)->assertRedirect(url('/livros'));
         $this->assertDatabaseHas('livros', [
@@ -94,5 +95,49 @@ class LivrosTest extends TestCase
         $resposta = $this->getJson('/api/livros/4321');
 
         $resposta->assertStatus(404);
+    }
+
+    /** @test */
+    function ao_adicionar_um_livro_quando_enviamos_uma_string_como_autor_este_valor_deve_ser_inserido_no_banco()
+    {
+        $autorExistente = factory('App\Autor')->create();
+        $livro = factory('App\Livro')->make();
+        $data = $livro->toArray();
+        $data['autores'][] = $autorExistente->id;
+        $data['autores'][] = "Novo Autor";
+
+        $resposta = $this->post('/livros', $data);
+
+        $resposta->assertStatus(302);
+        $this->assertCount(2, \App\Livro::first()->autores);
+        $this->assertDatabaseHas('autores', ['nome' => $data['autores'][1]]);
+    }
+
+    /** @test */
+    function ao_adicionar_um_livro_podemos_informar_o_nome_da_editora_e_este_sera_adicionado_ao_banco()
+    {
+        $livro = factory('App\Livro')->make(['editora_id' => null]);
+
+        $resposta = $this->post('/livros', array_merge($livro->toArray(), [
+            'editora_id' => $editora = 'Nova Editora',
+            'autores' => [factory('App\Autor')->create()->id]
+        ]));
+
+        $resposta->assertStatus(302);
+        $this->assertDatabaseHas('editoras', ['nome' => $editora]);
+    }
+
+    /** @test */
+    function ao_adicionar_um_livro_podemos_informar_o_nome_da_secao_e_este_sera_adicionado_ao_banco()
+    {
+        $livro = factory('App\Livro')->make(['secao_id' => null]);
+
+        $resposta = $this->post('/livros', array_merge($livro->toArray(), [
+            'secao_id' => $secao = 'Nova Secao',
+            'autores' => [factory('App\Autor')->create()->id]
+        ]));
+
+        $resposta->assertStatus(302);
+        $this->assertDatabaseHas('secoes', ['descricao' => $secao]);
     }
 }

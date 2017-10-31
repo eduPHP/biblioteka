@@ -16,8 +16,5 @@
         </ul>
     </nav>
     <h1 class="title">Editar Livro {{$livro->titulo}}</h1>
-    <form action="{{ url("/livros/{$livro->id}") }}" method="POST" class="form-horizontal">
-        {!! method_field("PATCH") !!}
-        @include('livros.form')
-    </form>
+    <form-livro :livro="{{$livro}}"></form-livro>
 @endsection

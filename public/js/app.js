@@ -1622,12 +1622,10 @@ module.exports = {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_EmprestimoDatepicker_vue__ = __webpack_require__("./resources/assets/js/components/EmprestimoDatepicker.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_EmprestimoDatepicker_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_EmprestimoDatepicker_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__("./node_modules/moment/moment.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__directives_errors__ = __webpack_require__("./resources/assets/js/directives/errors.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__directives_loading__ = __webpack_require__("./resources/assets/js/directives/loading.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment__ = __webpack_require__("./node_modules/moment/moment.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_moment__);
 //
 //
 //
@@ -1777,81 +1775,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
-var Errors = function () {
-    function Errors(errors) {
-        _classCallCheck(this, Errors);
 
-        this.errors = errors;
-    }
-
-    _createClass(Errors, [{
-        key: "has",
-        value: function has(field) {
-            return this.errors.hasOwnProperty(field);
-        }
-    }, {
-        key: "any",
-        value: function any() {
-            return !!Object.keys(this.errors).length;
-        }
-    }, {
-        key: "first",
-        value: function first(field) {
-            if (this.errors[field]) {
-                return this.errors[field][0];
-            }
-        }
-    }, {
-        key: "add",
-        value: function add(field, message) {
-            window.Vue.set(this.errors, field, [message]);
-        }
-    }, {
-        key: "remove",
-        value: function remove(field) {
-            delete this.errors[field];
-        }
-    }, {
-        key: "record",
-        value: function record(errors) {
-            this.errors = errors;
-        }
-    }]);
-
-    return Errors;
-}();
-
-var LoadingState = function () {
-    function LoadingState() {
-        _classCallCheck(this, LoadingState);
-
-        this.loading = {};
-    }
-
-    _createClass(LoadingState, [{
-        key: "set",
-        value: function set(field) {
-            window.Vue.set(this.loading, field, true);
-        }
-    }, {
-        key: "has",
-        value: function has(field) {
-            return this.loading.hasOwnProperty(field);
-        }
-    }, {
-        key: "done",
-        value: function done(field) {
-            delete this.loading[field];
-        }
-    }, {
-        key: "any",
-        value: function any() {
-            return Object.keys(this.loading).length;
-        }
-    }]);
-
-    return LoadingState;
-}();
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
@@ -1862,14 +1786,14 @@ var LoadingState = function () {
     },
     data: function data() {
         return {
-            devolucao: __WEBPACK_IMPORTED_MODULE_1_moment___default()().add(7, 'days').format('DD/MM/YYYY'),
+            devolucao: __WEBPACK_IMPORTED_MODULE_3_moment___default()().add(7, 'days').format('DD/MM/YYYY'),
             estudante: null,
             estudanteSearch: '',
             livroSearch: '',
             estudantesList: { meta: {}, estudantes: {} },
             livros: [],
-            errors: new Errors({}),
-            loading: new LoadingState(),
+            errors: new __WEBPACK_IMPORTED_MODULE_1__directives_errors__["a" /* default */]({}),
+            loading: new __WEBPACK_IMPORTED_MODULE_2__directives_loading__["a" /* default */](),
             isbnNotFound: false,
             modalEnable: false
         };
@@ -1921,7 +1845,7 @@ var LoadingState = function () {
 
             this.loading.set('estudante');
 
-            axios.get("/api/estudantes?q=" + this.estudanteSearch).then(function (_ref) {
+            axios.get('/api/estudantes?q=' + this.estudanteSearch).then(function (_ref) {
                 var data = _ref.data;
 
                 _this2.loading.done('estudante');
@@ -1931,7 +1855,7 @@ var LoadingState = function () {
                 }
 
                 if (data.meta.total === 0) {
-                    _this2.errors.add('estudante_id', "Nenhum Estudante emcontrado contendo \"" + _this2.estudanteSearch + "\".");
+                    _this2.errors.add('estudante_id', 'Nenhum Estudante emcontrado contendo "' + _this2.estudanteSearch + '".');
                     _this2.$refs.estudante.focus();
                     _this2.modalEnable = false;
                     return;
@@ -1955,7 +1879,7 @@ var LoadingState = function () {
             this.isbnNotFound = false;
             this.errors.remove('livros');
 
-            axios.get("/api/livros/" + this.livroSearch, {
+            axios.get('/api/livros/' + this.livroSearch, {
                 validateStatus: function validateStatus(status) {
                     return status !== 200 || status !== 404;
                 }
@@ -2382,6 +2306,202 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/FormLivro.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__directives_errors__ = __webpack_require__("./resources/assets/js/directives/errors.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_SelectAutores_vue__ = __webpack_require__("./resources/assets/js/components/SelectAutores.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_SelectAutores_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_SelectAutores_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_SelectEditoras_vue__ = __webpack_require__("./resources/assets/js/components/SelectEditoras.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_SelectEditoras_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_SelectEditoras_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_SelectSecoes_vue__ = __webpack_require__("./resources/assets/js/components/SelectSecoes.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_SelectSecoes_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_SelectSecoes_vue__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    components: {
+        'select-autores': __WEBPACK_IMPORTED_MODULE_1__components_SelectAutores_vue___default.a,
+        'select-editoras': __WEBPACK_IMPORTED_MODULE_2__components_SelectEditoras_vue___default.a,
+        'select-secoes': __WEBPACK_IMPORTED_MODULE_3__components_SelectSecoes_vue___default.a
+    },
+    props: ['livro'],
+    data: function data() {
+        return {
+            id: null,
+            isbn: '',
+            quantidade: 1,
+            autores: [],
+            titulo: '',
+            descricao: '',
+            editora_id: null,
+            secao_id: null,
+            ano: '',
+            edicao: '',
+            errors: new __WEBPACK_IMPORTED_MODULE_0__directives_errors__["a" /* default */]({})
+        };
+    },
+    mounted: function mounted() {
+        this.isbn = 123;
+    }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/Paginator.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2695,8 +2815,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.selected = editora;
 
             this.typeAheadEscape();
-
-            this.$refs.search.focus();
+            var secao = document.getElementById("secao_id");
+            if (secao) {
+                secao.focus();
+            } else {
+                document.getElementById('ano').focus();
+            }
         },
         close: function close(e) {
             if (e.relatedTarget) {
@@ -2739,6 +2863,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_typeAheadPointer__ = __webpack_require__("./resources/assets/js/mixins/typeAheadPointer.js");
+//
 //
 //
 //
@@ -2828,7 +2953,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.typeAheadEscape();
 
-            this.$refs.search.focus();
+            document.getElementById('ano').focus();
         },
         close: function close(e) {
             if (e.relatedTarget) {
@@ -2888,7 +3013,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.input-addon[data-v-491e4966] {\n  margin: 0 0 0.5em;\n}\n.select2-search[data-v-491e4966] {\n  border: 1px solid #d4d4d4;\n  background: #fff;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  border-top: none;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  z-index: 5;\n}\n.select2-search .button[data-v-491e4966] {\n    width: 100%;\n    -webkit-box-pack: left;\n        -ms-flex-pack: left;\n            justify-content: left;\n}\n.select2-search .help[data-v-491e4966] {\n    padding-left: 1em;\n}\n.tag[data-v-491e4966], .tag .fa[data-v-491e4966] {\n  margin-right: 0.5em;\n}\n", ""]);
+exports.push([module.i, "\n.input-addon[data-v-491e4966] {\n  margin: 0 0 0.5em;\n}\n.select2-search[data-v-491e4966] {\n  border: 1px solid #d4d4d4;\n  background: #fff;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  border-top: none;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  z-index: 5;\n}\n.select2-search .button[data-v-491e4966] {\n    width: 100%;\n    -webkit-box-pack: left;\n        -ms-flex-pack: left;\n            justify-content: left;\n}\n.select2-search .help[data-v-491e4966] {\n    padding-left: 1em;\n}\n.tag[data-v-491e4966], .tag .fa[data-v-491e4966] {\n  margin-right: 0.5em;\n}\n.is-danger .input[data-v-491e4966] {\n  border-color: #ff3860;\n}\n", ""]);
 
 // exports
 
@@ -2933,7 +3058,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.input-addon[data-v-599d8f00] {\n  margin: 0 0 0.5em;\n}\n.select2-search[data-v-599d8f00] {\n  border: 1px solid #d4d4d4;\n  background: #fff;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  border-top: none;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  z-index: 5;\n}\n.select2-search .button[data-v-599d8f00] {\n    width: 100%;\n    -webkit-box-pack: left;\n        -ms-flex-pack: left;\n            justify-content: left;\n}\n.select2-search .help[data-v-599d8f00] {\n    padding-left: 1em;\n}\n.tag[data-v-599d8f00], .tag .fa[data-v-599d8f00] {\n  margin-right: 0.5em;\n}\n", ""]);
+exports.push([module.i, "\n.input-addon[data-v-599d8f00] {\n  margin: 0 0 0.5em;\n}\n.select2-search[data-v-599d8f00] {\n  border: 1px solid #d4d4d4;\n  background: #fff;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  border-top: none;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  z-index: 5;\n}\n.select2-search .button[data-v-599d8f00] {\n    width: 100%;\n    -webkit-box-pack: left;\n        -ms-flex-pack: left;\n            justify-content: left;\n}\n.select2-search .help[data-v-599d8f00] {\n    padding-left: 1em;\n}\n.tag[data-v-599d8f00], .tag .fa[data-v-599d8f00] {\n  margin-right: 0.5em;\n}\n.is-danger .input[data-v-599d8f00] {\n  border-color: #ff3860;\n}\n", ""]);
 
 // exports
 
@@ -2955,6 +3080,21 @@ exports.push([module.i, "\n.card-content[data-v-684120e5] {\n    padding: 0.3rem
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bdc11086\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/FormLivro.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-dc868300\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/SelectEditoras.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2963,7 +3103,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.input-addon[data-v-dc868300] {\n  margin: 0 0 0.5em;\n}\n.select2-search[data-v-dc868300] {\n  border: 1px solid #d4d4d4;\n  background: #fff;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  border-top: none;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  z-index: 5;\n}\n.select2-search .button[data-v-dc868300] {\n    width: 100%;\n    -webkit-box-pack: left;\n        -ms-flex-pack: left;\n            justify-content: left;\n}\n.select2-search .help[data-v-dc868300] {\n    padding-left: 1em;\n}\n.tag[data-v-dc868300], .tag .fa[data-v-dc868300] {\n  margin-right: 0.5em;\n}\n", ""]);
+exports.push([module.i, "\n.input-addon[data-v-dc868300] {\n  margin: 0 0 0.5em;\n}\n.select2-search[data-v-dc868300] {\n  border: 1px solid #d4d4d4;\n  background: #fff;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  border-top: none;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  z-index: 5;\n}\n.select2-search .button[data-v-dc868300] {\n    width: 100%;\n    -webkit-box-pack: left;\n        -ms-flex-pack: left;\n            justify-content: left;\n}\n.select2-search .help[data-v-dc868300] {\n    padding-left: 1em;\n}\n.tag[data-v-dc868300], .tag .fa[data-v-dc868300] {\n  margin-right: 0.5em;\n}\n.is-danger .input[data-v-dc868300] {\n  border-color: #ff3860;\n}\n", ""]);
 
 // exports
 
@@ -38694,7 +38834,10 @@ var render = function() {
             ],
             ref: "search",
             staticClass: "input",
-            attrs: { placeholder: "Digite o nome para pesquisar" },
+            attrs: {
+              id: "secao_id",
+              placeholder: "Digite o nome para pesquisar"
+            },
             domProps: { value: _vm.searchFor },
             on: {
               blur: _vm.close,
@@ -39960,6 +40103,439 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-bdc11086\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/FormLivro.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "columns" }, [
+      _c("div", { staticClass: "column" }, [
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label", attrs: { for: "isbn" } }, [
+            _vm._v("ISBN")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "control has-icons-right" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.isbn,
+                  expression: "isbn"
+                }
+              ],
+              staticClass: "input",
+              class: { "is-danger": _vm.errors.has("isbn") },
+              attrs: { name: "isbn", id: "isbn" },
+              domProps: { value: _vm.isbn },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.isbn = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("span", { staticClass: "icon is-small is-right" }, [
+              _c("i", {
+                staticClass: "fa fa-barcode",
+                class: { "fa-warning": _vm.errors.has("isbn") }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _vm.errors.has("isbn")
+            ? _c("p", {
+                staticClass: "help is-danger",
+                domProps: { textContent: _vm._s(_vm.errors.first("isbn")) }
+              })
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "column" }, [
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label", attrs: { for: "quantidade" } }, [
+            _vm._v("Quantidade")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "control has-icons-right" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.quantidade,
+                  expression: "quantidade"
+                }
+              ],
+              staticClass: "input",
+              class: { "is-danger": _vm.errors.has("quantidade") },
+              attrs: { type: "number", name: "quantidade", id: "quantidade" },
+              domProps: { value: _vm.quantidade },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.quantidade = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.errors.has("quantidade")
+              ? _c("span", { staticClass: "icon is-small is-right" }, [
+                  _c("i", { staticClass: "fa fa-warning" })
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _vm.errors.has("quantidade")
+            ? _c("p", {
+                staticClass: "help is-danger",
+                domProps: {
+                  textContent: _vm._s(_vm.errors.first("quantidade"))
+                }
+              })
+            : _vm._e()
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "columns" }, [
+      _c("div", { staticClass: "column is-half-tablet" }, [
+        _c("div", { staticClass: "field" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "control",
+              class: { "has-icons-right is-danger": _vm.errors.has("autores") }
+            },
+            [
+              _c("select-autores", { attrs: { data: "autores" } }),
+              _vm._v(" "),
+              _vm.errors.has("autores")
+                ? _c("span", { staticClass: "icon is-small is-right" }, [
+                    _c("i", { staticClass: "fa fa-warning" })
+                  ])
+                : _vm._e()
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.errors.has("autores")
+            ? _c("p", {
+                staticClass: "help is-danger",
+                domProps: { textContent: _vm._s(_vm.errors.first("autores")) }
+              })
+            : _vm._e()
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "field" }, [
+      _c("label", { staticClass: "label", attrs: { for: "titulo" } }, [
+        _vm._v("Titulo")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "control has-icons-right" }, [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.titulo,
+              expression: "titulo"
+            }
+          ],
+          staticClass: "input",
+          class: { "is-danger": _vm.errors.has("titulo") },
+          attrs: { name: "titulo", id: "titulo" },
+          domProps: { value: _vm.titulo },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.titulo = $event.target.value
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.errors.has("titulo")
+          ? _c("span", { staticClass: "icon is-small is-right" }, [
+              _c("i", { staticClass: "fa fa-warning" })
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _vm.errors.has("titulo")
+        ? _c("p", {
+            staticClass: "help is-danger",
+            domProps: { textContent: _vm._s(_vm.errors.first("titulo")) }
+          })
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "field" }, [
+      _c("label", { staticClass: "label", attrs: { for: "descricao" } }, [
+        _vm._v("Descricao")
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "control has-icons-right" }, [
+        _c("textarea", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.descricao,
+              expression: "descricao"
+            }
+          ],
+          staticClass: "textarea",
+          class: { "is-danger": _vm.errors.has("descricao") },
+          attrs: { name: "descricao", id: "descricao", rows: "3" },
+          domProps: { value: _vm.descricao },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.descricao = $event.target.value
+            }
+          }
+        }),
+        _vm._v(" "),
+        _vm.errors.has("descricao")
+          ? _c("span", { staticClass: "icon is-small is-right" }, [
+              _c("i", { staticClass: "fa fa-warning" })
+            ])
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      _vm.errors.has("descricao")
+        ? _c("p", {
+            staticClass: "help is-danger",
+            domProps: { textContent: _vm._s(_vm.errors.first("descricao")) }
+          })
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "columns" }, [
+      _c("div", { staticClass: "column" }, [
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label" }, [_vm._v("Editora")]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "control has-icons-right",
+              class: {
+                "has-icons-right is-danger": _vm.errors.has("editora_id")
+              }
+            },
+            [
+              _c("select-editoras"),
+              _vm._v(" "),
+              _vm.errors.has("editora_id")
+                ? _c("span", { staticClass: "icon is-small is-right" }, [
+                    _c("i", { staticClass: "fa fa-warning" })
+                  ])
+                : _vm._e()
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.errors.has("editora_id")
+            ? _c("p", {
+                staticClass: "help is-danger",
+                domProps: {
+                  textContent: _vm._s(_vm.errors.first("editora_id"))
+                }
+              })
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "column" }, [
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label" }, [_vm._v("Seção")]),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              staticClass: "control has-icons-right",
+              class: { "has-icons-right is-danger": _vm.errors.has("secao_id") }
+            },
+            [
+              _c("select-secoes"),
+              _vm._v(" "),
+              _vm.errors.has("secao_id")
+                ? _c("span", { staticClass: "icon is-small is-right" }, [
+                    _c("i", { staticClass: "fa fa-warning" })
+                  ])
+                : _vm._e()
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.errors.has("secao_id")
+            ? _c("p", {
+                staticClass: "help is-danger",
+                domProps: { textContent: _vm._s(_vm.errors.first("secao_id")) }
+              })
+            : _vm._e()
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "columns" }, [
+      _c("div", { staticClass: "column" }, [
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label", attrs: { for: "ano" } }, [
+            _vm._v("Ano")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "control has-icons-right" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.ano,
+                  expression: "ano"
+                }
+              ],
+              staticClass: "input",
+              class: { "is-danger": _vm.errors.has("ano") },
+              attrs: { type: "number", name: "ano", id: "ano" },
+              domProps: { value: _vm.ano },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.ano = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.errors.has("ano")
+              ? _c("span", { staticClass: "icon is-small is-right" }, [
+                  _c("i", { staticClass: "fa fa-warning" })
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _vm.errors.has("ano")
+            ? _c("p", {
+                staticClass: "help is-danger",
+                domProps: { textContent: _vm._s(_vm.errors.first("ano")) }
+              })
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "column" }, [
+        _c("div", { staticClass: "field" }, [
+          _c("label", { staticClass: "label", attrs: { for: "edicao" } }, [
+            _vm._v("Edição")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "control has-icons-right" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.edicao,
+                  expression: "edicao"
+                }
+              ],
+              staticClass: "input",
+              class: { "is-danger": _vm.errors.has("edicao") },
+              attrs: { name: "edicao", id: "edicao" },
+              domProps: { value: _vm.edicao },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.edicao = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _vm.errors.has("edicao")
+              ? _c("span", { staticClass: "icon is-small is-right" }, [
+                  _c("i", { staticClass: "fa fa-warning" })
+                ])
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _vm.errors.has("edicao")
+            ? _c("p", {
+                staticClass: "help is-danger",
+                domProps: { textContent: _vm._s(_vm.errors.first("edicao")) }
+              })
+            : _vm._e()
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "field is-grouped" }, [
+      _c("div", { staticClass: "control" }, [
+        _c(
+          "button",
+          { staticClass: "button is-info", class: { "is-success": _vm.id } },
+          [_vm._v("Gravar")]
+        )
+      ]),
+      _vm._v(" "),
+      _vm._m(1)
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("label", { staticClass: "label is-marginless" }, [
+      _vm._v("Autores "),
+      _c("span", { staticClass: "subtitle is-7" }, [_vm._v("(0)")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "control" }, [
+      _c("button", { staticClass: "button", attrs: { type: "reset" } }, [
+        _vm._v("Reset")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-bdc11086", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-dc868300\",\"hasScoped\":true}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/SelectEditoras.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -40300,6 +40876,33 @@ if(false) {
  if(!content.locals) {
    module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-684120e5\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CriarEmprestimo.vue", function() {
      var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-684120e5\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CriarEmprestimo.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bdc11086\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/FormLivro.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bdc11086\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/FormLivro.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("55d851ef", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bdc11086\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./FormLivro.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bdc11086\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./FormLivro.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -50859,9 +51462,7 @@ __webpack_require__("./resources/assets/js/bootstrap.js");
 Vue.component('emprestimos-grid', __webpack_require__("./resources/assets/js/components/Emprestimos.vue"));
 Vue.component('criar-emprestimo', __webpack_require__("./resources/assets/js/components/CriarEmprestimo.vue"));
 Vue.component('flash', __webpack_require__("./resources/assets/js/components/Flash.vue"));
-Vue.component('select-autores', __webpack_require__("./resources/assets/js/components/SelectAutores.vue"));
-Vue.component('select-editoras', __webpack_require__("./resources/assets/js/components/SelectEditoras.vue"));
-Vue.component('select-secoes', __webpack_require__("./resources/assets/js/components/SelectSecoes.vue"));
+Vue.component('form-livro', __webpack_require__("./resources/assets/js/components/FormLivro.vue"));
 
 var app = new Vue({
     el: '#app'
@@ -51103,6 +51704,57 @@ module.exports = Component.exports
 
 /***/ }),
 
+/***/ "./resources/assets/js/components/FormLivro.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bdc11086\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/FormLivro.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/FormLivro.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-bdc11086\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/FormLivro.vue")
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/FormLivro.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] FormLivro.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-bdc11086", Component.options)
+  } else {
+    hotAPI.reload("data-v-bdc11086", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
 /***/ "./resources/assets/js/components/Paginator.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -51303,6 +51955,108 @@ if (false) {(function () {
 })()}
 
 module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/directives/errors.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Errors; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Errors = function () {
+    function Errors(errors) {
+        _classCallCheck(this, Errors);
+
+        this.errors = errors;
+    }
+
+    _createClass(Errors, [{
+        key: "has",
+        value: function has(field) {
+            return this.errors.hasOwnProperty(field);
+        }
+    }, {
+        key: "any",
+        value: function any() {
+            return !!Object.keys(this.errors).length;
+        }
+    }, {
+        key: "first",
+        value: function first(field) {
+            if (this.errors[field]) {
+                return this.errors[field][0];
+            }
+        }
+    }, {
+        key: "add",
+        value: function add(field, message) {
+            window.Vue.set(this.errors, field, [message]);
+        }
+    }, {
+        key: "remove",
+        value: function remove(field) {
+            delete this.errors[field];
+        }
+    }, {
+        key: "record",
+        value: function record(errors) {
+            this.errors = errors;
+        }
+    }]);
+
+    return Errors;
+}();
+
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/directives/loading.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return LoadingState; });
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var LoadingState = function () {
+    function LoadingState() {
+        _classCallCheck(this, LoadingState);
+
+        this.loading = {};
+    }
+
+    _createClass(LoadingState, [{
+        key: "set",
+        value: function set(field) {
+            window.Vue.set(this.loading, field, true);
+        }
+    }, {
+        key: "has",
+        value: function has(field) {
+            return this.loading.hasOwnProperty(field);
+        }
+    }, {
+        key: "done",
+        value: function done(field) {
+            delete this.loading[field];
+        }
+    }, {
+        key: "any",
+        value: function any() {
+            return Object.keys(this.loading).length;
+        }
+    }]);
+
+    return LoadingState;
+}();
+
 
 
 /***/ }),

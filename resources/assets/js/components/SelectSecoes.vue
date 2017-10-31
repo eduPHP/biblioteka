@@ -8,6 +8,7 @@
                 </span>
             </div>
             <input class="input" v-if="!selected" @blur="close" @focus="open"
+                   id="secao_id"
                    @keyup="search(1, $event)"
                    @keydown.down.prevent="typeAheadDown"
                    @keydown.up.prevent="typeAheadUp"
@@ -86,7 +87,7 @@
 
                 this.typeAheadEscape();
 
-                this.$refs.search.focus();
+                document.getElementById('ano').focus();
             },
             close(e){
                 if (e.relatedTarget){
@@ -137,5 +138,6 @@
             padding-left: 1em
     .tag, .tag .fa
             margin-right : 0.5em
-
+    .is-danger .input
+        border-color : #ff3860
 </style>

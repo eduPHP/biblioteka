@@ -50,8 +50,8 @@ class LivrosController extends Controller
             'edicao' => 'nullable|numeric',
             'quantidade' => 'required|numeric|min:1',
             'ano' => 'required|date_format:Y',
-            'editora_id' => 'required|exists:editoras,id',
-            'secao_id' => 'required|exists:secoes,id',
+            'editora_id' => 'required',
+            'secao_id' => 'required',
             'autores' => 'required|array'
         ]);
 
@@ -81,10 +81,7 @@ class LivrosController extends Controller
      */
     public function edit(Livro $livro)
     {
-        $secoes = Secao::all();
-        $editoras = Editora::all();
-
-        return view('livros.edit', compact('livro', 'secoes', 'editoras'));
+        return view('livros.edit', compact('livro'));
     }
 
     /**
@@ -100,9 +97,16 @@ class LivrosController extends Controller
         $data = $request->validate([
             'isbn' => 'required',
             'titulo' => 'required',
+            'descricao' => 'nullable',
+            'edicao' => 'nullable|numeric',
+            'quantidade' => 'required|numeric|min:1',
+            'ano' => 'required|date_format:Y',
+            'editora_id' => 'required',
+            'secao_id' => 'required',
+            'autores' => 'required|array'
         ]);
 
-        $livro->update($data);
+        $livro->atualizar($data);
 
         return $this->redirectToIndex("Livro modificado");
     }

@@ -145,61 +145,9 @@
 
 <script>
     import EmprestimoDatepicker from "../components/EmprestimoDatepicker.vue"
+    import Errors from '../directives/errors'
+    import LoadingState from '../directives/loading'
     import moment from 'moment'
-
-    class Errors {
-        constructor(errors) {
-            this.errors = errors;
-        }
-
-        has(field) {
-            return this.errors.hasOwnProperty(field);
-        }
-
-        any() {
-            return !!Object.keys(this.errors).length;
-        }
-
-        first(field) {
-            if (this.errors[field]) {
-                return this.errors[field][0];
-            }
-        }
-
-        add(field, message) {
-            window.Vue.set(this.errors, field, [message]);
-        }
-
-        remove(field) {
-            delete this.errors[field];
-        }
-
-        record(errors) {
-            this.errors = errors;
-        }
-    }
-
-    class LoadingState {
-        constructor() {
-            this.loading = {};
-        }
-
-        set(field) {
-            window.Vue.set(this.loading, field, true);
-        }
-
-        has(field) {
-            return this.loading.hasOwnProperty(field);
-        }
-
-        done(field) {
-            delete this.loading[field];
-        }
-
-        any() {
-            return Object.keys(this.loading).length;
-        }
-    }
 
     export default {
         components: {
