@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Livro extends Model
 {
     protected $guarded = [];
-    protected $with = ['autores'];
 
     public static function findByIsbn($isbn)
     {

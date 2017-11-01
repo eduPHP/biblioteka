@@ -2467,6 +2467,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2492,11 +2505,96 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             secao_id: null,
             ano: '',
             edicao: '',
-            errors: new __WEBPACK_IMPORTED_MODULE_0__directives_errors__["a" /* default */]({})
+            errors: new __WEBPACK_IMPORTED_MODULE_0__directives_errors__["a" /* default */]({}),
+            enviando: false
         };
     },
+
+    computed: {
+        buttonClass: function buttonClass() {
+            var classe = this.id ? 'is-success' : '';
+            classe += this.enviando ? 'is-loading' : '';
+            return classe;
+        }
+    },
+    methods: {
+        search: function search() {
+            console.log('buscando' + this.isbn);
+        },
+        selectAutor: function selectAutor(autores) {
+            this.autores = autores;
+            this.errors.remove('autores');
+        },
+        selectEditora: function selectEditora(editora) {
+            if (editora === null) {
+                this.editora_id = editora;
+                return;
+            }
+            this.editora_id = editora.id ? editora.id : editora.nome;
+            this.errors.remove('editora_id');
+        },
+        selectSecao: function selectSecao(secao) {
+            if (secao === null) {
+                this.secao_id = secao;
+                return;
+            }
+            this.secao_id = secao.id ? secao.id : secao.descricao;
+            this.errors.remove('secao_id');
+        },
+        enviar: function enviar() {
+            var _this = this;
+
+            this.enviando = true;
+            var data = {
+                isbn: this.isbn,
+                quantidade: this.quantidade,
+                autores: this.autores.map(function (a) {
+                    return a.id ? a.id : a.nome;
+                }),
+                titulo: this.titulo,
+                descricao: this.descricao,
+                editora_id: this.editora_id,
+                secao_id: this.secao_id,
+                ano: this.ano,
+                edicao: this.edicao
+            };
+
+            console.log(data);
+            if (this.id) {
+                axios.patch('/api/livros/' + this.id, data).then(function (result) {
+                    _this.enviando = false;
+                    if (result.status === 201) {
+                        flash('Livro Modificado');
+                    }
+                }).catch(function (error) {
+                    _this.errors.record(error.response.data.errors);
+                });
+                return;
+            }
+            axios.post('/api/livros', data).then(function (result) {
+                _this.enviando = false;
+                _this.id = result.data.livro.id;
+                if (result.status === 201) {
+                    flash('Livro Adicionado');
+                }
+            }).catch(function (error) {
+                _this.errors.record(error.response.data.errors);
+            });
+        }
+    },
     mounted: function mounted() {
-        this.isbn = 123;
+        if (this.livro) {
+            this.id = this.livro.id;
+            this.titulo = this.livro.titulo;
+            this.isbn = this.livro.isbn;
+            this.quantidade = this.livro.quantidade;
+            this.descricao = this.livro.descricao;
+            this.autores = this.livro.autores;
+            this.editora_id = this.livro.editora_id;
+            this.secao_id = this.livro.secao_id;
+            this.ano = this.livro.ano;
+            this.edicao = this.livro.edicao;
+        }
     }
 });
 
@@ -2629,9 +2727,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_typeAheadPointer__["a" /* default */]],
     name: 'select-autores',
+    props: ['autores'],
     data: function data() {
         return {
-            selected: [],
+            selected: this.autores,
             options: [],
             meta: {},
             opened: false,
@@ -2668,7 +2767,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             if (typeof autor === 'undefined') {
-                // mensagem de erro: selecione um dos resultados
+                flash('Selecione um autor', 'erro');
                 return;
             }
 
@@ -2681,6 +2780,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }) === -1) {
                 this.selected.push(autor);
             }
+
+            this.$emit('selected', this.selected);
 
             this.typeAheadEscape();
 
@@ -2716,6 +2817,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 flash('Erro ao buscar autores', 'danger');
             });
         }
+    },
+    mounted: function mounted() {
+        console.log(this.selected);
     }
 });
 
@@ -2797,6 +2901,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         unselect: function unselect() {
             this.selected = null;
+            this.$emit('selected', null);
         },
         select: function select(editora) {
             if (this.optionSelected === -1 && this.options.length === 1) {
@@ -2813,6 +2918,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             this.selected = editora;
+            this.$emit('selected', editora);
 
             this.typeAheadEscape();
             var secao = document.getElementById("secao_id");
@@ -2934,6 +3040,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         unselect: function unselect() {
             this.selected = null;
+            this.$emit('selected', null);
         },
         select: function select(secao) {
             if (this.optionSelected === -1 && this.options.length === 1) {
@@ -2941,7 +3048,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             if (typeof secao === 'undefined') {
-                // mensagem de erro: selecione um dos resultados
+                flash('Selecione uma seção', 'erro');
                 return;
             }
 
@@ -2950,6 +3057,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             this.selected = secao;
+            this.$emit('selected', secao);
 
             this.typeAheadEscape();
 
@@ -3088,7 +3196,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -40110,410 +40218,497 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "columns" }, [
-      _c("div", { staticClass: "column" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("label", { staticClass: "label", attrs: { for: "isbn" } }, [
-            _vm._v("ISBN")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "control has-icons-right" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.isbn,
-                  expression: "isbn"
-                }
-              ],
-              staticClass: "input",
-              class: { "is-danger": _vm.errors.has("isbn") },
-              attrs: { name: "isbn", id: "isbn" },
-              domProps: { value: _vm.isbn },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.isbn = $event.target.value
-                }
-              }
-            }),
+  return _c(
+    "form",
+    {
+      on: {
+        submit: function($event) {
+          $event.preventDefault()
+          _vm.enviar($event)
+        }
+      }
+    },
+    [
+      _c("div", { staticClass: "columns" }, [
+        _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label", attrs: { for: "isbn" } }, [
+              _vm._v("ISBN")
+            ]),
             _vm._v(" "),
-            _c("span", { staticClass: "icon is-small is-right" }, [
-              _c("i", {
-                staticClass: "fa fa-barcode",
-                class: { "fa-warning": _vm.errors.has("isbn") }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _vm.errors.has("isbn")
-            ? _c("p", {
-                staticClass: "help is-danger",
-                domProps: { textContent: _vm._s(_vm.errors.first("isbn")) }
-              })
-            : _vm._e()
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "column" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("label", { staticClass: "label", attrs: { for: "quantidade" } }, [
-            _vm._v("Quantidade")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "control has-icons-right" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.quantidade,
-                  expression: "quantidade"
-                }
-              ],
-              staticClass: "input",
-              class: { "is-danger": _vm.errors.has("quantidade") },
-              attrs: { type: "number", name: "quantidade", id: "quantidade" },
-              domProps: { value: _vm.quantidade },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+            _c("div", { staticClass: "control has-icons-right" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.isbn,
+                    expression: "isbn"
                   }
-                  _vm.quantidade = $event.target.value
+                ],
+                staticClass: "input",
+                class: { "is-danger": _vm.errors.has("isbn") },
+                attrs: { name: "isbn", id: "isbn" },
+                domProps: { value: _vm.isbn },
+                on: {
+                  keydown: function($event) {
+                    if (
+                      !("button" in $event) &&
+                      _vm._k($event.keyCode, "enter", 13)
+                    ) {
+                      return null
+                    }
+                    $event.preventDefault()
+                    _vm.search($event)
+                  },
+                  blur: _vm.search,
+                  change: function($event) {
+                    _vm.errors.remove("isbn")
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.isbn = $event.target.value
+                  }
                 }
-              }
-            }),
+              }),
+              _vm._v(" "),
+              _c("span", { staticClass: "icon is-small is-right" }, [
+                _c("i", {
+                  staticClass: "fa fa-barcode",
+                  class: { "fa-warning": _vm.errors.has("isbn") }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _vm.errors.has("isbn")
+              ? _c("p", {
+                  staticClass: "help is-danger",
+                  domProps: { textContent: _vm._s(_vm.errors.first("isbn")) }
+                })
+              : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "field" }, [
+            _c(
+              "label",
+              { staticClass: "label", attrs: { for: "quantidade" } },
+              [_vm._v("Quantidade")]
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "control has-icons-right" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.quantidade,
+                    expression: "quantidade"
+                  }
+                ],
+                staticClass: "input",
+                class: { "is-danger": _vm.errors.has("quantidade") },
+                attrs: { type: "number", name: "quantidade", id: "quantidade" },
+                domProps: { value: _vm.quantidade },
+                on: {
+                  change: function($event) {
+                    _vm.errors.remove("quantidade")
+                  },
+                  keyup: [
+                    function($event) {
+                      if (
+                        !("button" in $event) &&
+                        _vm._k($event.keyCode, "up", 38)
+                      ) {
+                        return null
+                      }
+                      _vm.quantidade++
+                    },
+                    function($event) {
+                      if (
+                        !("button" in $event) &&
+                        _vm._k($event.keyCode, "down", 40)
+                      ) {
+                        return null
+                      }
+                      _vm.quantidade--
+                    }
+                  ],
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.quantidade = $event.target.value
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm.errors.has("quantidade")
+                ? _c("span", { staticClass: "icon is-small is-right" }, [
+                    _c("i", { staticClass: "fa fa-warning" })
+                  ])
+                : _vm._e()
+            ]),
             _vm._v(" "),
             _vm.errors.has("quantidade")
-              ? _c("span", { staticClass: "icon is-small is-right" }, [
-                  _c("i", { staticClass: "fa fa-warning" })
-                ])
+              ? _c("p", {
+                  staticClass: "help is-danger",
+                  domProps: {
+                    textContent: _vm._s(_vm.errors.first("quantidade"))
+                  }
+                })
               : _vm._e()
-          ]),
-          _vm._v(" "),
-          _vm.errors.has("quantidade")
-            ? _c("p", {
-                staticClass: "help is-danger",
-                domProps: {
-                  textContent: _vm._s(_vm.errors.first("quantidade"))
-                }
-              })
-            : _vm._e()
+          ])
         ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "columns" }, [
-      _c("div", { staticClass: "column is-half-tablet" }, [
-        _c("div", { staticClass: "field" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "control",
-              class: { "has-icons-right is-danger": _vm.errors.has("autores") }
-            },
-            [
-              _c("select-autores", { attrs: { data: "autores" } }),
-              _vm._v(" "),
-              _vm.errors.has("autores")
-                ? _c("span", { staticClass: "icon is-small is-right" }, [
-                    _c("i", { staticClass: "fa fa-warning" })
-                  ])
-                : _vm._e()
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _vm.errors.has("autores")
-            ? _c("p", {
-                staticClass: "help is-danger",
-                domProps: { textContent: _vm._s(_vm.errors.first("autores")) }
-              })
-            : _vm._e()
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "field" }, [
-      _c("label", { staticClass: "label", attrs: { for: "titulo" } }, [
-        _vm._v("Titulo")
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "control has-icons-right" }, [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.titulo,
-              expression: "titulo"
-            }
-          ],
-          staticClass: "input",
-          class: { "is-danger": _vm.errors.has("titulo") },
-          attrs: { name: "titulo", id: "titulo" },
-          domProps: { value: _vm.titulo },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+      _c("div", { staticClass: "columns" }, [
+        _c("div", { staticClass: "column is-half-tablet" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label is-marginless" }, [
+              _vm._v("Autores "),
+              _c("span", { staticClass: "subtitle is-7" }, [
+                _vm._v("(" + _vm._s(_vm.autores.length) + ")")
+              ])
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "control",
+                class: {
+                  "has-icons-right is-danger": _vm.errors.has("autores")
+                }
+              },
+              [
+                _c("select-autores", {
+                  attrs: { autores: _vm.autores },
+                  on: {
+                    selected: function($event) {
+                      _vm.selectAutor($event)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.has("autores")
+                  ? _c("span", { staticClass: "icon is-small is-right" }, [
+                      _c("i", { staticClass: "fa fa-warning" })
+                    ])
+                  : _vm._e()
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _vm.errors.has("autores")
+              ? _c("p", {
+                  staticClass: "help is-danger",
+                  domProps: { textContent: _vm._s(_vm.errors.first("autores")) }
+                })
+              : _vm._e()
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "field" }, [
+        _c("label", { staticClass: "label", attrs: { for: "titulo" } }, [
+          _vm._v("Titulo")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control has-icons-right" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.titulo,
+                expression: "titulo"
               }
-              _vm.titulo = $event.target.value
+            ],
+            staticClass: "input",
+            class: { "is-danger": _vm.errors.has("titulo") },
+            attrs: { name: "titulo", id: "titulo" },
+            domProps: { value: _vm.titulo },
+            on: {
+              change: function($event) {
+                _vm.errors.remove("titulo")
+              },
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.titulo = $event.target.value
+              }
             }
-          }
-        }),
+          }),
+          _vm._v(" "),
+          _vm.errors.has("titulo")
+            ? _c("span", { staticClass: "icon is-small is-right" }, [
+                _c("i", { staticClass: "fa fa-warning" })
+              ])
+            : _vm._e()
+        ]),
         _vm._v(" "),
         _vm.errors.has("titulo")
-          ? _c("span", { staticClass: "icon is-small is-right" }, [
-              _c("i", { staticClass: "fa fa-warning" })
-            ])
+          ? _c("p", {
+              staticClass: "help is-danger",
+              domProps: { textContent: _vm._s(_vm.errors.first("titulo")) }
+            })
           : _vm._e()
       ]),
       _vm._v(" "),
-      _vm.errors.has("titulo")
-        ? _c("p", {
-            staticClass: "help is-danger",
-            domProps: { textContent: _vm._s(_vm.errors.first("titulo")) }
-          })
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "field" }, [
-      _c("label", { staticClass: "label", attrs: { for: "descricao" } }, [
-        _vm._v("Descricao")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "control has-icons-right" }, [
-        _c("textarea", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.descricao,
-              expression: "descricao"
-            }
-          ],
-          staticClass: "textarea",
-          class: { "is-danger": _vm.errors.has("descricao") },
-          attrs: { name: "descricao", id: "descricao", rows: "3" },
-          domProps: { value: _vm.descricao },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+      _c("div", { staticClass: "field" }, [
+        _c("label", { staticClass: "label", attrs: { for: "descricao" } }, [
+          _vm._v("Descricao")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "control has-icons-right" }, [
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.descricao,
+                expression: "descricao"
               }
-              _vm.descricao = $event.target.value
+            ],
+            staticClass: "textarea",
+            class: { "is-danger": _vm.errors.has("descricao") },
+            attrs: { name: "descricao", id: "descricao", rows: "3" },
+            domProps: { value: _vm.descricao },
+            on: {
+              change: function($event) {
+                _vm.errors.remove("descricao")
+              },
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.descricao = $event.target.value
+              }
             }
-          }
-        }),
+          }),
+          _vm._v(" "),
+          _vm.errors.has("descricao")
+            ? _c("span", { staticClass: "icon is-small is-right" }, [
+                _c("i", { staticClass: "fa fa-warning" })
+              ])
+            : _vm._e()
+        ]),
         _vm._v(" "),
         _vm.errors.has("descricao")
-          ? _c("span", { staticClass: "icon is-small is-right" }, [
-              _c("i", { staticClass: "fa fa-warning" })
-            ])
+          ? _c("p", {
+              staticClass: "help is-danger",
+              domProps: { textContent: _vm._s(_vm.errors.first("descricao")) }
+            })
           : _vm._e()
       ]),
       _vm._v(" "),
-      _vm.errors.has("descricao")
-        ? _c("p", {
-            staticClass: "help is-danger",
-            domProps: { textContent: _vm._s(_vm.errors.first("descricao")) }
-          })
-        : _vm._e()
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "columns" }, [
-      _c("div", { staticClass: "column" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("label", { staticClass: "label" }, [_vm._v("Editora")]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "control has-icons-right",
-              class: {
-                "has-icons-right is-danger": _vm.errors.has("editora_id")
-              }
-            },
-            [
-              _c("select-editoras"),
-              _vm._v(" "),
-              _vm.errors.has("editora_id")
-                ? _c("span", { staticClass: "icon is-small is-right" }, [
-                    _c("i", { staticClass: "fa fa-warning" })
-                  ])
-                : _vm._e()
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _vm.errors.has("editora_id")
-            ? _c("p", {
-                staticClass: "help is-danger",
-                domProps: {
-                  textContent: _vm._s(_vm.errors.first("editora_id"))
+      _c("div", { staticClass: "columns" }, [
+        _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("Editora")]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "control has-icons-right",
+                class: {
+                  "has-icons-right is-danger": _vm.errors.has("editora_id")
                 }
-              })
-            : _vm._e()
+              },
+              [
+                _c("select-editoras", {
+                  on: {
+                    selected: function($event) {
+                      _vm.selectEditora($event)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.has("editora_id")
+                  ? _c("span", { staticClass: "icon is-small is-right" }, [
+                      _c("i", { staticClass: "fa fa-warning" })
+                    ])
+                  : _vm._e()
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _vm.errors.has("editora_id")
+              ? _c("p", {
+                  staticClass: "help is-danger",
+                  domProps: {
+                    textContent: _vm._s(_vm.errors.first("editora_id"))
+                  }
+                })
+              : _vm._e()
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label" }, [_vm._v("Seção")]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "control has-icons-right",
+                class: {
+                  "has-icons-right is-danger": _vm.errors.has("secao_id")
+                }
+              },
+              [
+                _c("select-secoes", {
+                  on: {
+                    selected: function($event) {
+                      _vm.selectSecao($event)
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _vm.errors.has("secao_id")
+                  ? _c("span", { staticClass: "icon is-small is-right" }, [
+                      _c("i", { staticClass: "fa fa-warning" })
+                    ])
+                  : _vm._e()
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _vm.errors.has("secao_id")
+              ? _c("p", {
+                  staticClass: "help is-danger",
+                  domProps: {
+                    textContent: _vm._s(_vm.errors.first("secao_id"))
+                  }
+                })
+              : _vm._e()
+          ])
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "column" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("label", { staticClass: "label" }, [_vm._v("Seção")]),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              staticClass: "control has-icons-right",
-              class: { "has-icons-right is-danger": _vm.errors.has("secao_id") }
-            },
-            [
-              _c("select-secoes"),
+      _c("div", { staticClass: "columns" }, [
+        _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label", attrs: { for: "ano" } }, [
+              _vm._v("Ano")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "control has-icons-right" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.ano,
+                    expression: "ano"
+                  }
+                ],
+                staticClass: "input",
+                class: { "is-danger": _vm.errors.has("ano") },
+                attrs: { type: "number", name: "ano", id: "ano", min: "1000" },
+                domProps: { value: _vm.ano },
+                on: {
+                  change: function($event) {
+                    _vm.errors.remove("ano")
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.ano = $event.target.value
+                  }
+                }
+              }),
               _vm._v(" "),
-              _vm.errors.has("secao_id")
+              _vm.errors.has("ano")
                 ? _c("span", { staticClass: "icon is-small is-right" }, [
                     _c("i", { staticClass: "fa fa-warning" })
                   ])
                 : _vm._e()
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _vm.errors.has("secao_id")
-            ? _c("p", {
-                staticClass: "help is-danger",
-                domProps: { textContent: _vm._s(_vm.errors.first("secao_id")) }
-              })
-            : _vm._e()
-        ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "columns" }, [
-      _c("div", { staticClass: "column" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("label", { staticClass: "label", attrs: { for: "ano" } }, [
-            _vm._v("Ano")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "control has-icons-right" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.ano,
-                  expression: "ano"
-                }
-              ],
-              staticClass: "input",
-              class: { "is-danger": _vm.errors.has("ano") },
-              attrs: { type: "number", name: "ano", id: "ano" },
-              domProps: { value: _vm.ano },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.ano = $event.target.value
-                }
-              }
-            }),
+            ]),
             _vm._v(" "),
             _vm.errors.has("ano")
-              ? _c("span", { staticClass: "icon is-small is-right" }, [
-                  _c("i", { staticClass: "fa fa-warning" })
-                ])
+              ? _c("p", {
+                  staticClass: "help is-danger",
+                  domProps: { textContent: _vm._s(_vm.errors.first("ano")) }
+                })
               : _vm._e()
-          ]),
-          _vm._v(" "),
-          _vm.errors.has("ano")
-            ? _c("p", {
-                staticClass: "help is-danger",
-                domProps: { textContent: _vm._s(_vm.errors.first("ano")) }
-              })
-            : _vm._e()
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "column" }, [
-        _c("div", { staticClass: "field" }, [
-          _c("label", { staticClass: "label", attrs: { for: "edicao" } }, [
-            _vm._v("Edição")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "control has-icons-right" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.edicao,
-                  expression: "edicao"
-                }
-              ],
-              staticClass: "input",
-              class: { "is-danger": _vm.errors.has("edicao") },
-              attrs: { name: "edicao", id: "edicao" },
-              domProps: { value: _vm.edicao },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "column" }, [
+          _c("div", { staticClass: "field" }, [
+            _c("label", { staticClass: "label", attrs: { for: "edicao" } }, [
+              _vm._v("Edição")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "control has-icons-right" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.edicao,
+                    expression: "edicao"
                   }
-                  _vm.edicao = $event.target.value
+                ],
+                staticClass: "input",
+                class: { "is-danger": _vm.errors.has("edicao") },
+                attrs: { name: "edicao", id: "edicao" },
+                domProps: { value: _vm.edicao },
+                on: {
+                  change: function($event) {
+                    _vm.errors.remove("edicao")
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.edicao = $event.target.value
+                  }
                 }
-              }
-            }),
+              }),
+              _vm._v(" "),
+              _vm.errors.has("edicao")
+                ? _c("span", { staticClass: "icon is-small is-right" }, [
+                    _c("i", { staticClass: "fa fa-warning" })
+                  ])
+                : _vm._e()
+            ]),
             _vm._v(" "),
             _vm.errors.has("edicao")
-              ? _c("span", { staticClass: "icon is-small is-right" }, [
-                  _c("i", { staticClass: "fa fa-warning" })
-                ])
+              ? _c("p", {
+                  staticClass: "help is-danger",
+                  domProps: { textContent: _vm._s(_vm.errors.first("edicao")) }
+                })
               : _vm._e()
-          ]),
-          _vm._v(" "),
-          _vm.errors.has("edicao")
-            ? _c("p", {
-                staticClass: "help is-danger",
-                domProps: { textContent: _vm._s(_vm.errors.first("edicao")) }
-              })
-            : _vm._e()
+          ])
         ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "field is-grouped" }, [
-      _c("div", { staticClass: "control" }, [
-        _c(
-          "button",
-          { staticClass: "button is-info", class: { "is-success": _vm.id } },
-          [_vm._v("Gravar")]
-        )
       ]),
       _vm._v(" "),
-      _vm._m(1)
-    ])
-  ])
+      _c("div", { staticClass: "field is-grouped" }, [
+        _c("div", { staticClass: "control" }, [
+          _c(
+            "button",
+            {
+              staticClass: "button is-info",
+              class: _vm.buttonClass,
+              attrs: { disabled: _vm.enviando }
+            },
+            [_vm._v("Gravar")]
+          )
+        ]),
+        _vm._v(" "),
+        _vm._m(0)
+      ])
+    ]
+  )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { staticClass: "label is-marginless" }, [
-      _vm._v("Autores "),
-      _c("span", { staticClass: "subtitle is-7" }, [_vm._v("(0)")])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -52000,7 +52195,7 @@ var Errors = function () {
     }, {
         key: "remove",
         value: function remove(field) {
-            delete this.errors[field];
+            window.Vue.delete(this.errors, field);
         }
     }, {
         key: "record",

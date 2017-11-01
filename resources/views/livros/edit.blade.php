@@ -16,5 +16,5 @@
         </ul>
     </nav>
     <h1 class="title">Editar Livro {{$livro->titulo}}</h1>
-    <form-livro :livro="{{$livro}}"></form-livro>
+    <form-livro :livro="{{$livro->id}}"></form-livro>
 @endsection

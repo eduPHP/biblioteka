@@ -22,7 +22,7 @@ class Errors {
     }
 
     remove(field) {
-        delete this.errors[field];
+        window.Vue.delete(this.errors,field);
     }
 
     record(errors) {

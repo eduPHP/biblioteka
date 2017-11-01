@@ -39,9 +39,10 @@
     export default {
         mixins: [typeAheadPointer],
         name: 'select-autores',
+        props: ['autores'],
         data(){
             return {
-                selected: [],
+                selected: this.autores,
                 options: [],
                 meta: {},
                 opened: false,
@@ -75,7 +76,7 @@
                 }
 
                 if (typeof autor === 'undefined'){
-                    // mensagem de erro: selecione um dos resultados
+                    flash('Selecione um autor', 'erro');
                     return;
                 }
 
@@ -86,6 +87,8 @@
                 if (this.selected.findIndex(i => i.nome === autor.nome) === -1){
                     this.selected.push(autor);
                 }
+
+                this.$emit('selected', this.selected);
 
                 this.typeAheadEscape();
 
@@ -114,6 +117,9 @@
                     flash('Erro ao buscar autores','danger')
                 });
             }
+        },
+        mounted(){
+            console.log(this.selected);
         }
     }
 </script>

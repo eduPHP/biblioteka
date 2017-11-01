@@ -68,6 +68,7 @@
             },
             unselect(){
                 this.selected = null;
+                this.$emit('selected', null);
             },
             select(secao){
                 if (this.optionSelected === -1 && this.options.length === 1) {
@@ -75,7 +76,7 @@
                 }
 
                 if (typeof secao === 'undefined'){
-                    // mensagem de erro: selecione um dos resultados
+                    flash('Selecione uma seção','erro');
                     return;
                 }
 
@@ -84,6 +85,7 @@
                 }
 
                 this.selected = secao;
+                this.$emit('selected', secao);
 
                 this.typeAheadEscape();
 

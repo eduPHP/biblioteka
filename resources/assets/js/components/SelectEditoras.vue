@@ -67,6 +67,7 @@
             },
             unselect(){
                 this.selected = null;
+                this.$emit('selected', null);
             },
             select(editora){
                 if (this.optionSelected === -1 && this.options.length === 1) {
@@ -83,6 +84,7 @@
                 }
 
                 this.selected = editora;
+                this.$emit('selected', editora);
 
                 this.typeAheadEscape();
                 let secao = document.getElementById("secao_id");

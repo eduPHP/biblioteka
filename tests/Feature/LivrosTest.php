@@ -18,9 +18,9 @@ class LivrosTest extends TestCase
         $novoLivro = factory('App\Livro')->make()->toArray();
         factory('App\Autor')->create();
 
-        $resposta = $this->post("/livros", array_merge($novoLivro, ['autores' => [1]]));
+        $resposta = $this->post('/api/livros', array_merge($novoLivro, ['autores' => [1]]));
 
-        $resposta->assertStatus(302)->assertRedirect(url('/livros'));
+        $resposta->assertStatus(201);
         $this->assertDatabaseHas('livros', $novoLivro);
         $this->assertCount(1, \App\Livro::first()->autores);
     }
@@ -48,9 +48,9 @@ class LivrosTest extends TestCase
         $data = $livro->toArray();
         $data['titulo'] = $novoTitulo = 'Um novo Título';
         $data['autores'] = ['Novo Autor'];
-        $resposta = $this->patch("/livros/{$livro->id}", $data);
+        $resposta = $this->patch("/api/livros/{$livro->id}", $data);
 
-        $resposta->assertStatus(302)->assertRedirect(url('/livros'));
+        $resposta->assertStatus(201);
         $this->assertDatabaseHas('livros', [
             'id' => $livro->id,
             'titulo' => $novoTitulo,
@@ -72,9 +72,8 @@ class LivrosTest extends TestCase
     {
         $livro = factory('App\Livro')->create();
 
-        $resposta = $this->delete("/livros/{$livro->id}")->assertStatus(302);
+        $this->delete("/api/livros/{$livro->id}")->assertStatus(201);
 
-        $resposta->assertRedirect('/livros');
         $this->assertDatabaseMissing('livros', ['id' => $livro->id]);
     }
 
@@ -106,9 +105,9 @@ class LivrosTest extends TestCase
         $data['autores'][] = $autorExistente->id;
         $data['autores'][] = "Novo Autor";
 
-        $resposta = $this->post('/livros', $data);
+        $resposta = $this->post('/api/livros', $data);
 
-        $resposta->assertStatus(302);
+        $resposta->assertStatus(201);
         $this->assertCount(2, \App\Livro::first()->autores);
         $this->assertDatabaseHas('autores', ['nome' => $data['autores'][1]]);
     }
@@ -118,12 +117,12 @@ class LivrosTest extends TestCase
     {
         $livro = factory('App\Livro')->make(['editora_id' => null]);
 
-        $resposta = $this->post('/livros', array_merge($livro->toArray(), [
+        $resposta = $this->post('/api/livros', array_merge($livro->toArray(), [
             'editora_id' => $editora = 'Nova Editora',
             'autores' => [factory('App\Autor')->create()->id]
         ]));
 
-        $resposta->assertStatus(302);
+        $resposta->assertStatus(201);
         $this->assertDatabaseHas('editoras', ['nome' => $editora]);
     }
 
@@ -132,12 +131,12 @@ class LivrosTest extends TestCase
     {
         $livro = factory('App\Livro')->make(['secao_id' => null]);
 
-        $resposta = $this->post('/livros', array_merge($livro->toArray(), [
+        $resposta = $this->post('/api/livros', array_merge($livro->toArray(), [
             'secao_id' => $secao = 'Nova Secao',
             'autores' => [factory('App\Autor')->create()->id]
         ]));
 
-        $resposta->assertStatus(302);
+        $resposta->assertStatus(201);
         $this->assertDatabaseHas('secoes', ['descricao' => $secao]);
     }
 }
