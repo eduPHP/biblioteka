@@ -2501,8 +2501,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             autores: [],
             titulo: '',
             descricao: '',
-            editora_id: null,
-            secao_id: null,
+            editora: null,
+            secao: null,
             ano: '',
             edicao: '',
             errors: new __WEBPACK_IMPORTED_MODULE_0__directives_errors__["a" /* default */]({}),
@@ -2526,19 +2526,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.errors.remove('autores');
         },
         selectEditora: function selectEditora(editora) {
-            if (editora === null) {
-                this.editora_id = editora;
-                return;
-            }
-            this.editora_id = editora.id ? editora.id : editora.nome;
+            this.editora = editora;
             this.errors.remove('editora_id');
         },
         selectSecao: function selectSecao(secao) {
-            if (secao === null) {
-                this.secao_id = secao;
-                return;
-            }
-            this.secao_id = secao.id ? secao.id : secao.descricao;
+            this.secao = secao;
             this.errors.remove('secao_id');
         },
         enviar: function enviar() {
@@ -2553,8 +2545,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }),
                 titulo: this.titulo,
                 descricao: this.descricao,
-                editora_id: this.editora_id,
-                secao_id: this.secao_id,
+                editora_id: this.editora ? this.editora.id ? this.editora.id : this.editora.nome : null,
+                secao_id: this.secao ? this.secao.id ? this.secao.id : this.secao.descricao : null,
                 ano: this.ano,
                 edicao: this.edicao
             };
@@ -2567,6 +2559,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         flash('Livro Modificado');
                     }
                 }).catch(function (error) {
+                    _this.enviando = false;
                     _this.errors.record(error.response.data.errors);
                 });
                 return;
@@ -2578,24 +2571,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     flash('Livro Adicionado');
                 }
             }).catch(function (error) {
+                _this.enviando = false;
                 _this.errors.record(error.response.data.errors);
             });
         }
     },
-    mounted: function mounted() {
-        if (this.livro) {
-            this.id = this.livro.id;
-            this.titulo = this.livro.titulo;
-            this.isbn = this.livro.isbn;
-            this.quantidade = this.livro.quantidade;
-            this.descricao = this.livro.descricao;
-            this.autores = this.livro.autores;
-            this.editora_id = this.livro.editora_id;
-            this.secao_id = this.livro.secao_id;
-            this.ano = this.livro.ano;
-            this.edicao = this.livro.edicao;
-        }
+    created: function created() {
+        this.id = this.livro.id;
+        this.titulo = this.livro.titulo;
+        this.isbn = this.livro.isbn;
+        this.quantidade = this.livro.quantidade;
+        this.descricao = this.livro.descricao;
+        this.autores = this.livro.autores;
+        this.editora = this.livro.editora;
+        this.secao = this.livro.secao;
+        this.ano = this.livro.ano;
+        this.edicao = this.livro.edicao;
     }
+    //        mounted() {
+    //            if (this.livro) {
+    //                axios.get(`/api/livros/${this.livro}`).then(({data})=>{
+    //                    this.id = data.livro.id;
+    //                    this.titulo = data.livro.titulo;
+    //                    this.isbn = data.livro.isbn;
+    //                    this.quantidade = data.livro.quantidade;
+    //                    this.descricao = data.livro.descricao;
+    //                    this.autores = data.livro.autores;
+    //                    this.editora_id = data.livro.editora_id;
+    //                    this.secao_id = data.livro.secao_id;
+    //                    this.ano = data.livro.ano;
+    //                    this.edicao = data.livro.edicao;
+    //                    console.log(this.autores);
+    //                });
+    //            }
+    //        }
+
 });
 
 /***/ }),
@@ -2727,10 +2737,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_typeAheadPointer__["a" /* default */]],
     name: 'select-autores',
-    props: ['autores'],
+    props: {
+        autores: {
+            type: Array,
+            default: []
+        }
+    },
     data: function data() {
         return {
-            selected: this.autores,
+            selected: [],
             options: [],
             meta: {},
             opened: false,
@@ -2818,8 +2833,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         }
     },
-    mounted: function mounted() {
-        console.log(this.selected);
+    created: function created() {
+        this.selected = this.autores;
     }
 });
 
@@ -2872,6 +2887,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_typeAheadPointer__["a" /* default */]],
     name: 'select-editoras',
+    props: ['editora'],
     data: function data() {
         return {
             selected: null,
@@ -2958,6 +2974,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 flash('Erro ao buscar editoras', 'danger');
             });
         }
+    },
+    created: function created() {
+        this.selected = this.editora;
     }
 });
 
@@ -3011,6 +3030,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_typeAheadPointer__["a" /* default */]],
     name: 'select-secoes',
+    props: ['secao'],
     data: function data() {
         return {
             selected: null,
@@ -3093,6 +3113,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 flash('Erro ao buscar secoes', 'danger');
             });
         }
+    },
+    created: function created() {
+        this.selected = this.secao;
     }
 });
 
@@ -3196,7 +3219,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -40521,6 +40544,7 @@ var render = function() {
               },
               [
                 _c("select-editoras", {
+                  attrs: { editora: _vm.editora },
                   on: {
                     selected: function($event) {
                       _vm.selectEditora($event)
@@ -40562,6 +40586,7 @@ var render = function() {
               },
               [
                 _c("select-secoes", {
+                  attrs: { secao: _vm.secao },
                   on: {
                     selected: function($event) {
                       _vm.selectSecao($event)
@@ -40699,7 +40724,7 @@ var render = function() {
               class: _vm.buttonClass,
               attrs: { disabled: _vm.enviando }
             },
-            [_vm._v("Gravar")]
+            [_vm._v("Gravar\n            ")]
           )
         ]),
         _vm._v(" "),

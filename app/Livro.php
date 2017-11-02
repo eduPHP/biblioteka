@@ -64,4 +64,9 @@ class Livro extends Model
     {
         return $this->belongsTo(Editora::class);
     }
+
+    public function secao()
+    {
+        return $this->belongsTo(Secao::class);
+    }
 }

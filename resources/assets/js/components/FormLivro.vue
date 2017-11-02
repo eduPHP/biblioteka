@@ -9,8 +9,7 @@
                         <input class="input" :class="{'is-danger' : errors.has('isbn')}"
                                @keydown.enter.prevent="search" @blur="search"
                                @change="errors.remove('isbn')"
-                               name="isbn" id="isbn" v-model="isbn">
-                        <span class="icon is-small is-right">
+                               name="isbn" id="isbn" v-model="isbn"> <span class="icon is-small is-right">
                             <i class="fa fa-barcode" :class="{'fa-warning' : errors.has('isbn')}"></i>
                         </span>
                     </div>
@@ -87,7 +86,7 @@
                 <div class="field">
                     <label class="label">Editora</label>
                     <div class="control has-icons-right" :class="{'has-icons-right is-danger':errors.has('editora_id')}">
-                        <select-editoras @selected="selectEditora($event)"></select-editoras>
+                        <select-editoras @selected="selectEditora($event)" :editora="editora"></select-editoras>
                         <span class="icon is-small is-right" v-if="errors.has('editora_id')">
                             <i class="fa fa-warning"></i>
                         </span>
@@ -100,7 +99,7 @@
                 <div class="field">
                     <label class="label">Seção</label>
                     <div class="control has-icons-right" :class="{'has-icons-right is-danger':errors.has('secao_id')}">
-                        <select-secoes @selected="selectSecao($event)"></select-secoes>
+                        <select-secoes @selected="selectSecao($event)" :secao="secao"></select-secoes>
                         <span class="icon is-small is-right" v-if="errors.has('secao_id')">
                             <i class="fa fa-warning"></i>
                         </span>
@@ -151,7 +150,8 @@
             <div class="control">
                 <button class="button is-info"
                         :class="buttonClass"
-                        :disabled="enviando">Gravar</button>
+                        :disabled="enviando">Gravar
+                </button>
             </div>
             <div class="control">
                 <button type="reset" class="button">Reset</button>
@@ -181,16 +181,16 @@
                 autores: [],
                 titulo: '',
                 descricao: '',
-                editora_id: null,
-                secao_id: null,
+                editora: null,
+                secao: null,
                 ano: '',
                 edicao: '',
                 errors: new Errors({}),
                 enviando: false
             }
         },
-        computed:{
-            buttonClass(){
+        computed: {
+            buttonClass() {
                 let classe = this.id ? 'is-success' : '';
                 classe += this.enviando ? 'is-loading' : '';
                 return classe;
@@ -205,19 +205,11 @@
                 this.errors.remove('autores')
             },
             selectEditora(editora) {
-                if (editora === null){
-                    this.editora_id = editora;
-                    return;
-                }
-                this.editora_id = editora.id ? editora.id : editora.nome;
+                this.editora = editora;
                 this.errors.remove('editora_id');
             },
             selectSecao(secao) {
-                if (secao === null) {
-                    this.secao_id = secao;
-                    return;
-                }
-                this.secao_id = secao.id ? secao.id : secao.descricao;
+                this.secao = secao;
                 this.errors.remove('secao_id');
             },
             enviar() {
@@ -230,10 +222,10 @@
                     }),
                     titulo: this.titulo,
                     descricao: this.descricao,
-                    editora_id: this.editora_id,
-                    secao_id: this.secao_id,
+                    editora_id: this.editora ? this.editora.id ? this.editora.id : this.editora.nome : null,
+                    secao_id: this.secao ? this.secao.id ? this.secao.id : this.secao.descricao : null,
                     ano: this.ano,
-                    edicao: this.edicao,
+                    edicao: this.edicao
                 };
 
                 console.log(data);
@@ -244,6 +236,7 @@
                             flash('Livro Modificado');
                         }
                     }).catch(error => {
+                        this.enviando = false;
                         this.errors.record(error.response.data.errors)
                     });
                     return;
@@ -255,25 +248,41 @@
                         flash('Livro Adicionado')
                     }
                 }).catch(error => {
+                    this.enviando = false;
                     this.errors.record(error.response.data.errors)
                 });
 
             }
         },
-        mounted() {
-            if (this.livro) {
-                this.id = this.livro.id;
-                this.titulo = this.livro.titulo;
-                this.isbn = this.livro.isbn;
-                this.quantidade = this.livro.quantidade;
-                this.descricao = this.livro.descricao;
-                this.autores = this.livro.autores;
-                this.editora_id = this.livro.editora_id;
-                this.secao_id = this.livro.secao_id;
-                this.ano = this.livro.ano;
-                this.edicao = this.livro.edicao;
-            }
+        created() {
+            this.id = this.livro.id;
+            this.titulo = this.livro.titulo;
+            this.isbn = this.livro.isbn;
+            this.quantidade = this.livro.quantidade;
+            this.descricao = this.livro.descricao;
+            this.autores = this.livro.autores;
+            this.editora = this.livro.editora;
+            this.secao = this.livro.secao;
+            this.ano = this.livro.ano;
+            this.edicao = this.livro.edicao;
         }
+//        mounted() {
+//            if (this.livro) {
+//                axios.get(`/api/livros/${this.livro}`).then(({data})=>{
+//                    this.id = data.livro.id;
+//                    this.titulo = data.livro.titulo;
+//                    this.isbn = data.livro.isbn;
+//                    this.quantidade = data.livro.quantidade;
+//                    this.descricao = data.livro.descricao;
+//                    this.autores = data.livro.autores;
+//                    this.editora_id = data.livro.editora_id;
+//                    this.secao_id = data.livro.secao_id;
+//                    this.ano = data.livro.ano;
+//                    this.edicao = data.livro.edicao;
+//                    console.log(this.autores);
+//                });
+//            }
+//        }
     }
 </script>
 

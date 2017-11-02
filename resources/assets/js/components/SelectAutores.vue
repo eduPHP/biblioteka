@@ -39,10 +39,15 @@
     export default {
         mixins: [typeAheadPointer],
         name: 'select-autores',
-        props: ['autores'],
+        props: {
+            autores: {
+                type: Array,
+                default: []
+            }
+        },
         data(){
             return {
-                selected: this.autores,
+                selected: [],
                 options: [],
                 meta: {},
                 opened: false,
@@ -118,8 +123,8 @@
                 });
             }
         },
-        mounted(){
-            console.log(this.selected);
+        created(){
+            this.selected = this.autores;
         }
     }
 </script>

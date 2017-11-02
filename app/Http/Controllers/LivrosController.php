@@ -49,7 +49,7 @@ class LivrosController extends Controller
      */
     public function edit(Livro $livro)
     {
-        return view('livros.edit', compact('livro'));
+        return view('livros.edit', ['livro'=>$livro->load('autores','editora','secao')]);
     }
 
 }

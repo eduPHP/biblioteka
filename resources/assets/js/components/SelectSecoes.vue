@@ -40,6 +40,7 @@
     export default {
         mixins: [typeAheadPointer],
         name: 'select-secoes',
+        props: ['secao'],
         data(){
             return {
                 selected: null,
@@ -114,6 +115,9 @@
                     flash('Erro ao buscar secoes','danger')
                 });
             }
+        },
+        created(){
+            this.selected = this.secao;
         }
     }
 </script>

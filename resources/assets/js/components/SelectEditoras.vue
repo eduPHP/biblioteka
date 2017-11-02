@@ -39,6 +39,7 @@
     export default {
         mixins: [typeAheadPointer],
         name: 'select-editoras',
+        props: ['editora'],
         data(){
             return {
                 selected: null,
@@ -117,6 +118,9 @@
                     flash('Erro ao buscar editoras','danger')
                 });
             }
+        },
+        created(){
+            this.selected = this.editora;
         }
     }
 </script>
