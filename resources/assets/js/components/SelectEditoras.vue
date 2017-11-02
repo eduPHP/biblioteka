@@ -76,7 +76,7 @@
                 }
 
                 if (typeof editora === 'undefined'){
-                    // mensagem de erro: selecione um dos resultados
+                    flash('Selecione uma editora', 'erro');
                     return;
                 }
 

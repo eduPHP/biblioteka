@@ -2479,7 +2479,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 
 
@@ -2577,16 +2576,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     },
     created: function created() {
-        this.id = this.livro.id;
-        this.titulo = this.livro.titulo;
-        this.isbn = this.livro.isbn;
-        this.quantidade = this.livro.quantidade;
-        this.descricao = this.livro.descricao;
-        this.autores = this.livro.autores;
-        this.editora = this.livro.editora;
-        this.secao = this.livro.secao;
-        this.ano = this.livro.ano;
-        this.edicao = this.livro.edicao;
+        if (this.livro) {
+            this.id = this.livro.id;
+            this.titulo = this.livro.titulo;
+            this.isbn = this.livro.isbn;
+            this.quantidade = this.livro.quantidade;
+            this.descricao = this.livro.descricao;
+            this.autores = this.livro.autores;
+            this.editora = this.livro.editora;
+            this.secao = this.livro.secao;
+            this.ano = this.livro.ano;
+            this.edicao = this.livro.edicao;
+        }
     }
     //        mounted() {
     //            if (this.livro) {
@@ -2925,7 +2926,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
 
             if (typeof editora === 'undefined') {
-                // mensagem de erro: selecione um dos resultados
+                flash('Selecione uma editora', 'erro');
                 return;
             }
 
@@ -3219,7 +3220,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -40340,26 +40341,6 @@ var render = function() {
                   change: function($event) {
                     _vm.errors.remove("quantidade")
                   },
-                  keyup: [
-                    function($event) {
-                      if (
-                        !("button" in $event) &&
-                        _vm._k($event.keyCode, "up", 38)
-                      ) {
-                        return null
-                      }
-                      _vm.quantidade++
-                    },
-                    function($event) {
-                      if (
-                        !("button" in $event) &&
-                        _vm._k($event.keyCode, "down", 40)
-                      ) {
-                        return null
-                      }
-                      _vm.quantidade--
-                    }
-                  ],
                   input: function($event) {
                     if ($event.target.composing) {
                       return

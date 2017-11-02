@@ -23,8 +23,7 @@
                     <div class="control has-icons-right">
                         <input type="number" class="input" :class="{'is-danger' : errors.has('quantidade')}"
                                name="quantidade" id="quantidade" v-model="quantidade"
-                               @change="errors.remove('quantidade')"
-                               @keyup.up="quantidade++" @keyup.down="quantidade--">
+                               @change="errors.remove('quantidade')">
                         <span class="icon is-small is-right" v-if="errors.has('quantidade')">
                             <i class="fa fa-warning"></i>
                         </span>
@@ -255,16 +254,18 @@
             }
         },
         created() {
-            this.id = this.livro.id;
-            this.titulo = this.livro.titulo;
-            this.isbn = this.livro.isbn;
-            this.quantidade = this.livro.quantidade;
-            this.descricao = this.livro.descricao;
-            this.autores = this.livro.autores;
-            this.editora = this.livro.editora;
-            this.secao = this.livro.secao;
-            this.ano = this.livro.ano;
-            this.edicao = this.livro.edicao;
+            if (this.livro){
+                this.id = this.livro.id;
+                this.titulo = this.livro.titulo;
+                this.isbn = this.livro.isbn;
+                this.quantidade = this.livro.quantidade;
+                this.descricao = this.livro.descricao;
+                this.autores = this.livro.autores;
+                this.editora = this.livro.editora;
+                this.secao = this.livro.secao;
+                this.ano = this.livro.ano;
+                this.edicao = this.livro.edicao;
+            }
         }
 //        mounted() {
 //            if (this.livro) {
