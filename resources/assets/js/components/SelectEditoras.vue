@@ -58,6 +58,9 @@
                 if (!val){
                     this.searchFor = '';
                 }
+            },
+            editora() {
+                this.selected = this.editora;
             }
         },
         methods: {

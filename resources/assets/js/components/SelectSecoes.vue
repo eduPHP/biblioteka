@@ -59,6 +59,9 @@
                 if (!val){
                     this.searchFor = '';
                 }
+            },
+            secao() {
+                this.selected = this.secao;
             }
         },
         methods: {

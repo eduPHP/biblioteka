@@ -2514,6 +2514,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var classe = this.id ? 'is-success' : '';
             classe += this.enviando ? 'is-loading' : '';
             return classe;
+        },
+        livroDefault: function livroDefault() {
+            return this.livro;
         }
     },
     methods: {
@@ -2531,6 +2534,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         selectSecao: function selectSecao(secao) {
             this.secao = secao;
             this.errors.remove('secao_id');
+        },
+        reset: function reset() {
+            this.resetForm();
         },
         enviar: function enviar() {
             var _this = this;
@@ -2573,21 +2579,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this.enviando = false;
                 _this.errors.record(error.response.data.errors);
             });
+        },
+        resetForm: function resetForm() {
+            if (!this.livroDefault) {
+                this.$refs.form.reset();
+                return;
+            }
+            this.id = this.livroDefault.id;
+            this.titulo = this.livroDefault.titulo;
+            this.isbn = this.livroDefault.isbn;
+            this.quantidade = this.livroDefault.quantidade;
+            this.descricao = this.livroDefault.descricao;
+            this.autores = _.clone(this.livroDefault.autores);
+            this.editora = _.clone(this.livroDefault.editora);
+            this.secao = _.clone(this.livroDefault.secao);
+            this.ano = this.livroDefault.ano;
+            this.edicao = this.livroDefault.edicao;
         }
     },
     created: function created() {
-        if (this.livro) {
-            this.id = this.livro.id;
-            this.titulo = this.livro.titulo;
-            this.isbn = this.livro.isbn;
-            this.quantidade = this.livro.quantidade;
-            this.descricao = this.livro.descricao;
-            this.autores = this.livro.autores;
-            this.editora = this.livro.editora;
-            this.secao = this.livro.secao;
-            this.ano = this.livro.ano;
-            this.edicao = this.livro.edicao;
-        }
+        this.resetForm();
     }
     //        mounted() {
     //            if (this.livro) {
@@ -2746,7 +2757,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     data: function data() {
         return {
-            selected: [],
+            selected: this.autores,
             options: [],
             meta: {},
             opened: false,
@@ -2763,6 +2774,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (!val) {
                 this.searchFor = '';
             }
+        },
+        autores: function autores() {
+            this.selected = this.autores;
         }
     },
     methods: {
@@ -2833,9 +2847,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 flash('Erro ao buscar autores', 'danger');
             });
         }
-    },
-    created: function created() {
-        this.selected = this.autores;
     }
 });
 
@@ -2908,6 +2919,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (!val) {
                 this.searchFor = '';
             }
+        },
+        editora: function editora() {
+            this.selected = this.editora;
         }
     },
     methods: {
@@ -3051,6 +3065,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (!val) {
                 this.searchFor = '';
             }
+        },
+        secao: function secao() {
+            this.selected = this.secao;
         }
     },
     methods: {
@@ -3220,7 +3237,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -40245,6 +40262,7 @@ var render = function() {
   return _c(
     "form",
     {
+      ref: "form",
       on: {
         submit: function($event) {
           $event.preventDefault()
@@ -40709,23 +40727,22 @@ var render = function() {
           )
         ]),
         _vm._v(" "),
-        _vm._m(0)
+        _c("div", { staticClass: "control" }, [
+          _c(
+            "button",
+            {
+              staticClass: "button",
+              attrs: { type: "button" },
+              on: { click: _vm.reset }
+            },
+            [_vm._v("Reset")]
+          )
+        ])
       ])
     ]
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "control" }, [
-      _c("button", { staticClass: "button", attrs: { type: "reset" } }, [
-        _vm._v("Reset")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {

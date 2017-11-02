@@ -47,7 +47,7 @@
         },
         data(){
             return {
-                selected: [],
+                selected: this.autores,
                 options: [],
                 meta: {},
                 opened: false,
@@ -63,6 +63,9 @@
                 if (!val){
                     this.searchFor = '';
                 }
+            },
+            autores() {
+                this.selected = this.autores;
             }
         },
         methods: {
@@ -122,9 +125,6 @@
                     flash('Erro ao buscar autores','danger')
                 });
             }
-        },
-        created(){
-            this.selected = this.autores;
         }
     }
 </script>

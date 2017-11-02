@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="enviar">
+    <form @submit.prevent="enviar" ref="form">
         <div class="columns">
             <div class="column">
                 <!-- Input Isbn -->
@@ -153,7 +153,7 @@
                 </button>
             </div>
             <div class="control">
-                <button type="reset" class="button">Reset</button>
+                <button @click="reset" type="button" class="button">Reset</button>
             </div>
         </div>
     </form>
@@ -193,6 +193,9 @@
                 let classe = this.id ? 'is-success' : '';
                 classe += this.enviando ? 'is-loading' : '';
                 return classe;
+            },
+            livroDefault(){
+                return this.livro;
             }
         },
         methods: {
@@ -210,6 +213,9 @@
             selectSecao(secao) {
                 this.secao = secao;
                 this.errors.remove('secao_id');
+            },
+            reset(){
+                this.resetForm();
             },
             enviar() {
                 this.enviando = true;
@@ -251,21 +257,26 @@
                     this.errors.record(error.response.data.errors)
                 });
 
+            },
+            resetForm(){
+                if (!this.livroDefault) {
+                    this.$refs.form.reset();
+                    return;
+                }
+                this.id = this.livroDefault.id;
+                this.titulo = this.livroDefault.titulo;
+                this.isbn = this.livroDefault.isbn;
+                this.quantidade = this.livroDefault.quantidade;
+                this.descricao = this.livroDefault.descricao;
+                this.autores = _.clone(this.livroDefault.autores);
+                this.editora = _.clone(this.livroDefault.editora);
+                this.secao = _.clone(this.livroDefault.secao);
+                this.ano = this.livroDefault.ano;
+                this.edicao = this.livroDefault.edicao;
             }
         },
         created() {
-            if (this.livro){
-                this.id = this.livro.id;
-                this.titulo = this.livro.titulo;
-                this.isbn = this.livro.isbn;
-                this.quantidade = this.livro.quantidade;
-                this.descricao = this.livro.descricao;
-                this.autores = this.livro.autores;
-                this.editora = this.livro.editora;
-                this.secao = this.livro.secao;
-                this.ano = this.livro.ano;
-                this.edicao = this.livro.edicao;
-            }
+            this.resetForm();
         }
 //        mounted() {
 //            if (this.livro) {
