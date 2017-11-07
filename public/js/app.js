@@ -2514,9 +2514,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var classe = this.id ? 'is-success' : '';
             classe += this.enviando ? 'is-loading' : '';
             return classe;
-        },
-        livroDefault: function livroDefault() {
-            return this.livro;
         }
     },
     methods: {
@@ -2581,20 +2578,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         resetForm: function resetForm() {
-            if (!this.livroDefault) {
+            if (!this.livro) {
                 this.$refs.form.reset();
                 return;
             }
-            this.id = this.livroDefault.id;
-            this.titulo = this.livroDefault.titulo;
-            this.isbn = this.livroDefault.isbn;
-            this.quantidade = this.livroDefault.quantidade;
-            this.descricao = this.livroDefault.descricao;
-            this.autores = _.clone(this.livroDefault.autores);
-            this.editora = _.clone(this.livroDefault.editora);
-            this.secao = _.clone(this.livroDefault.secao);
-            this.ano = this.livroDefault.ano;
-            this.edicao = this.livroDefault.edicao;
+            this.id = this.livro.id;
+            this.titulo = this.livro.titulo;
+            this.isbn = this.livro.isbn;
+            this.quantidade = this.livro.quantidade;
+            this.descricao = this.livro.descricao;
+            this.autores = _.clone(this.livro.autores);
+            this.editora = _.clone(this.livro.editora);
+            this.secao = _.clone(this.livro.secao);
+            this.ano = this.livro.ano;
+            this.edicao = this.livro.edicao;
         }
     },
     created: function created() {
@@ -3237,7 +3234,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 

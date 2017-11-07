@@ -7,8 +7,11 @@
         <p class="title is-4">Funcionalidades a implementar</p>
         <ul>
             <li>Pesquisa por informações dos livros online através do ISBN</li>
-            <li><s>Componentes para adição de seções, editoras e autores</s> </li>
-            <li>Relatórios de livros mais emprestados, menos emprestados e empréstimos com devolução atrazada</li>
+            <li><s>Componentes para adição de seções, editoras e autores</s></li>
+            <li>Telas de confirmação para ações, exemplo devolução</li>
+            <li>Tela de Autenticação e regras de validação de acesso</li>
+            <li>Tela de acesso para estudantes com permissão para renovação/reservas</li>
+            <li>Relatórios de livros mais emprestados, menos emprestados e empréstimos com devolução atrasada</li>
         </ul>
     </div>
 @endsection
