@@ -1646,12 +1646,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             active: false,
             icon: 'fa-check',
             button: 'Continuar',
-            message: 'Tem certeza?'
+            message: 'Tem certeza?',
+            callback: null
         };
     },
 
     methods: {
         accept: function accept() {
+            if (this.callback) {
+                this.callback();
+                this.close();
+                return;
+            }
             window.events.$emit('accepted', _.clone(this.message));
             this.close();
         },
@@ -1666,10 +1672,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     created: function created() {
         var _this = this;
 
-        window.events.$on('confirm', function (message, acceptText, acceptIcon) {
+        window.events.$on('confirm', function (callback, message, acceptText, acceptIcon) {
             _this.message = message;
             _this.button = acceptText;
             _this.icon = acceptIcon;
+            _this.callback = callback;
             _this.open();
         });
     }
@@ -2161,29 +2168,21 @@ var moment = __webpack_require__("./node_modules/moment/moment.js");
          * @param emprestimo
          */
         renovar: function renovar(emprestimo) {
-            var message = 'Renovar empréstimo?';
-            vueConfirm(message, 'Renovar', 'fa-recycle');
-            window.events.$on('accepted', function (response) {
-                if (response !== message) {
-                    return;
-                }
+            vueConfirm(function () {
                 axios.post("/api/emprestimos/" + emprestimo.id + "/renovar").then(function (response) {
                     emprestimo.devolucao = response.data.devolucao;
+                    flash('Empréstimo renovado.', 'info');
                 });
-            });
+            }, 'Renovar empréstimo?', 'Renovar', 'fa-recycle');
         },
         devolver: function devolver(emprestimo) {
-            var message = 'Devolver livro?';
-            vueConfirm(message, 'Devolver', 'fa-arrow-circle-o-down');
-            window.events.$on('accepted', function (response) {
-                if (response !== message) {
-                    return;
-                }
+            vueConfirm(function () {
                 axios.patch("/api/emprestimos/" + emprestimo.id + "/devolver").then(function (response) {
                     emprestimo.devolvido = true;
                     emprestimo.devolvido_em = moment().format();
+                    flash('Empréstimo devolvido.', 'info');
                 });
-            });
+            }, 'Devolver livro?', 'Devolver', 'fa-arrow-circle-o-down');
         },
         fetch: function fetch(page) {
             var _this = this;
@@ -52049,11 +52048,11 @@ window.flash = function (message) {
     window.events.$emit('flash', message, type);
 };
 
-window.vueConfirm = function (message) {
-    var acceptText = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Continuar';
-    var acceptIcon = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'fa-check';
+window.vueConfirm = function (callback, message) {
+    var acceptText = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'Continuar';
+    var acceptIcon = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 'fa-check';
 
-    window.events.$emit('confirm', message, acceptText, acceptIcon);
+    window.events.$emit('confirm', callback, message, acceptText, acceptIcon);
 };
 
 // import Echo from 'laravel-echo'

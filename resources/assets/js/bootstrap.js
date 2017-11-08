@@ -16,8 +16,8 @@ window.flash = function(message, type='sucesso'){
     window.events.$emit('flash', message, type);
 };
 
-window.vueConfirm = function (message, acceptText = 'Continuar', acceptIcon = 'fa-check') {
-    window.events.$emit('confirm', message, acceptText, acceptIcon);
+window.vueConfirm = function (callback, message, acceptText = 'Continuar', acceptIcon = 'fa-check') {
+    window.events.$emit('confirm', callback, message, acceptText, acceptIcon);
 };
 
 // import Echo from 'laravel-echo'

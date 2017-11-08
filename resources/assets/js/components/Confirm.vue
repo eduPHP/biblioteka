@@ -24,11 +24,17 @@
                 active: false,
                 icon: 'fa-check',
                 button: 'Continuar',
-                message: 'Tem certeza?'
+                message: 'Tem certeza?',
+                callback: null
             }
         },
         methods: {
             accept() {
+                if (this.callback){
+                    this.callback();
+                    this.close();
+                    return;
+                }
                 window.events.$emit('accepted', _.clone(this.message));
                 this.close();
             },
@@ -41,10 +47,11 @@
             }
         },
         created(){
-            window.events.$on('confirm', (message, acceptText, acceptIcon) => {
+            window.events.$on('confirm', (callback, message, acceptText, acceptIcon) => {
                 this.message = message;
                 this.button = acceptText;
                 this.icon = acceptIcon;
+                this.callback = callback;
                 this.open();
             })
         }

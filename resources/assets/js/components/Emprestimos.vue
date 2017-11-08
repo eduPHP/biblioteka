@@ -141,30 +141,22 @@
              * @param emprestimo
              */
             renovar(emprestimo) {
-                let message = 'Renovar empréstimo?';
-                vueConfirm(message, 'Renovar', 'fa-recycle');
-                window.events.$on('accepted', (response) => {
-                    if (response !== message){
-                        return;
-                    }
+                vueConfirm(()=>{
                     axios.post(`/api/emprestimos/${emprestimo.id}/renovar`).then(response => {
                         emprestimo.devolucao = response.data.devolucao;
+                        flash('Empréstimo renovado.', 'info')
                     });
-                });
+                }, 'Renovar empréstimo?', 'Renovar', 'fa-recycle');
             },
 
             devolver(emprestimo) {
-                let message = 'Devolver livro?';
-                vueConfirm(message, 'Devolver', 'fa-arrow-circle-o-down');
-                window.events.$on('accepted', (response) => {
-                    if (response !== message) {
-                        return;
-                    }
+                vueConfirm(()=>{
                     axios.patch(`/api/emprestimos/${emprestimo.id}/devolver`).then(response => {
                         emprestimo.devolvido = true;
                         emprestimo.devolvido_em = moment().format();
+                        flash('Empréstimo devolvido.','info')
                     });
-                });
+                }, 'Devolver livro?', 'Devolver', 'fa-arrow-circle-o-down');
             },
 
             fetch(page) {
