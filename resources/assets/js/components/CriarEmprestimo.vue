@@ -60,7 +60,7 @@
                             <div class="level-left">
                                 <div>
                                     <h4 class="title is-5">{{ livro.titulo }}</h4>
-                                    <span class="subtitile is-7">{ Autores aqui }</span>
+                                    <span class="subtitile is-7"><div v-for="autor in livro.autores" v-text="autor.nome"></div></span>
                                 </div>
                             </div>
                             <button class="delete level-right" type="button" @click="remove(livro)"></button>

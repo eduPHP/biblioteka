@@ -75,18 +75,20 @@
         </table>
         <p v-if="!loading && !emprestimos.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
+        <confirm></confirm>
     </div>
 </template>
 
 <script>
     import Paginator from "../components/Paginator.vue";
+    import Confirm from "../components/Confirm.vue";
 
     let moment = require('moment');
     import 'moment/locale/pt-br';
 
 
     export default {
-        components: {Paginator},
+        components: {Paginator, Confirm},
         replace: true,
         data() {
             return {
@@ -133,18 +135,35 @@
                 this.fetch(1);
             },
 
+            /**
+             * TODO: Melhorar confirmação usando promises
+             *
+             * @param emprestimo
+             */
             renovar(emprestimo) {
-                axios.post(`/api/emprestimos/${emprestimo.id}/renovar`).then(response => {
-                    console.log(response);
-                    emprestimo.devolucao = response.data.devolucao;
+                let message = 'Renovar empréstimo?';
+                vueConfirm(message, 'Renovar', 'fa-recycle');
+                window.events.$on('accepted', (response) => {
+                    if (response !== message){
+                        return;
+                    }
+                    axios.post(`/api/emprestimos/${emprestimo.id}/renovar`).then(response => {
+                        emprestimo.devolucao = response.data.devolucao;
+                    });
                 });
             },
 
             devolver(emprestimo) {
-                axios.patch(`/api/emprestimos/${emprestimo.id}/devolver`).then(response => {
-                    console.log(response);
-                    emprestimo.devolvido = true;
-                    emprestimo.devolvido_em = moment().format();
+                let message = 'Devolver livro?';
+                vueConfirm(message, 'Devolver', 'fa-arrow-circle-o-down');
+                window.events.$on('accepted', (response) => {
+                    if (response !== message) {
+                        return;
+                    }
+                    axios.patch(`/api/emprestimos/${emprestimo.id}/devolver`).then(response => {
+                        emprestimo.devolvido = true;
+                        emprestimo.devolvido_em = moment().format();
+                    });
                 });
             },
 

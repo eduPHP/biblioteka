@@ -14,3 +14,17 @@
 
     <emprestimos-grid> </emprestimos-grid>
 @endsection
+@section('style')
+    @parent
+    <style>
+        .flex-1{
+            flex: 1;
+        }
+        .modal-confirm{
+            width: 400px;
+        }
+        .has-buttons-right{
+
+        }
+    </style>
+@endsection

@@ -1615,6 +1615,68 @@ module.exports = {
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/Confirm.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: 'confirm',
+    data: function data() {
+        return {
+            active: false,
+            icon: 'fa-check',
+            button: 'Continuar',
+            message: 'Tem certeza?'
+        };
+    },
+
+    methods: {
+        accept: function accept() {
+            window.events.$emit('accepted', _.clone(this.message));
+            this.close();
+        },
+        open: function open() {
+            this.active = true;
+        },
+        close: function close() {
+            this.active = false;
+            this.message = '';
+        }
+    },
+    created: function created() {
+        var _this = this;
+
+        window.events.$on('confirm', function (message, acceptText, acceptIcon) {
+            _this.message = message;
+            _this.button = acceptText;
+            _this.icon = acceptIcon;
+            _this.open();
+        });
+    }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/CriarEmprestimo.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2033,8 +2095,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Paginator_vue__ = __webpack_require__("./resources/assets/js/components/Paginator.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Paginator_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Paginator_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment_locale_pt_br__ = __webpack_require__("./node_modules/moment/locale/pt-br.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment_locale_pt_br___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment_locale_pt_br__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Confirm_vue__ = __webpack_require__("./resources/assets/js/components/Confirm.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_Confirm_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_Confirm_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment_locale_pt_br__ = __webpack_require__("./node_modules/moment/locale/pt-br.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_moment_locale_pt_br___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_moment_locale_pt_br__);
 //
 //
 //
@@ -2115,6 +2179,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+
 
 
 
@@ -2122,7 +2188,7 @@ var moment = __webpack_require__("./node_modules/moment/moment.js");
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    components: { Paginator: __WEBPACK_IMPORTED_MODULE_0__components_Paginator_vue___default.a },
+    components: { Paginator: __WEBPACK_IMPORTED_MODULE_0__components_Paginator_vue___default.a, Confirm: __WEBPACK_IMPORTED_MODULE_1__components_Confirm_vue___default.a },
     replace: true,
     data: function data() {
         return {
@@ -2168,17 +2234,36 @@ var moment = __webpack_require__("./node_modules/moment/moment.js");
             };
             this.fetch(1);
         },
+
+
+        /**
+         * TODO: Melhorar confirmação usando promises
+         *
+         * @param emprestimo
+         */
         renovar: function renovar(emprestimo) {
-            axios.post('/api/emprestimos/' + emprestimo.id + '/renovar').then(function (response) {
-                console.log(response);
-                emprestimo.devolucao = response.data.devolucao;
+            var message = 'Renovar empréstimo?';
+            vueConfirm(message, 'Renovar', 'fa-recycle');
+            window.events.$on('accepted', function (response) {
+                if (response !== message) {
+                    return;
+                }
+                axios.post("/api/emprestimos/" + emprestimo.id + "/renovar").then(function (response) {
+                    emprestimo.devolucao = response.data.devolucao;
+                });
             });
         },
         devolver: function devolver(emprestimo) {
-            axios.patch('/api/emprestimos/' + emprestimo.id + '/devolver').then(function (response) {
-                console.log(response);
-                emprestimo.devolvido = true;
-                emprestimo.devolvido_em = moment().format();
+            var message = 'Devolver livro?';
+            vueConfirm(message, 'Devolver', 'fa-arrow-circle-o-down');
+            window.events.$on('accepted', function (response) {
+                if (response !== message) {
+                    return;
+                }
+                axios.patch("/api/emprestimos/" + emprestimo.id + "/devolver").then(function (response) {
+                    emprestimo.devolvido = true;
+                    emprestimo.devolvido_em = moment().format();
+                });
             });
         },
         fetch: function fetch(page) {
@@ -2192,11 +2277,11 @@ var moment = __webpack_require__("./node_modules/moment/moment.js");
                 var pageInQuery = location.search.match(/page=(\d+)/);
                 page = pageInQuery ? parseInt(pageInQuery[1]) : 1;
             }
-            if (page > 1) query.push('page=' + page);
+            if (page > 1) query.push("page=" + page);
 
-            query.push('orderby=' + this.order.field + ',' + this.order.direction);
+            query.push("orderby=" + this.order.field + "," + this.order.direction);
             if (this.filteredBy !== '') {
-                query.push('q=' + this.filteredBy);
+                query.push("q=" + this.filteredBy);
             }
 
             this.loading = true;
@@ -38871,6 +38956,62 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-143c7c0b\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/Confirm.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "modal", class: { "is-active": _vm.active } },
+    [
+      _c("div", { staticClass: "modal-background" }),
+      _vm._v(" "),
+      _c("div", { staticClass: "modal-card modal-confirm" }, [
+        _c("header", { staticClass: "modal-card-head" }, [
+          _c("p", { domProps: { textContent: _vm._s(_vm.message) } })
+        ]),
+        _vm._v(" "),
+        _c("footer", { staticClass: "modal-card-foot" }, [
+          _c("div", { staticClass: "flex-1" }),
+          _vm._v(" "),
+          _c(
+            "button",
+            {
+              staticClass: "button is-success has-icons",
+              on: { click: _vm.accept }
+            },
+            [
+              _c("span", { staticClass: "icon" }, [
+                _c("i", { staticClass: "fa", class: _vm.icon })
+              ]),
+              _vm._v(" "),
+              _c("span", { domProps: { textContent: _vm._s(_vm.button) } })
+            ]
+          ),
+          _vm._v(" "),
+          _c("button", { staticClass: "button", on: { click: _vm.close } }, [
+            _vm._v("Cancel")
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-143c7c0b", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-1c4d5a10\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/EmprestimoDatepicker.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -39395,7 +39536,12 @@ var render = function() {
         ? _c("p", [_vm._v("Nenhum registro encontrado.")])
         : _vm._e(),
       _vm._v(" "),
-      _c("paginator", { attrs: { meta: _vm.meta }, on: { changed: _vm.fetch } })
+      _c("paginator", {
+        attrs: { meta: _vm.meta },
+        on: { changed: _vm.fetch }
+      }),
+      _vm._v(" "),
+      _c("confirm")
     ],
     1
   )
@@ -39960,9 +40106,15 @@ var render = function() {
                           _vm._v(_vm._s(livro.titulo))
                         ]),
                         _vm._v(" "),
-                        _c("span", { staticClass: "subtitile is-7" }, [
-                          _vm._v("{ Autores aqui }")
-                        ])
+                        _c(
+                          "span",
+                          { staticClass: "subtitile is-7" },
+                          _vm._l(livro.autores, function(autor) {
+                            return _c("div", {
+                              domProps: { textContent: _vm._s(autor.nome) }
+                            })
+                          })
+                        )
                       ])
                     ]),
                     _vm._v(" "),
@@ -51708,6 +51860,13 @@ window.flash = function (message) {
     window.events.$emit('flash', message, type);
 };
 
+window.vueConfirm = function (message) {
+    var acceptText = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'Continuar';
+    var acceptIcon = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'fa-check';
+
+    window.events.$emit('confirm', message, acceptText, acceptIcon);
+};
+
 // import Echo from 'laravel-echo'
 
 // window.Pusher = require('pusher-js');
@@ -51716,6 +51875,53 @@ window.flash = function (message) {
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/Confirm.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/Confirm.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-143c7c0b\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/Confirm.vue")
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Confirm.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] Confirm.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-143c7c0b", Component.options)
+  } else {
+    hotAPI.reload("data-v-143c7c0b", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
 
 /***/ }),
 
