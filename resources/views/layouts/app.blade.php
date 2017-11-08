@@ -52,6 +52,9 @@
                 padding : 0 .8em;
             }
 
+            .flex-1 {
+                flex : 1;
+            }
         </style>
     @show
 </head>

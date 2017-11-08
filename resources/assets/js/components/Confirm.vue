@@ -50,3 +50,9 @@
         }
     }
 </script>
+
+<style>
+    .modal-confirm {
+        width : 400px;
+    }
+</style>

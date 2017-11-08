@@ -1684,10 +1684,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_EmprestimoDatepicker_vue__ = __webpack_require__("./resources/assets/js/components/EmprestimoDatepicker.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_EmprestimoDatepicker_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_EmprestimoDatepicker_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__directives_errors__ = __webpack_require__("./resources/assets/js/directives/errors.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__directives_loading__ = __webpack_require__("./resources/assets/js/directives/loading.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment__ = __webpack_require__("./node_modules/moment/moment.js");
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_SelectEstudante_vue__ = __webpack_require__("./resources/assets/js/components/SelectEstudante.vue");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_SelectEstudante_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_SelectEstudante_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__directives_errors__ = __webpack_require__("./resources/assets/js/directives/errors.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__directives_loading__ = __webpack_require__("./resources/assets/js/directives/loading.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment__ = __webpack_require__("./node_modules/moment/moment.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
 //
 //
 //
@@ -1800,39 +1802,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+
 
 
 
@@ -1841,31 +1811,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     components: {
-        "emprestimo-datepicker": __WEBPACK_IMPORTED_MODULE_0__components_EmprestimoDatepicker_vue___default.a
-    },
-    mounted: function mounted() {
-        this.$refs.estudante.focus();
+        "emprestimo-datepicker": __WEBPACK_IMPORTED_MODULE_0__components_EmprestimoDatepicker_vue___default.a,
+        "select-estudante": __WEBPACK_IMPORTED_MODULE_1__components_SelectEstudante_vue___default.a
     },
     data: function data() {
         return {
-            devolucao: __WEBPACK_IMPORTED_MODULE_3_moment___default()().add(7, 'days').format('DD/MM/YYYY'),
+            devolucao: __WEBPACK_IMPORTED_MODULE_4_moment___default()().add(7, 'days').format('DD/MM/YYYY'),
             estudante: null,
-            estudanteSearch: '',
             livroSearch: '',
-            estudantesList: { meta: {}, estudantes: {} },
             livros: [],
-            errors: new __WEBPACK_IMPORTED_MODULE_1__directives_errors__["a" /* default */]({}),
-            loading: new __WEBPACK_IMPORTED_MODULE_2__directives_loading__["a" /* default */](),
-            isbnNotFound: false,
-            modalEnable: false
+            errors: new __WEBPACK_IMPORTED_MODULE_2__directives_errors__["a" /* default */]({}),
+            loading: new __WEBPACK_IMPORTED_MODULE_3__directives_loading__["a" /* default */](),
+            isbnNotFound: false
         };
     },
 
-    watch: {
-        livrosLoading: function livrosLoading(flag) {
-            console.log("livrosLoading mudou para " + flag);
-        }
-    },
     methods: {
         validation: function validation() {
             if (!this.estudante) {
@@ -1882,56 +1842,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             return this.errors.any();
         },
-        removeEstudante: function removeEstudante() {
-            var _this = this;
-
-            this.estudante = null;
-            this.$nextTick(function () {
-                return _this.$refs.estudante.focus();
-            });
-        },
         selectEstudante: function selectEstudante(estudante) {
             this.estudante = estudante;
-            this.estudantesList = { meta: {}, estudantes: {} };
-            this.estudanteSearch = '';
-            this.errors.remove('estudante_id');
-            this.modalEnable = false;
             this.$refs.livros.focus();
         },
-        searchEstudante: function searchEstudante() {
-            var _this2 = this;
-
-            if (!this.estudanteSearch.length) {
-                return;
-            }
-
-            this.loading.set('estudante');
-
-            axios.get('/api/estudantes?q=' + this.estudanteSearch).then(function (_ref) {
-                var data = _ref.data;
-
-                _this2.loading.done('estudante');
-                if (data.meta.total === 1 && !_this2.modalEnable) {
-                    _this2.selectEstudante(data.estudantes[0]);
-                    return;
-                }
-
-                if (data.meta.total === 0) {
-                    _this2.errors.add('estudante_id', 'Nenhum Estudante emcontrado contendo "' + _this2.estudanteSearch + '".');
-                    _this2.$refs.estudante.focus();
-                    _this2.modalEnable = false;
-                    return;
-                }
-
-                _this2.estudantesList = data;
-                _this2.modalEnable = true;
-                _this2.$nextTick(function () {
-                    return _this2.$refs.modalInput.focus();
-                });
-            });
-        },
         searchLivro: function searchLivro() {
-            var _this3 = this;
+            var _this = this;
 
             if (!this.livroSearch.length) {
                 return;
@@ -1941,16 +1857,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.isbnNotFound = false;
             this.errors.remove('livros');
 
-            axios.get('/api/livros/' + this.livroSearch, {
+            axios.get("/api/livros/" + this.livroSearch, {
                 validateStatus: function validateStatus(status) {
                     return status !== 200 || status !== 404;
                 }
             }).then(function (response) {
-                _this3.loading.done('livros');
+                _this.loading.done('livros');
                 if (response.status === 404) {
-                    return _this3.isbnNotFound = response.data;
+                    return _this.isbnNotFound = response.data;
                 }
-                _this3.livros.unshift(response.data.livro);
+                _this.livros.unshift(response.data.livro);
             });
 
             this.livroSearch = '';
@@ -1958,8 +1874,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         remove: function remove(livro) {
             this.livros.splice(this.livros.indexOf(livro), 1);
         },
+        clear: function clear() {
+            this.livros = [];
+            this.estudante = null;
+            this.livroSearch = '';
+        },
         enviar: function enviar() {
-            var _this4 = this;
+            var _this2 = this;
 
             if (this.validation()) {
                 return;
@@ -1972,13 +1893,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 estudante_id: this.estudante ? this.estudante.id : null,
                 devolucao: this.devolucao
             }).then(function (response) {
-                _this4.livros = [];
-                _this4.estudante = null;
+                _this2.clear();
                 flash(response.data);
-                //                    console.log(response.data);
             }).catch(function (error) {
                 console.log(error.response.data.errors);
-                _this4.errors.record(error.response.data.errors);
+                _this2.errors.record(error.response.data.errors);
                 flash('Erro ao tentar adicionar empréstimo', 'erro');
             });
         }
@@ -3079,6 +2998,147 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/SelectEstudante.vue":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__mixins_typeAheadPointer__ = __webpack_require__("./resources/assets/js/mixins/typeAheadPointer.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_typeAheadPointer__["a" /* default */]],
+    name: 'select-estudante',
+    props: ['estudante'],
+    data: function data() {
+        return {
+            selected: null,
+            options: [],
+            meta: {},
+            opened: false,
+            searchFor: '',
+            searching: false
+        };
+    },
+
+    watch: {
+        searchFor: function searchFor() {
+            this.open();
+        },
+        opened: function opened(val) {
+            if (!val) {
+                this.searchFor = '';
+            }
+        },
+        estudante: function estudante() {
+            this.selected = this.estudante;
+        }
+    },
+    methods: {
+        open: function open() {
+            if (this.searchFor.length > 1) {
+                this.opened = true;
+            }
+        },
+        unselect: function unselect() {
+            this.selected = null;
+            this.$emit('selected', null);
+        },
+        select: function select(estudante) {
+            if (this.optionSelected === -1 && this.options.length === 1) {
+                estudante = this.options[0];
+            }
+
+            if (!estudante || typeof estudante === 'undefined') {
+                this.$emit('error', 'Selecione um estudante');
+                this.typeAheadEscape();
+                return;
+            }
+
+            this.selected = estudante;
+            this.$emit('selected', estudante);
+
+            this.typeAheadEscape();
+        },
+        close: function close(e) {
+            if (e.relatedTarget) {
+                var classes = e.relatedTarget.getAttribute('class');
+                this.opened = !!classes.match(/option/);
+            }
+        },
+        search: function search() {
+            var _this = this;
+
+            var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+            var e = arguments[1];
+
+            if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Escape') {
+                return;
+            }
+            if (this.searching || this.searchFor.length < 2) {
+                return;
+            }
+            this.searching = true;
+            this.$emit('searching');
+            axios.get('/api/estudantes?q=' + this.searchFor + '&page=' + page).then(function (_ref) {
+                var data = _ref.data;
+
+                _this.searching = false;
+                _this.options = data.estudantes;
+                _this.meta = data.meta;
+            }).catch(function () {
+                _this.searching = false;
+                flash('Erro ao buscar estudantes', 'danger');
+            });
+        }
+    },
+    created: function created() {
+        this.selected = this.estudante;
+    },
+    mounted: function mounted() {
+        this.$refs.search.focus();
+    }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/SelectSecoes.vue":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -3230,6 +3290,36 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 // module
 exports.push([module.i, "\n.notification[data-v-0d4b040a] {\n    position: fixed;\n    bottom: 2em;\n    right: 2em;\n    max-width: 30em\n}\n.is-sucesso[data-v-0d4b040a] {\n    background-color: #23d160;\n    color: #fff;\n}\n.is-erro[data-v-0d4b040a] {\n    background-color: #ff3860;\n    color: #fff;\n}\n.is-alerta[data-v-0d4b040a] {\n    background-color: #ffdd57;\n    color: rgba(0, 0, 0, 0.7);\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-143c7c0b\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/Confirm.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.modal-confirm {\n    width : 400px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a6f56bc\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/SelectEstudante.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.input-addon[data-v-3a6f56bc] {\n  margin: 0 0 0.5em;\n}\n.select2-search[data-v-3a6f56bc] {\n  border: 1px solid #d4d4d4;\n  background: #fff;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  border-top: none;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  z-index: 5;\n}\n.select2-search .button[data-v-3a6f56bc] {\n    width: 100%;\n    -webkit-box-pack: left;\n        -ms-flex-pack: left;\n            justify-content: left;\n}\n.select2-search .help[data-v-3a6f56bc] {\n    padding-left: 1em;\n}\n.tag[data-v-3a6f56bc], .tag .fa[data-v-3a6f56bc] {\n  margin-right: 0.5em;\n}\n.is-danger .input[data-v-3a6f56bc] {\n  border-color: #ff3860;\n}\n", ""]);
 
 // exports
 
@@ -39076,6 +39166,206 @@ if (false) {
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-3a6f56bc\",\"hasScoped\":true}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/SelectEstudante.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "select2-multi" }, [
+      _c("div", { staticClass: "input-addon" }, [
+        _vm.selected
+          ? _c(
+              "span",
+              {
+                staticClass: "tag is-large tag-default",
+                class: { "is-success": !_vm.selected.id }
+              },
+              [
+                !_vm.selected.id
+                  ? _c("i", { staticClass: "fa fa-plus" })
+                  : _vm._e(),
+                _vm._v("\n                " + _vm._s(_vm.selected.nome) + " "),
+                _c("a", {
+                  staticClass: "delete is-small",
+                  on: { click: _vm.unselect }
+                })
+              ]
+            )
+          : _vm._e()
+      ]),
+      _vm._v(" "),
+      !_vm.selected
+        ? _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.searchFor,
+                expression: "searchFor"
+              }
+            ],
+            ref: "search",
+            staticClass: "input",
+            attrs: {
+              placeholder: "Digite a matrícula ou o nome para pesquisar"
+            },
+            domProps: { value: _vm.searchFor },
+            on: {
+              blur: _vm.close,
+              focus: _vm.open,
+              keyup: function($event) {
+                _vm.search(1, $event)
+              },
+              keydown: [
+                function($event) {
+                  if (
+                    !("button" in $event) &&
+                    _vm._k($event.keyCode, "down", 40)
+                  ) {
+                    return null
+                  }
+                  $event.preventDefault()
+                  _vm.typeAheadDown($event)
+                },
+                function($event) {
+                  if (
+                    !("button" in $event) &&
+                    _vm._k($event.keyCode, "up", 38)
+                  ) {
+                    return null
+                  }
+                  $event.preventDefault()
+                  _vm.typeAheadUp($event)
+                },
+                function($event) {
+                  if (
+                    !("button" in $event) &&
+                    _vm._k($event.keyCode, "esc", 27)
+                  ) {
+                    return null
+                  }
+                  $event.preventDefault()
+                  _vm.typeAheadEscape($event)
+                },
+                function($event) {
+                  if (
+                    !("button" in $event) &&
+                    _vm._k($event.keyCode, "enter", 13)
+                  ) {
+                    return null
+                  }
+                  $event.preventDefault()
+                  _vm.select(
+                    _vm.options.length ? _vm.options[_vm.optionSelected] : null
+                  )
+                }
+              ],
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.searchFor = $event.target.value
+              }
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      !_vm.selected
+        ? _c("span", { staticClass: "icon is-small is-left" }, [
+            _c("i", { staticClass: "fa fa-user" })
+          ])
+        : _vm._e()
+    ]),
+    _vm._v(" "),
+    _vm.opened
+      ? _c(
+          "div",
+          { staticClass: "select2-search" },
+          [
+            _vm.searching
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "button",
+                    attrs: { type: "button", disabled: "" }
+                  },
+                  [_vm._v('Buscando "' + _vm._s(_vm.searchFor) + '"...')]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.noMatches
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "button is-white option",
+                    class: { "is-info": _vm.optionSelected === 0 },
+                    attrs: { type: "button" },
+                    on: {
+                      blur: _vm.close,
+                      click: function($event) {
+                        _vm.select({ nome: _vm.searchFor })
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      '"' +
+                        _vm._s(_vm.searchFor) +
+                        '" não encontrado, clique para adicionar'
+                    )
+                  ]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _vm._l(_vm.options, function(estudante, index) {
+              return _c("button", {
+                staticClass: "button is-white option",
+                class: { "is-info": index === _vm.optionSelected },
+                attrs: { type: "button" },
+                domProps: { textContent: _vm._s(estudante.nome) },
+                on: {
+                  blur: _vm.close,
+                  click: function($event) {
+                    _vm.select(estudante)
+                  }
+                }
+              })
+            }),
+            _vm._v(" "),
+            _vm.meta.total > 10 && _vm.opened
+              ? _c("span", { staticClass: "help is-info" }, [
+                  _vm._v(
+                    "\n            Exibindo " +
+                      _vm._s(_vm.meta.from) +
+                      " a " +
+                      _vm._s(_vm.meta.to) +
+                      " de um total de " +
+                      _vm._s(_vm.meta.total) +
+                      " resultados\n        "
+                  )
+                ])
+              : _vm._e()
+          ],
+          2
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-3a6f56bc", module.exports)
+  }
+}
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-491e4966\",\"hasScoped\":true}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/SelectSecoes.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -39891,11 +40181,7 @@ var render = function() {
     _c("div", { staticClass: "columns" }, [
       _c("div", { staticClass: "column" }, [
         _c("div", { staticClass: "field" }, [
-          _c(
-            "label",
-            { staticClass: "label is-large", attrs: { for: "estudante_id" } },
-            [_vm._v("Estudante")]
-          ),
+          _c("label", { staticClass: "label is-large" }, [_vm._v("Estudante")]),
           _vm._v(" "),
           _vm.estudante
             ? _c("span", { staticClass: "tag is-large" }, [
@@ -39917,58 +40203,31 @@ var render = function() {
                 "div",
                 {
                   staticClass: "control has-icons-right has-icons-left",
-                  class: { "is-loading": _vm.loading.has("estudante") }
+                  class: { "is-danger": _vm.errors.has("estudante_id") }
                 },
                 [
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.estudanteSearch,
-                        expression: "estudanteSearch"
-                      }
-                    ],
-                    ref: "estudante",
-                    staticClass: "input",
-                    class: { "is-danger": _vm.errors.has("estudante_id") },
-                    attrs: {
-                      autocomplete: "off",
-                      id: "estudante_id",
-                      placeholder:
-                        "Informe a matricula ou parte do nome e pressione enter"
-                    },
-                    domProps: { value: _vm.estudanteSearch },
+                  _c("select-estudante", {
+                    attrs: { estudante: _vm.estudante },
                     on: {
-                      keyup: function($event) {
-                        if (
-                          !("button" in $event) &&
-                          _vm._k($event.keyCode, "enter", 13)
-                        ) {
-                          return null
-                        }
-                        _vm.searchEstudante()
+                      selected: function($event) {
+                        _vm.selectEstudante($event)
                       },
-                      keydown: function($event) {
+                      error: function($event) {
+                        _vm.errors.add("estudante_id", $event)
+                      },
+                      searching: function($event) {
                         _vm.errors.remove("estudante_id")
-                      },
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.estudanteSearch = $event.target.value
                       }
                     }
                   }),
-                  _vm._v(" "),
-                  _vm._m(0),
                   _vm._v(" "),
                   _vm.errors.has("estudante_id")
                     ? _c("span", { staticClass: "icon is-small is-right" }, [
                         _c("i", { staticClass: "fa fa-warning" })
                       ])
                     : _vm._e()
-                ]
+                ],
+                1
               ),
           _vm._v(" "),
           _vm.errors.has("estudante_id")
@@ -40040,7 +40299,7 @@ var render = function() {
                 }
               }),
               _vm._v(" "),
-              _vm._m(1),
+              _vm._m(0),
               _vm._v(" "),
               _vm.errors.has("livros")
                 ? _c("span", { staticClass: "icon is-small is-right" }, [
@@ -40082,7 +40341,7 @@ var render = function() {
                     ])
                   ]),
                   _vm._v(" "),
-                  _vm._m(2)
+                  _vm._m(1)
                 ])
               : _vm._e(),
             _vm._v(" "),
@@ -40090,7 +40349,7 @@ var render = function() {
             !_vm.isbnNotFound &&
             !_vm.loading.has("livros")
               ? _c("div", { staticClass: "card-content has-border-bottom" }, [
-                  _vm._m(3)
+                  _vm._m(2)
                 ])
               : _vm._e(),
             _vm._v(" "),
@@ -40141,7 +40400,7 @@ var render = function() {
             _vm._v(" "),
             _vm.loading.has("livros")
               ? _c("div", { staticClass: "card-content has-border-bottom" }, [
-                  _vm._m(4),
+                  _vm._m(3),
                   _vm._v(" "),
                   _c("div", { staticClass: "content mt-1" }, [
                     _c("p", { staticClass: "subtitle is-6" }, [
@@ -40202,127 +40461,11 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _vm._m(5)
-    ]),
-    _vm._v(" "),
-    _vm.modalEnable
-      ? _c("div", { staticClass: "modal is-active" }, [
-          _c("div", { staticClass: "modal-content" }, [
-            _c(
-              "article",
-              {
-                staticClass: "message",
-                staticStyle: { border: "1px solid #faf2cc" }
-              },
-              [
-                _c("div", { staticClass: "message-header" }, [
-                  _c("p", [
-                    _vm._v(
-                      'Busca Estudante contendo "' +
-                        _vm._s(_vm.estudanteSearch) +
-                        '"'
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("button", {
-                    staticClass: "delete",
-                    attrs: { "aria-label": "delete" },
-                    on: {
-                      click: function($event) {
-                        _vm.modalEnable = false
-                      }
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "message-body" }, [
-                  _c("div", { staticClass: "field row" }, [
-                    _c("div", { staticClass: "control has-icons-right" }, [
-                      _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: _vm.estudanteSearch,
-                            expression: "estudanteSearch"
-                          }
-                        ],
-                        ref: "modalInput",
-                        staticClass: "input",
-                        attrs: { autocomplete: "off" },
-                        domProps: { value: _vm.estudanteSearch },
-                        on: {
-                          keyup: function($event) {
-                            _vm.searchEstudante()
-                          },
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.estudanteSearch = $event.target.value
-                          }
-                        }
-                      }),
-                      _vm._v(" "),
-                      _vm._m(6)
-                    ]),
-                    _vm._v(" "),
-                    _c("p", { staticClass: "help is-info" }, [
-                      _vm._v(
-                        "\n                            Exibindo\n                            " +
-                          _vm._s(
-                            _vm.estudantesList.meta.per_page <
-                            _vm.estudantesList.meta.total
-                              ? _vm.estudantesList.meta.per_page
-                              : _vm.estudantesList.meta.total
-                          ) +
-                          "\n                            de um total de " +
-                          _vm._s(_vm.estudantesList.meta.total) +
-                          "\n                        "
-                      )
-                    ])
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "ul",
-                    _vm._l(_vm.estudantesList.estudantes, function(item) {
-                      return _c("li", [
-                        _c(
-                          "a",
-                          {
-                            staticClass: "button is-link",
-                            on: {
-                              click: function($event) {
-                                _vm.selectEstudante(item)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              _vm._s(item.matricula) + " - " + _vm._s(item.nome)
-                            )
-                          ]
-                        )
-                      ])
-                    })
-                  )
-                ])
-              ]
-            )
-          ])
-        ])
-      : _vm._e()
+      _vm._m(4)
+    ])
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "icon is-small is-left" }, [
-      _c("i", { staticClass: "fa fa-user" })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -40379,14 +40522,6 @@ var staticRenderFns = [
       _c("button", { staticClass: "button", attrs: { type: "button" } }, [
         _vm._v("Reset")
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "icon is-small is-right" }, [
-      _c("i", { staticClass: "fa fa-search" })
     ])
   }
 ]
@@ -41108,6 +41243,60 @@ if(false) {
  if(!content.locals) {
    module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0d4b040a\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Flash.vue", function() {
      var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-0d4b040a\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Flash.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-143c7c0b\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/Confirm.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-143c7c0b\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/Confirm.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("1bc17745", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-143c7c0b\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Confirm.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-143c7c0b\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Confirm.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a6f56bc\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/SelectEstudante.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a6f56bc\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/SelectEstudante.vue");
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("ea2b2d30", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a6f56bc\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js?indentedSyntax!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./SelectEstudante.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a6f56bc\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js?indentedSyntax!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./SelectEstudante.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -51882,13 +52071,17 @@ window.vueConfirm = function (message) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-143c7c0b\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/Confirm.vue")
+}
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
 var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/Confirm.vue")
 /* template */
 var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-143c7c0b\",\"hasScoped\":false}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/Confirm.vue")
 /* styles */
-var __vue_styles__ = null
+var __vue_styles__ = injectStyle
 /* scopeId */
 var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
@@ -52318,6 +52511,57 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-dc868300", Component.options)
   } else {
     hotAPI.reload("data-v-dc868300", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+
+/***/ "./resources/assets/js/components/SelectEstudante.vue":
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-3a6f56bc\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0!./resources/assets/js/components/SelectEstudante.vue")
+}
+var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
+/* script */
+var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0!./resources/assets/js/components/SelectEstudante.vue")
+/* template */
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-3a6f56bc\",\"hasScoped\":true}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./resources/assets/js/components/SelectEstudante.vue")
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-3a6f56bc"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/SelectEstudante.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key.substr(0, 2) !== "__"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] SelectEstudante.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-3a6f56bc", Component.options)
+  } else {
+    hotAPI.reload("data-v-3a6f56bc", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
