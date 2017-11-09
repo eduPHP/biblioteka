@@ -22,9 +22,9 @@ Route::get('/estudantes/create', 'EstudantesController@create');
 Route::get('/estudantes/{estudante}', 'EstudantesController@show');
 Route::patch('/estudantes/{estudante}', 'EstudantesController@update');
 Route::get('/estudantes/{estudante}/edit', 'EstudantesController@edit');
-Route::delete('/estudantes/{estudante}', 'EstudantesController@destroy');
+Route::delete('/api/estudantes/{estudante}', 'Api\EstudantesController@destroy');
 Route::get('/estudantes', 'EstudantesController@index');
-Route::get('/api/estudantes', 'Api\\EstudantesController@index');
+Route::get('/api/estudantes', 'Api\EstudantesController@index');
 Route::post('/estudantes', 'EstudantesController@store');
 
 Route::get('/emprestimos', 'EmprestimosController@index');
@@ -59,4 +59,4 @@ Route::post('/autores', 'AutoresController@store');
 Route::get('/autores/{autor}', 'AutoresController@show');
 Route::patch('/autores/{autor}', 'AutoresController@update');
 Route::get('/autores/{autor}/edit', 'AutoresController@edit');
-Route::delete('/autores/{autor}', 'AutoresController@destroy');
+Route::delete('/api/autores/{autor}', 'Api\AutoresController@destroy');

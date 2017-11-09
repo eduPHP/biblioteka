@@ -53,10 +53,4 @@ class EstudantesController extends Controller
         return redirect(url('/estudantes'))->with('success', 'Estudante modificado');
     }
 
-    public function destroy(Estudante $estudante)
-    {
-        $estudante->delete();
-
-        return redirect(url('/estudantes'))->with('success', 'Estudante removido');
-    }
 }

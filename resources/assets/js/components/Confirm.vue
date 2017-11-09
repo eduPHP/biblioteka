@@ -35,8 +35,7 @@
                     this.close();
                     return;
                 }
-                window.events.$emit('accepted', _.clone(this.message));
-                this.close();
+                flash('Confirmado :)');
             },
             open(){
                 this.active = true;

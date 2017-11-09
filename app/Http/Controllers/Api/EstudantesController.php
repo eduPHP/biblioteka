@@ -14,4 +14,14 @@ class EstudantesController extends Controller
             Estudante::apiQuery()
         );
     }
+
+    public function destroy(Estudante $estudante)
+    {
+        try {
+            $estudante->delete();
+            return response('Estudante removido.');
+        } catch (\Exception $exception) {
+            return response(['message' => 'Estudante sendo referenciado em algum empréstimo.'], 422);
+        }
+    }
 }

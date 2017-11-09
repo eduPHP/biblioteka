@@ -17,7 +17,7 @@
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
                 <a href="/emprestimos/create" class="button is-info">
-                    <span class="icon"><i classw="fa fa-plus"></i></span> <span>Adicionar</span> </a>
+                    <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
         </div>
@@ -82,33 +82,22 @@
 <script>
     import Paginator from "../components/Paginator.vue";
     import Confirm from "../components/Confirm.vue";
+    import indexGrid from "../mixins/indexGrid";
 
     let moment = require('moment');
     import 'moment/locale/pt-br';
 
-
     export default {
+        mixins: [indexGrid],
         components: {Paginator, Confirm},
-        replace: true,
         data() {
             return {
-                search: '',
-                filteredBy: '',
-                loading: false,
-                meta: {},
                 order: {
                     field: 'devolucao',
                     direction: 'asc'
                 },
                 emprestimos: []
             };
-        },
-
-        watch: {
-            filteredBy() {
-                this.search = '';
-                this.fetch(this.filteredBy === '' ? 1 : null);
-            }
         },
 
         filters: {
@@ -121,25 +110,6 @@
         },
 
         methods: {
-            buscar() {
-                this.filteredBy = this.search;
-            },
-
-            orderBy(field) {
-                let direction = this.order.direction === 'asc' && this.order.field === field ? 'desc' : 'asc';
-
-                this.order = {
-                    field,
-                    direction
-                };
-                this.fetch(1);
-            },
-
-            /**
-             * TODO: Melhorar confirmação usando promises
-             *
-             * @param emprestimo
-             */
             renovar(emprestimo) {
                 vueConfirm(()=>{
                     axios.post(`/api/emprestimos/${emprestimo.id}/renovar`).then(response => {
@@ -194,21 +164,6 @@
 
                 history.pushState(null, document.title, '?' + update);
             }
-        },
-        mounted() {
-            let searchInQuery = location.search.match(/q=([^&]+)/);
-            let orderInQuery = location.search.match(/orderby=([a-z]+),(asc|desc)/);
-            if (orderInQuery) {
-                this.order = {
-                    field: orderInQuery[1],
-                    direction: orderInQuery[2]
-                };
-            }
-            if (searchInQuery) {
-                this.filteredBy = searchInQuery[1];
-                return;
-            }
-            this.fetch();
         }
     }
 </script>

@@ -15,8 +15,8 @@ class CreateEmprestimosTable extends Migration
     {
         Schema::create('emprestimos', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedInteger('estudante_id');
-            $table->unsignedInteger('livro_id');
+            $table->unsignedInteger('estudante_id')->references('id')->on('estudantes');
+            $table->unsignedInteger('livro_id')->references('id')->on('livros');
             $table->dateTime('devolucao');
 
             $table->dateTime('emprestado_em');

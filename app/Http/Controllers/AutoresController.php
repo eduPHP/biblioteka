@@ -14,9 +14,7 @@ class AutoresController extends Controller
      */
     public function index()
     {
-        $autores = Autor::paginate();
-
-        return view('autores.index', compact('autores'));
+        return view('autores.index');
     }
 
     /**
@@ -88,20 +86,6 @@ class AutoresController extends Controller
         $autor->update($data);
 
         return $this->redirectToIndex("Autor modificado");
-    }
-
-    /**
-     * Remove um Autor
-     *
-     * @param Autor $autor
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Autor $autor)
-    {
-        $autor->delete();
-
-        return $this->redirectToIndex("Autor removido");
     }
 
     /**
