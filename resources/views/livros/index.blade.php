@@ -13,52 +13,5 @@
             </li>
         </ul>
     </nav>
-
-    <div class="container">
-        <div class="level">
-            <h1 class="title level-left">Livros</h1>
-            <a href="{{url("/livros/create")}}" class="button is-info level-right">
-                <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
-        </div>
-        <table class="table is-fullwidth">
-            <thead>
-            <tr>
-                <th class="is-1">ISBN</th>
-                <th>Título</th>
-                <th class="is-1">Ação</th>
-            </tr>
-            </thead>
-            <tbody>
-            @forelse($livros as $livro)
-                <tr>
-                    <td>{{$livro->isbn}}</td>
-                    <td>
-                        <a href="{{url("/livros/{$livro->id}")}}">{{$livro->titulo}}</a>
-                    </td>
-                    <td>
-                        <form action="{{url("/livros/{$livro->id}")}}" method="POST">
-                            {!! method_field("DELETE") !!}
-                            {!! csrf_field() !!}
-                            <div class="level">
-                                <a href="{{url("/livros/{$livro->id}/edit")}}"
-                                   class="button is-info is-small level-left"><i
-                                            class="fa fa-pencil"></i></a>
-                                <button class="button is-danger is-small remover level-right">
-                                    <i class="fa fa-trash"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="4" class="espaco">Nenhum Livro encontrado</td>
-                </tr>
-            @endforelse
-            </tbody>
-        </table>
-        <div>
-            {!! $livros->render() !!}
-        </div>
-    </div>
+    <livros-grid></livros-grid>
 @endsection

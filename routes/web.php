@@ -17,6 +17,7 @@ Route::delete('/api/livros/{livro}', 'Api\LivrosController@destroy');
 Route::get('/livros/{livro}/edit', 'LivrosController@edit');
 Route::get('/livros', 'LivrosController@index');
 Route::post('/api/livros', 'Api\LivrosController@store');
+Route::get('/api/livros', 'Api\LivrosController@index');
 
 Route::get('/estudantes/create', 'EstudantesController@create');
 Route::get('/estudantes/{estudante}', 'EstudantesController@show');
@@ -41,7 +42,7 @@ Route::get('/secoes/{secao}','SecoesController@show');
 Route::get('/secoes/create','SecoesController@create');
 Route::patch('/secoes/{secao}','SecoesController@update');
 Route::get('/secoes/{secao}/edit','SecoesController@edit');
-Route::delete('/secoes/{secao}','SecoesController@destroy');
+Route::delete('/api/secoes/{secao}','Api\SecoesController@destroy');
 
 Route::get('/editoras', 'EditorasController@index');
 Route::get('/api/editoras', 'Api\EditorasController@index');
@@ -50,7 +51,7 @@ Route::get('/editoras/{editora}', 'EditorasController@show');
 Route::get('/editoras/create', 'EditorasController@create');
 Route::patch('/editoras/{editora}', 'EditorasController@update');
 Route::get('/editoras/{editora}/edit', 'EditorasController@edit');
-Route::delete('/editoras/{editora}', 'EditorasController@destroy');
+Route::delete('/api/editoras/{editora}', 'Api\EditorasController@destroy');
 
 Route::get('/autores/create', 'AutoresController@create');
 Route::get('/api/autores','Api\AutoresController@index');

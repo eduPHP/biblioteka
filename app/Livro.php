@@ -2,11 +2,15 @@
 
 namespace App;
 
+use App\Models\Traits\Sortable;
 use Illuminate\Database\Eloquent\Model;
 
 class Livro extends Model
 {
+    use Sortable;
+
     protected $guarded = [];
+    protected $orderby = "titulo";
 
     public static function findByIsbn($isbn)
     {
@@ -22,6 +26,21 @@ class Livro extends Model
 
         return $livro;
     }
+
+    public static function apiQuery()
+    {
+        $query = self::ordered();
+
+        if ($search = request('q')) {
+            $query->whereRaw(
+                '(UPPER(titulo) like ? or isbn = ?)',
+                [strtoupper("%$search%"), $search]
+            );
+        }
+
+        return $query->paginate(request('perpage', 10));
+    }
+
     public function atualizar($data)
     {
         list($data, $autores) = self::prepareData($data);

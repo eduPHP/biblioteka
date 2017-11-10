@@ -60,7 +60,7 @@
                             <div class="level-left">
                                 <div>
                                     <h4 class="title is-5">{{ livro.titulo }}</h4>
-                                    <span class="subtitile is-7"><div v-for="autor in livro.autores" v-text="autor.nome"></div></span>
+                                    <span class="subtitile is-7 autores"><span v-for="autor in livro.autores" v-text="autor.nome"></span></span>
                                 </div>
                             </div>
                             <button class="delete level-right" type="button" @click="remove(livro)"></button>
@@ -159,7 +159,6 @@
                     return;
                 }
 
-
                 this.loading.set('livros');
                 this.isbnNotFound = false;
                 this.errors.remove('livros');
@@ -173,7 +172,7 @@
                     if (response.status === 404) {
                         return this.isbnNotFound = response.data;
                     }
-                    this.livros.unshift(response.data.livro);
+                    this.livros.unshift(response.data.livros);
                 });
 
                 this.livroSearch = '';
@@ -234,5 +233,8 @@
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
         -webkit-appearance: none;
+    }
+    .autores span + span:before{
+        content: ', ';
     }
 </style>

@@ -30,7 +30,7 @@ class LivrosTest extends TestCase
     {
         $livros = factory('App\Livro', 3)->create();
 
-        $resposta = $this->get("/livros");
+        $resposta = $this->get("/api/livros");
 
         foreach ($livros as $livro) {
             $resposta->assertSee(e($livro->titulo));
@@ -85,13 +85,13 @@ class LivrosTest extends TestCase
         $resposta = $this->getJson('/api/livros/4321');
 
         $resposta->assertStatus(200);
-        $this->assertEquals(4321, $resposta->json()['livro']['isbn']);
+        $this->assertEquals(4321, $resposta->json()['livros']['isbn']);
     }
 
     /** @test */
     function ao_consultar_um_isbn_nao_cadastrado_deve_retornar_four_oh_four()
     {
-        $resposta = $this->getJson('/api/livros/4321');
+        $resposta = $this->getJson('/api/livros/1111');
 
         $resposta->assertStatus(404);
     }

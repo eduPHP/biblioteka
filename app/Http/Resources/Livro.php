@@ -14,7 +14,7 @@ class Livro extends Resource
      */
     public function toArray($request)
     {
-        self::wrap('livro');
+        self::wrap('livros');
         return [
             'id'=>$this->id,
             'isbn'=>$this->isbn,

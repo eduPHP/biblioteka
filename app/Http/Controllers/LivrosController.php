@@ -13,9 +13,7 @@ class LivrosController extends Controller
      */
     public function index()
     {
-        $livros = Livro::paginate();
-
-        return view('livros.index', compact('livros'));
+        return view('livros.index');
     }
 
     /**

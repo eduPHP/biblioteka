@@ -74,7 +74,7 @@ class EstudantesTest extends TestCase
     {
         $estudantes = factory('App\Estudante', 3)->create();
 
-        $resposta = $this->get('/estudantes');
+        $resposta = $this->getJson('/api/estudantes');
 
         $resposta->assertStatus(200);
 
@@ -98,9 +98,9 @@ class EstudantesTest extends TestCase
     {
         $estudante = factory('App\Estudante')->create();
 
-        $resposta = $this->delete("/estudantes/{$estudante->id}");
+        $resposta = $this->deleteJson("/api/estudantes/{$estudante->id}");
 
-        $resposta->assertStatus(302)->assertRedirect('/estudantes')->assertSessionHas('success');
+        $resposta->assertStatus(200);
         $this->assertDatabaseMissing('estudantes', ['id' => $estudante->id]);
     }
 

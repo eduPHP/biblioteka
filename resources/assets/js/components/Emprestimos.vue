@@ -16,7 +16,7 @@
                     <input v-model="search" @keyup.enter="buscar" placeholder="Buscar..." class="input">
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
-                <a href="/emprestimos/create" class="button is-info">
+                <a :href="paths.create()" class="button is-info">
                     <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
@@ -26,7 +26,7 @@
             <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i> <span class="sr-only">Loading...</span>
         </div>
 
-        <table v-if="emprestimos.length" class="table is-fullwidth crud">
+        <table v-if="itens.length" class="table is-fullwidth crud">
             <thead>
             <tr>
                 <th @click="orderBy('livro')">
@@ -48,7 +48,7 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="emprestimo in emprestimos">
+            <tr v-for="emprestimo in itens">
                 <td>
                     [ {{emprestimo.livro.isbn}} ] {{emprestimo.livro.titulo}}
                 </td>
@@ -73,7 +73,7 @@
             </tr>
             </tbody>
         </table>
-        <p v-if="!loading && !emprestimos.length">Nenhum registro encontrado.</p>
+        <p v-if="!loading && !itens.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
         <confirm></confirm>
     </div>
@@ -92,12 +92,17 @@
         components: {Paginator, Confirm},
         data() {
             return {
-                order: {
+                basePath: 'emprestimos'
+            };
+        },
+
+        computed: {
+            defaultOrder() {
+                return {
                     field: 'devolucao',
                     direction: 'asc'
-                },
-                emprestimos: []
-            };
+                };
+            }
         },
 
         filters: {
@@ -112,7 +117,7 @@
         methods: {
             renovar(emprestimo) {
                 vueConfirm(()=>{
-                    axios.post(`/api/emprestimos/${emprestimo.id}/renovar`).then(response => {
+                    axios.post(`${this.paths.edit(emprestimo)}/renovar`).then(response => {
                         emprestimo.devolucao = response.data.devolucao;
                         flash('Empréstimo renovado.', 'info')
                     });
@@ -121,48 +126,12 @@
 
             devolver(emprestimo) {
                 vueConfirm(()=>{
-                    axios.patch(`/api/emprestimos/${emprestimo.id}/devolver`).then(response => {
+                    axios.patch(`${this.paths.edit(emprestimo)}/devolver`).then(() => {
                         emprestimo.devolvido = true;
                         emprestimo.devolvido_em = moment().format();
                         flash('Empréstimo devolvido.','info')
                     });
                 }, 'Devolver livro?', 'Devolver', 'fa-arrow-circle-o-down');
-            },
-
-            fetch(page) {
-                if (this.loading) {
-                    return;
-                }
-                let query = [];
-                if (!page) {
-                    let pageInQuery = location.search.match(/page=(\d+)/);
-                    page = pageInQuery ? parseInt(pageInQuery[1]) : 1;
-                }
-                if (page > 1) query.push(`page=${page}`);
-
-                query.push(`orderby=${this.order.field},${this.order.direction}`);
-                if (this.filteredBy !== '') {
-                    query.push(`q=${this.filteredBy}`);
-                }
-
-                this.loading = true;
-                axios.get('/api/emprestimos?' + query.join('&')).then(response => {
-                    console.log(response.data);
-                    this.emprestimos = response.data.emprestimos;
-                    this.meta = response.data.meta;
-                    this.loading = false;
-                });
-                this.updateLocation(query);
-            },
-
-            updateLocation(query) {
-                let update = query.join('&');
-                if (update === 'orderby=devolucao,asc') {
-                    history.pushState(null, document.title, location.href.split("?")[0]);
-                    return;
-                }
-
-                history.pushState(null, document.title, '?' + update);
             }
         }
     }

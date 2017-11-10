@@ -9,9 +9,7 @@ class EstudantesController extends Controller
 {
     public function index()
     {
-        $estudantes = Estudante::paginate();
-
-        return view('estudantes.index', compact('estudantes'));
+        return view('estudantes.index');
     }
 
     public function show(Estudante $estudante)

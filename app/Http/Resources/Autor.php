@@ -17,6 +17,7 @@ class Autor extends Resource
         return [
             'id'=>$this->id,
             'nome'=>$this->nome,
+            'livros_count'=>$this->livros()->count(),
         ];
     }
 }

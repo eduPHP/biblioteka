@@ -14,9 +14,7 @@ class EditorasController extends Controller
      */
     public function index()
     {
-        $editoras = Editora::paginate();
-
-        return view('editoras.index', compact('editoras'));
+        return view('editoras.index');
     }
 
     /**
@@ -91,20 +89,6 @@ class EditorasController extends Controller
     }
 
     /**
-     * Remove um Editora
-     *
-     * @param Editora $editora
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Editora $editora)
-    {
-        $editora->delete();
-
-        return $this->redirectToIndex("Editora removida");
-    }
-
-    /**
      * Redireciona para a listagem
      *
      * @param $str
@@ -115,5 +99,4 @@ class EditorasController extends Controller
     {
         return redirect('/editoras')->withSuccess($str);
     }
-
 }

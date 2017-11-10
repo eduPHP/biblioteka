@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Emprestimo;
-use Illuminate\Http\Request;
 
 class EmprestimosController extends Controller
 {

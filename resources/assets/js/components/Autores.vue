@@ -16,7 +16,7 @@
                     <input v-model="search" @keyup.enter="buscar" placeholder="Buscar..." class="input">
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
-                <a href="/autores/create" class="button is-info">
+                <a :href="paths.create()" class="button is-info">
                     <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
@@ -26,7 +26,7 @@
             <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i> <span class="sr-only">Loading...</span>
         </div>
 
-        <table v-if="autores.length" class="table is-fullwidth crud">
+        <table v-if="itens.length" class="table is-fullwidth crud">
             <thead>
             <tr>
                 <th @click="orderBy('nome')">
@@ -34,17 +34,25 @@
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
                     </span>
                 </th>
+                <th @click="orderBy('livros-count')" class="is-2">
+                    <span>Livros</span> <span class="icon is-small" v-if="order.field === 'livros-count'">
+                       <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
+                    </span>
+                </th>
                 <th></th>
             </tr>
             </thead>
             <tbody>
-            <tr v-for="autor in autores">
+            <tr v-for="autor in itens">
                 <td>
                     {{autor.nome}}
                 </td>
+                <td>
+                    {{autor.livros_count}}
+                </td>
                 <td class="has-buttons">
                     <div class="level">
-                        <a :href="autor | editUrl" title="Editar" class="button is-info level-left">
+                        <a :href="paths.edit(autor)" title="Editar" class="button is-info level-left">
                             <i class="fa fa-pencil"></i> </a>
                         <button @click="remover(autor)" title="Remover" class="button is-danger level-right">
                             <i class="fa fa-trash"></i>
@@ -54,7 +62,7 @@
             </tr>
             </tbody>
         </table>
-        <p v-if="!loading && !autores.length">Nenhum registro encontrado.</p>
+        <p v-if="!loading && !itens.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
         <confirm></confirm>
     </div>
@@ -70,62 +78,18 @@
         components: {Paginator, Confirm},
         data() {
             return {
-                order: {
-                    field: 'nome',
-                    direction: 'asc'
-                },
-                autores: []
+                basePath: 'autores'
             };
-        },
-
-        filters: {
-            editUrl(autor){
-                return `/autores/${autor.id}/edit`;
-            }
         },
 
         methods: {
             remover(autor) {
                 vueConfirm(() => {
-                    axios.delete(`/api/autores/${autor.id}`).then(() => {
+                    axios.delete(this.paths.destroy(autor)).then(() => {
                         flash('Autor removido.', 'info')
                         this.fetch()
                     });
                 }, 'Remover autor?', 'Excluir', 'fa-trash');
-            },
-
-            fetch(page) {
-                if (this.loading) {
-                    return;
-                }
-                let query = [];
-                if (!page) {
-                    let pageInQuery = location.search.match(/page=(\d+)/);
-                    page = pageInQuery ? parseInt(pageInQuery[1]) : 1;
-                }
-                if (page > 1) query.push(`page=${page}`);
-
-                query.push(`orderby=${this.order.field},${this.order.direction}`);
-                if (this.filteredBy !== '') {
-                    query.push(`q=${this.filteredBy}`);
-                }
-
-                this.loading = true;
-                axios.get('/api/autores?' + query.join('&')).then(response => {
-                    this.autores = response.data.autores;
-                    this.meta = response.data.meta;
-                    this.loading = false;
-                });
-                this.updateLocation(query);
-            },
-            updateLocation(query) {
-                let update = query.join('&');
-                if (update === 'orderby=nome,asc') {
-                    history.pushState(null, document.title, location.href.split("?")[0]);
-                    return;
-                }
-
-                history.pushState(null, document.title, '?' + update);
             }
         }
     }

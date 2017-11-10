@@ -9,10 +9,28 @@ use App\Http\Controllers\Controller;
 
 class EditorasController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $autores = Editora::whereRaw('UPPER(nome) LIKE ?',[strtoupper("%{$request->q}%")])->paginate(10);
+        $editoras = Editora::apiQuery();
 
-        return new EditoraCollection($autores);
+        return new EditoraCollection($editoras);
+    }
+
+
+    /**
+     * Remove um Editora
+     *
+     * @param Editora $editora
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Editora $editora)
+    {
+        try {
+            $editora->delete();
+            return response('Removido');
+        } catch (\Exception $exception) {
+            return response(['message' => 'Editora sendo referenciada em algum livro.'], 422);
+        }
     }
 }

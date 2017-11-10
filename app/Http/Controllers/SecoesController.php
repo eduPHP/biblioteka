@@ -14,9 +14,7 @@ class SecoesController extends Controller
      */
     public function index()
     {
-        $secoes = Secao::paginate();
-
-        return view('secoes.index', compact('secoes'));
+        return view('secoes.index');
     }
 
     /**
@@ -90,20 +88,6 @@ class SecoesController extends Controller
         $secao->update($data);
 
         return $this->redirectToIndex("Seção modificada");
-    }
-
-    /**
-     * Remove um Secao
-     *
-     * @param Secao $secao
-     *
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy(Secao $secao)
-    {
-        $secao->delete();
-
-        return $this->redirectToIndex("Seção removida");
     }
 
     /**

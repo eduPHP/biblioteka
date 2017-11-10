@@ -10,6 +10,7 @@ class Estudante extends Model
     use Sortable;
 
     protected $guarded = [];
+    protected $orderby = "nome";
 
     public static function apiQuery()
     {

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="level">
             <div class="level-left">
-                <h1 class="title">Estudantes</h1>
+                <h1 class="title">Editoras</h1>
                 <h2 class="subtitle" v-if="filteredBy !== ''">
                     Filtrado por <span class="tag">
                         {{ filteredBy }}
@@ -29,11 +29,6 @@
         <table v-if="itens.length" class="table is-fullwidth crud">
             <thead>
             <tr>
-                <th @click="orderBy('matricula')" class="is-1">
-                    <span>Matrícula</span> <span class="icon is-small" v-if="order.field === 'matricula'">
-                       <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
-                    </span>
-                </th>
                 <th @click="orderBy('nome')">
                     <span>Nome</span> <span class="icon is-small" v-if="order.field === 'nome'">
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
@@ -43,18 +38,15 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="estudante in itens">
+            <tr v-for="editora in itens">
                 <td>
-                    {{estudante.matricula}}
-                </td>
-                <td>
-                    {{estudante.nome}}
+                    {{editora.nome}}
                 </td>
                 <td class="has-buttons">
                     <div class="level">
-                        <a :href="paths.edit(estudante)" title="Editar" class="button is-info level-left">
+                        <a :href="paths.edit(editora)" title="Editar" class="button is-info level-left">
                             <i class="fa fa-pencil"></i> </a>
-                        <button @click="remover(estudante)" title="Remover" class="button is-danger level-right">
+                        <button @click="remover(editora)" title="Remover" class="button is-danger level-right">
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>
@@ -78,18 +70,18 @@
         components: {Paginator, Confirm},
         data() {
             return {
-                basePath: 'estudantes'
+                basePath: 'editoras'
             };
         },
 
         methods: {
-            remover(estudante) {
+            remover(editora) {
                 vueConfirm(() => {
-                    axios.delete(this.paths.destroy(estudante)).then(() => {
-                        flash('Estudante removido.', 'info')
+                    axios.delete(this.paths.destroy(editora)).then(() => {
+                        flash('Editora removida.', 'info')
                         this.fetch()
                     });
-                }, 'Remover estudante?', 'Excluir', 'fa-trash');
+                }, 'Remover editora?', 'Excluir', 'fa-trash');
             }
         }
     }

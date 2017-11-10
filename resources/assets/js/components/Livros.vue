@@ -2,7 +2,7 @@
     <div class="container">
         <div class="level">
             <div class="level-left">
-                <h1 class="title">Estudantes</h1>
+                <h1 class="title">Livros</h1>
                 <h2 class="subtitle" v-if="filteredBy !== ''">
                     Filtrado por <span class="tag">
                         {{ filteredBy }}
@@ -29,13 +29,13 @@
         <table v-if="itens.length" class="table is-fullwidth crud">
             <thead>
             <tr>
-                <th @click="orderBy('matricula')" class="is-1">
-                    <span>Matrícula</span> <span class="icon is-small" v-if="order.field === 'matricula'">
+                <th @click="orderBy('isbn')">
+                    <span>ISBN</span> <span class="icon is-small" v-if="order.field === 'isbn'">
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
                     </span>
                 </th>
-                <th @click="orderBy('nome')">
-                    <span>Nome</span> <span class="icon is-small" v-if="order.field === 'nome'">
+                <th @click="orderBy('titulo')">
+                    <span>Nome</span> <span class="icon is-small" v-if="order.field === 'titulo'">
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
                     </span>
                 </th>
@@ -43,18 +43,18 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="estudante in itens">
+            <tr v-for="livro in itens">
                 <td>
-                    {{estudante.matricula}}
+                    {{livro.isbn}}
                 </td>
                 <td>
-                    {{estudante.nome}}
+                    {{livro.titulo}}
                 </td>
                 <td class="has-buttons">
                     <div class="level">
-                        <a :href="paths.edit(estudante)" title="Editar" class="button is-info level-left">
+                        <a :href="paths.edit(livro)" title="Editar" class="button is-info level-left">
                             <i class="fa fa-pencil"></i> </a>
-                        <button @click="remover(estudante)" title="Remover" class="button is-danger level-right">
+                        <button @click="remover(livro)" title="Remover" class="button is-danger level-right">
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>
@@ -78,18 +78,26 @@
         components: {Paginator, Confirm},
         data() {
             return {
-                basePath: 'estudantes'
+                basePath: 'livros',
             };
+        },
+        computed: {
+            defaultOrder() {
+                return {
+                    field: 'titulo',
+                    direction: 'asc'
+                };
+            }
         },
 
         methods: {
-            remover(estudante) {
+            remover(livro) {
                 vueConfirm(() => {
-                    axios.delete(this.paths.destroy(estudante)).then(() => {
-                        flash('Estudante removido.', 'info')
+                    axios.delete(this.paths.destroy(livro)).then(() => {
+                        flash('Livro removido.', 'info');
                         this.fetch()
                     });
-                }, 'Remover estudante?', 'Excluir', 'fa-trash');
+                }, 'Remover livro?', 'Excluir', 'fa-trash');
             }
         }
     }

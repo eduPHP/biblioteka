@@ -2,7 +2,7 @@
     <div class="container">
         <div class="level">
             <div class="level-left">
-                <h1 class="title">Estudantes</h1>
+                <h1 class="title">Seções</h1>
                 <h2 class="subtitle" v-if="filteredBy !== ''">
                     Filtrado por <span class="tag">
                         {{ filteredBy }}
@@ -29,13 +29,8 @@
         <table v-if="itens.length" class="table is-fullwidth crud">
             <thead>
             <tr>
-                <th @click="orderBy('matricula')" class="is-1">
-                    <span>Matrícula</span> <span class="icon is-small" v-if="order.field === 'matricula'">
-                       <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
-                    </span>
-                </th>
-                <th @click="orderBy('nome')">
-                    <span>Nome</span> <span class="icon is-small" v-if="order.field === 'nome'">
+                <th @click="orderBy('descricao')">
+                    <span>Descrição</span> <span class="icon is-small" v-if="order.field === 'descricao'">
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
                     </span>
                 </th>
@@ -43,18 +38,15 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="estudante in itens">
+            <tr v-for="secao in itens">
                 <td>
-                    {{estudante.matricula}}
-                </td>
-                <td>
-                    {{estudante.nome}}
+                    {{secao.descricao}}
                 </td>
                 <td class="has-buttons">
                     <div class="level">
-                        <a :href="paths.edit(estudante)" title="Editar" class="button is-info level-left">
+                        <a :href="paths.edit(secao)" title="Editar" class="button is-info level-left">
                             <i class="fa fa-pencil"></i> </a>
-                        <button @click="remover(estudante)" title="Remover" class="button is-danger level-right">
+                        <button @click="remover(secao)" title="Remover" class="button is-danger level-right">
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>
@@ -78,18 +70,27 @@
         components: {Paginator, Confirm},
         data() {
             return {
-                basePath: 'estudantes'
+                basePath: 'secoes'
             };
         },
 
+        computed: {
+            defaultOrder() {
+                return {
+                    field: 'descricao',
+                    direction: 'asc'
+                };
+            }
+        },
+
         methods: {
-            remover(estudante) {
+            remover(secao) {
                 vueConfirm(() => {
-                    axios.delete(this.paths.destroy(estudante)).then(() => {
-                        flash('Estudante removido.', 'info')
+                    axios.delete(this.paths.destroy(secao)).then(() => {
+                        flash('Seção removida.', 'info')
                         this.fetch()
                     });
-                }, 'Remover estudante?', 'Excluir', 'fa-trash');
+                }, 'Remover seção?', 'Excluir', 'fa-trash');
             }
         }
     }
