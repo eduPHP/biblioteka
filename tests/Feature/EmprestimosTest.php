@@ -4,12 +4,12 @@ namespace Tests\Feature;
 
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EmprestimosTest extends TestCase
 {
-    use DatabaseMigrations, InteractsWithExceptionHandling;
+    use RefreshDatabase, InteractsWithExceptionHandling;
 
     /** @test */
     function devemos_poder_cadastrar_um_emprestimo()

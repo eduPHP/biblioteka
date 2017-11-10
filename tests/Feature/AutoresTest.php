@@ -2,13 +2,12 @@
 
 namespace Tests\Feature;
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AutoresTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
     /** @test */
     function devemos_poder_ordenar_autores_pela_quantidade_de_livros()
     {
