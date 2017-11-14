@@ -275,26 +275,5 @@
         created() {
             this.resetForm();
         }
-//        mounted() {
-//            if (this.livro) {
-//                axios.get(`/api/livros/${this.livro}`).then(({data})=>{
-//                    this.id = data.livro.id;
-//                    this.titulo = data.livro.titulo;
-//                    this.isbn = data.livro.isbn;
-//                    this.quantidade = data.livro.quantidade;
-//                    this.descricao = data.livro.descricao;
-//                    this.autores = data.livro.autores;
-//                    this.editora_id = data.livro.editora_id;
-//                    this.secao_id = data.livro.secao_id;
-//                    this.ano = data.livro.ano;
-//                    this.edicao = data.livro.edicao;
-//                    console.log(this.autores);
-//                });
-//            }
-//        }
     }
 </script>
-
-<style>
-
-</style>

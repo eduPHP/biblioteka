@@ -16,7 +16,7 @@
                     <input v-model="search" @keyup.enter="buscar" placeholder="Buscar..." class="input">
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
-                <a :href="paths.create()" class="button is-info">
+                <a @click="editar" class="button is-info">
                     <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
@@ -52,7 +52,7 @@
                 </td>
                 <td class="has-buttons">
                     <div class="level">
-                        <a :href="paths.edit(estudante)" title="Editar" class="button is-info level-left">
+                        <a @click="editar(estudante)" title="Editar" class="button is-info level-left">
                             <i class="fa fa-pencil"></i> </a>
                         <button @click="remover(estudante)" title="Remover" class="button is-danger level-right">
                             <i class="fa fa-trash"></i>
@@ -65,6 +65,7 @@
         <p v-if="!loading && !itens.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
         <confirm></confirm>
+        <form-estudante :estudante="editEstudante" :active="editando" @close="fecharEdicao"></form-estudante>
     </div>
 </template>
 
@@ -78,11 +79,22 @@
         components: {Paginator, Confirm},
         data() {
             return {
-                basePath: 'estudantes'
+                basePath: 'estudantes',
+                editEstudante: null,
+                editando: false
             };
         },
 
         methods: {
+            editar(estudante = null) {
+                this.editEstudante = estudante;
+                this.editando = true;
+            },
+            fecharEdicao() {
+                this.editEstudante = null;
+                this.editando = false;
+                this.fetch();
+            },
             remover(estudante) {
                 vueConfirm(() => {
                     axios.delete(this.paths.destroy(estudante)).then(() => {

@@ -19,14 +19,12 @@ Route::get('/livros', 'LivrosController@index');
 Route::post('/api/livros', 'Api\LivrosController@store');
 Route::get('/api/livros', 'Api\LivrosController@index');
 
-Route::get('/estudantes/create', 'EstudantesController@create');
 Route::get('/estudantes/{estudante}', 'EstudantesController@show');
-Route::patch('/estudantes/{estudante}', 'EstudantesController@update');
-Route::get('/estudantes/{estudante}/edit', 'EstudantesController@edit');
+Route::patch('/api/estudantes/{estudante}', 'Api\EstudantesController@update');
 Route::delete('/api/estudantes/{estudante}', 'Api\EstudantesController@destroy');
 Route::get('/estudantes', 'EstudantesController@index');
 Route::get('/api/estudantes', 'Api\EstudantesController@index');
-Route::post('/estudantes', 'EstudantesController@store');
+Route::post('/api/estudantes', 'Api\EstudantesController@store');
 
 Route::get('/emprestimos', 'EmprestimosController@index');
 Route::get('/api/emprestimos', 'Api\EmprestimosController@index');
@@ -46,18 +44,14 @@ Route::delete('/api/secoes/{secao}','Api\SecoesController@destroy');
 
 Route::get('/editoras', 'EditorasController@index');
 Route::get('/api/editoras', 'Api\EditorasController@index');
-Route::post('/editoras', 'EditorasController@store');
+Route::post('/api/editoras', 'Api\EditorasController@store');
 Route::get('/editoras/{editora}', 'EditorasController@show');
-Route::get('/editoras/create', 'EditorasController@create');
-Route::patch('/editoras/{editora}', 'EditorasController@update');
-Route::get('/editoras/{editora}/edit', 'EditorasController@edit');
+Route::patch('/api/editoras/{editora}', 'Api\EditorasController@update');
 Route::delete('/api/editoras/{editora}', 'Api\EditorasController@destroy');
 
-Route::get('/autores/create', 'AutoresController@create');
 Route::get('/api/autores','Api\AutoresController@index');
 Route::get('/autores', 'AutoresController@index');
-Route::post('/autores', 'AutoresController@store');
+Route::post('/api/autores', 'Api\AutoresController@store');
 Route::get('/autores/{autor}', 'AutoresController@show');
-Route::patch('/autores/{autor}', 'AutoresController@update');
-Route::get('/autores/{autor}/edit', 'AutoresController@edit');
+Route::patch('/api/autores/{autor}', 'Api\AutoresController@update');
 Route::delete('/api/autores/{autor}', 'Api\AutoresController@destroy');

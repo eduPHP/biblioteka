@@ -16,7 +16,7 @@
                     <input v-model="search" @keyup.enter="buscar" placeholder="Buscar..." class="input">
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
-                <a :href="paths.create()" class="button is-info">
+                <a @click="editar" class="button is-info">
                     <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
@@ -44,7 +44,7 @@
                 </td>
                 <td class="has-buttons">
                     <div class="level">
-                        <a :href="paths.edit(editora)" title="Editar" class="button is-info level-left">
+                        <a @click="editar(editora)" title="Editar" class="button is-info level-left">
                             <i class="fa fa-pencil"></i> </a>
                         <button @click="remover(editora)" title="Remover" class="button is-danger level-right">
                             <i class="fa fa-trash"></i>
@@ -57,6 +57,7 @@
         <p v-if="!loading && !itens.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
         <confirm></confirm>
+        <form-editora :editora="editEditora" :active="editando" @close="fecharEdicao"></form-editora>
     </div>
 </template>
 
@@ -70,11 +71,22 @@
         components: {Paginator, Confirm},
         data() {
             return {
-                basePath: 'editoras'
+                basePath: 'editoras',
+                editEditora: null,
+                editando: false
             };
         },
 
         methods: {
+            editar(estudante = null) {
+                this.editEditora = estudante;
+                this.editando = true;
+            },
+            fecharEdicao() {
+                this.editEditora = null;
+                this.editando = false;
+                this.fetch();
+            },
             remover(editora) {
                 vueConfirm(() => {
                     axios.delete(this.paths.destroy(editora)).then(() => {

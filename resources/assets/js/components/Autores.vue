@@ -16,7 +16,7 @@
                     <input v-model="search" @keyup.enter="buscar" placeholder="Buscar..." class="input">
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
-                <a :href="paths.create()" class="button is-info">
+                <a @click="editar({nome:''})" class="button is-info">
                     <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
@@ -35,7 +35,7 @@
                     </span>
                 </th>
                 <th @click="orderBy('livros-count')" class="is-2">
-                    <span>Livros</span> <span class="icon is-small" v-if="order.field === 'livros-count'">
+                    <span># Livros</span> <span class="icon is-small" v-if="order.field === 'livros-count'">
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
                     </span>
                 </th>
@@ -52,7 +52,7 @@
                 </td>
                 <td class="has-buttons">
                     <div class="level">
-                        <a :href="paths.edit(autor)" title="Editar" class="button is-info level-left">
+                        <a @click="editar(autor)" title="Editar" class="button is-info level-left">
                             <i class="fa fa-pencil"></i> </a>
                         <button @click="remover(autor)" title="Remover" class="button is-danger level-right">
                             <i class="fa fa-trash"></i>
@@ -65,6 +65,7 @@
         <p v-if="!loading && !itens.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
         <confirm></confirm>
+        <form-autor :autor="editAutor" :active="editando" @close="fecharEdicao"></form-autor>
     </div>
 </template>
 
@@ -78,16 +79,27 @@
         components: {Paginator, Confirm},
         data() {
             return {
-                basePath: 'autores'
+                basePath: 'autores',
+                editando: false,
+                editAutor: null
             };
         },
 
         methods: {
+            editar(autor){
+                this.editAutor = autor;
+                this.editando = true;
+            },
+            fecharEdicao(){
+                this.editAutor = null;
+                this.editando = false;
+                this.fetch();
+            },
             remover(autor) {
                 vueConfirm(() => {
                     axios.delete(this.paths.destroy(autor)).then(() => {
-                        flash('Autor removido.', 'info')
-                        this.fetch()
+                        flash('Autor removido.', 'info');
+                        this.fetch();
                     });
                 }, 'Remover autor?', 'Excluir', 'fa-trash');
             }

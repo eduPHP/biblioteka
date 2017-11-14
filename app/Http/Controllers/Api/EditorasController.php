@@ -18,6 +18,44 @@ class EditorasController extends Controller
 
 
     /**
+     * Grava um novo Editora
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'nome' => 'required'
+        ]);
+
+        $editora = Editora::create($data);
+
+        return response(compact('editora'), 201);
+    }
+
+    /**
+     * Atualiza um Editora
+     *
+     * @param Request $request
+     * @param Editora $editora
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, Editora $editora)
+    {
+        $data = $request->validate([
+            'nome' => 'required'
+        ]);
+
+        $editora->update($data);
+
+        return response(compact('editora'), 201);
+    }
+
+
+    /**
      * Remove um Editora
      *
      * @param Editora $editora
