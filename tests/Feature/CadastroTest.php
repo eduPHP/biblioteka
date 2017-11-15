@@ -21,6 +21,6 @@ class CadastroTest extends TestCase
 
         $this->post('/register', $dados);
 
-        $this->assertDatabaseHas('usuarios', ['email' => 'john@example.com']);
+        $this->assertDatabaseHas('usuarios', ['email' => 'john@example.com', 'grupo'=>'usuario']);
     }
 }

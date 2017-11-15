@@ -16,7 +16,7 @@
             margin    : 5rem auto;
         }
         .card-header span{
-            margin: 0 auto;
+            margin: 2rem auto;
         }
         .field.is-grouped{
             justify-content: center;
@@ -29,16 +29,15 @@
 
     <div class="card">
         <header class="card-header">
-            <span class="is-size-3 has-text-weight-semibold">Login</span>
+            <span class="is-size-3 has-text-weight-semibold">{{config('app.name')}}</span>
         </header>
         <div class="card-content">
             <div class="content">
                 <!-- Input Email -->
                 <div class="field">
-                    <label class="label" for="email">Email</label>
                     <div class="control{{ $errors->has('email') ? ' has-icons-right' : '' }}">
                         <input class="input{{ $errors->has('email') ? ' is-danger' : '' }}"
-                               name="email" id="email" value="{{old('email')}}">
+                               name="email" placeholder="Digite seu e-mail" value="{{old('email')}}">
                         {!! $errors->has('email') ? '<span class="icon is-small is-right"><i class="fa fa-warning"></i></span>' : ''  !!}
                     </div>
                     {!! $errors->first('email', '<p class="help is-danger">:message</p>') !!}
@@ -46,18 +45,17 @@
 
                 <!-- Input Password -->
                 <div class="field">
-                    <label class="label" for="password">Password</label>
                     <div class="control{{ $errors->has('password') ? ' has-icons-right' : '' }}">
                         <input type="password" class="input{{ $errors->has('password') ? ' is-danger' : '' }}"
-                               name="password" id="password" value="{{old('password')}}">
+                               name="password" placeholder="Digite sua senha" value="{{old('password')}}">
                         {!! $errors->has('password') ? '<span class="icon is-small is-right"><i class="fa fa-warning"></i></span>' : ''  !!}
                     </div>
                     {!! $errors->first('password', '<p class="help is-danger">:message</p>') !!}
                 </div>
-                <!-- Checkbox Remember ${FOLDER} -->
+                <!-- Checkbox Remember -->
                 <div class="field">
                     <input class="is-checkbox" id="remember" type="checkbox" name="remember"
-                            {{ old('remember') ? 'checked' : '' }}> <label for="remember"> Remember me </label>
+                            {{ old('remember') ? 'checked' : '' }}> <label for="remember"> Lembre-me </label>
                 </div>
                 <!-- Form Submit -->
                 <div class="field is-grouped">
@@ -65,7 +63,7 @@
                         Login
                     </button>
 
-                    <a class="button is-link" href="{{ route('password.request') }}"> Forgot Your Password? </a>
+                    <a class="button is-link" href="{{ route('password.request') }}"> Esqueceu sua senha? </a>
                 </div>
 
             </div>

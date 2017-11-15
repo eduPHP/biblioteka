@@ -1,7 +1,6 @@
 <?php
 
 Route::get('/', "IndexController@index");
-Route::get('/teste', "IndexController@vue");
 
 Auth::routes();
 

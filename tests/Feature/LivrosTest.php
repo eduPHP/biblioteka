@@ -32,7 +32,7 @@ class LivrosTest extends TestCase
         $resposta = $this->get("/api/livros");
 
         foreach ($livros as $livro) {
-            $resposta->assertSee(e($livro->titulo));
+            $resposta->assertSee($livro->titulo);
         }
     }
 
@@ -52,16 +52,6 @@ class LivrosTest extends TestCase
             'id' => $livro->id,
             'titulo' => $novoTitulo,
         ]);
-    }
-
-    /** @test */
-    function devemos_poder_visualizar_um_livro()
-    {
-        $livro = factory('App\Livro')->create();
-
-        $resposta = $this->get("/livros/{$livro->id}/edit")->assertStatus(200);
-
-        $resposta->assertSee($livro->titulo);
     }
 
     /** @test */

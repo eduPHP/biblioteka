@@ -82,8 +82,8 @@ class EmprestimosTest extends TestCase
 
         $resposta->assertStatus(200);
         foreach ($emprestimos as $emprestimo) {
-            $resposta->assertJsonFragment([e($emprestimo->estudante->nome)]);
-            $resposta->assertJsonFragment([e($emprestimo->livro->titulo)]);
+            $resposta->assertJsonFragment([$emprestimo->estudante->nome]);
+            $resposta->assertJsonFragment([$emprestimo->livro->titulo]);
         }
     }
 
