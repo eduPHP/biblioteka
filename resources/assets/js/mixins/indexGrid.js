@@ -20,7 +20,10 @@ class PathFinder {
     }
 }
 
+import formActions from "../mixins/formActions";
+
 export default {
+    mixins: [formActions],
     replace: true,
     data() {
         return {

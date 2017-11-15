@@ -57,7 +57,7 @@
         <p v-if="!loading && !itens.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
         <confirm></confirm>
-        <form-editora :editora="editEditora" :active="editando" @close="fecharEdicao"></form-editora>
+        <form-editora :editora="editResource" :active="editando" @close="fecharEdicao($event)"></form-editora>
     </div>
 </template>
 
@@ -65,28 +65,18 @@
     import Paginator from "../components/Paginator.vue";
     import Confirm from "../components/Confirm.vue";
     import indexGrid from "../mixins/indexGrid";
+    import FormEditora from "../components/FormEditora.vue";
 
     export default {
         mixins: [indexGrid],
-        components: {Paginator, Confirm},
+        components: {Paginator, Confirm, FormEditora},
         data() {
             return {
-                basePath: 'editoras',
-                editEditora: null,
-                editando: false
+                basePath: 'editoras'
             };
         },
 
         methods: {
-            editar(estudante = null) {
-                this.editEditora = estudante;
-                this.editando = true;
-            },
-            fecharEdicao() {
-                this.editEditora = null;
-                this.editando = false;
-                this.fetch();
-            },
             remover(editora) {
                 vueConfirm(() => {
                     axios.delete(this.paths.destroy(editora)).then(() => {

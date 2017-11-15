@@ -16,7 +16,7 @@
                     <input v-model="search" @keyup.enter="buscar" placeholder="Buscar..." class="input">
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
-                <a :href="paths.create()" class="button is-info">
+                <a @click="editar()" class="button is-info">
                     <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
@@ -44,7 +44,7 @@
                 </td>
                 <td class="has-buttons">
                     <div class="level">
-                        <a :href="paths.edit(secao)" title="Editar" class="button is-info level-left">
+                        <a @click="editar(secao)" title="Editar" class="button is-info level-left">
                             <i class="fa fa-pencil"></i> </a>
                         <button @click="remover(secao)" title="Remover" class="button is-danger level-right">
                             <i class="fa fa-trash"></i>
@@ -57,6 +57,7 @@
         <p v-if="!loading && !itens.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
         <confirm></confirm>
+        <form-secao :secao="editResource" :active="editando" @close="fecharEdicao($event)"></form-secao>
     </div>
 </template>
 
@@ -64,10 +65,11 @@
     import Paginator from "../components/Paginator.vue";
     import Confirm from "../components/Confirm.vue";
     import indexGrid from "../mixins/indexGrid";
+    import FormSecao from "../components/FormSecao.vue"
 
     export default {
         mixins: [indexGrid],
-        components: {Paginator, Confirm},
+        components: {Paginator, Confirm, FormSecao},
         data() {
             return {
                 basePath: 'secoes'

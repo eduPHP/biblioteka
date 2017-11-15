@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Secao;
 use App\Http\Resources\SecaoCollection;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 class SecoesController extends Controller
 {
@@ -32,4 +33,42 @@ class SecoesController extends Controller
         }
     }
 
+    /**
+     * Grava um novo Secao
+     *
+     * @param Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'descricao' => 'required',
+            'localizacao' => 'nullable'
+        ]);
+
+        $secao = Secao::create($data);
+
+        return response(compact('secao'), 201);
+    }
+
+    /**
+     * Atualiza um Secao
+     *
+     * @param Request $request
+     * @param Secao $secao
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(Request $request, Secao $secao)
+    {
+        $data = $request->validate([
+            'descricao' => 'required',
+            'localizacao' => 'nullable'
+        ]);
+
+        $secao->update($data);
+
+        return response(compact('secao'), 201);
+    }
 }

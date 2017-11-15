@@ -27,8 +27,8 @@ class Livro extends Resource
             }),
             'titulo'=>$this->titulo,
             'descricao'=>$this->descricao,
-            'editora_id'=>$this->editora_id,
-            'secao_id'=>$this->secao_id,
+            'editora'=>$this->editora,
+            'secao'=>$this->secao,
             'ano'=>$this->ano,
             'edicao'=>$this->edicao,
         ];

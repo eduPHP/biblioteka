@@ -65,36 +65,26 @@
         <p v-if="!loading && !itens.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
         <confirm></confirm>
-        <form-autor :autor="editAutor" :active="editando" @close="fecharEdicao"></form-autor>
+        <form-autor :autor="editResource" :active="editando" @close="fecharEdicao($event)"></form-autor>
     </div>
 </template>
 
 <script>
     import Paginator from "../components/Paginator.vue";
     import Confirm from "../components/Confirm.vue";
+    import FormAutor from "../components/FormAutor.vue";
     import indexGrid from "../mixins/indexGrid";
 
     export default {
         mixins: [indexGrid],
-        components: {Paginator, Confirm},
+        components: {Paginator, Confirm, FormAutor},
         data() {
             return {
-                basePath: 'autores',
-                editando: false,
-                editAutor: null
+                basePath: 'autores'
             };
         },
 
         methods: {
-            editar(autor){
-                this.editAutor = autor;
-                this.editando = true;
-            },
-            fecharEdicao(){
-                this.editAutor = null;
-                this.editando = false;
-                this.fetch();
-            },
             remover(autor) {
                 vueConfirm(() => {
                     axios.delete(this.paths.destroy(autor)).then(() => {

@@ -28,6 +28,10 @@ class Errors {
     record(errors) {
         this.errors = errors;
     }
+
+    clear(){
+        this.errors = {};
+    }
 }
 
 export {Errors as default};

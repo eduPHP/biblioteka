@@ -65,40 +65,30 @@
         <p v-if="!loading && !itens.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
         <confirm></confirm>
-        <form-estudante :estudante="editEstudante" :active="editando" @close="fecharEdicao"></form-estudante>
+        <form-estudante :estudante="editResource" :active="editando" @close="fecharEdicao($event)"></form-estudante>
     </div>
 </template>
 
 <script>
     import Paginator from "../components/Paginator.vue";
     import Confirm from "../components/Confirm.vue";
+    import FormEstudante from "../components/FormEstudante.vue";
     import indexGrid from "../mixins/indexGrid";
 
     export default {
         mixins: [indexGrid],
-        components: {Paginator, Confirm},
+        components: {Paginator, Confirm, FormEstudante},
         data() {
             return {
-                basePath: 'estudantes',
-                editEstudante: null,
-                editando: false
+                basePath: 'estudantes'
             };
         },
 
         methods: {
-            editar(estudante = null) {
-                this.editEstudante = estudante;
-                this.editando = true;
-            },
-            fecharEdicao() {
-                this.editEstudante = null;
-                this.editando = false;
-                this.fetch();
-            },
             remover(estudante) {
                 vueConfirm(() => {
                     axios.delete(this.paths.destroy(estudante)).then(() => {
-                        flash('Estudante removido.', 'info')
+                        flash('Estudante removido.', 'info');
                         this.fetch()
                     });
                 }, 'Remover estudante?', 'Excluir', 'fa-trash');

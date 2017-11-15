@@ -14802,3 +14802,14 @@ html {
   margin-top: 1em;
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  -webkit-transition: opacity .4s;
+  transition: opacity .4s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+

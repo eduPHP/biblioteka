@@ -17,11 +17,9 @@ class EstudantesTest extends TestCase
             'matricula' => 123,
         ];
 
-        $this->get('/estudantes/create')->assertStatus(200);
+        $resposta = $this->postJson('/api/estudantes', $dados);
 
-        $resposta = $this->post('/estudantes', $dados);
-
-        $resposta->assertStatus(302)->assertRedirect('/estudantes');
+        $resposta->assertStatus(201);
         $this->assertDatabaseHas('estudantes', $dados);
 
     }
@@ -33,9 +31,9 @@ class EstudantesTest extends TestCase
             'matricula' => 123,
         ];
 
-        $resposta = $this->post('/estudantes', $dados);
+        $resposta = $this->postJson('/api/estudantes', $dados);
 
-        $resposta->assertStatus(302)->assertSessionHasErrors('nome');
+        $resposta->assertStatus(422)->assertJsonFragment(['nome']);
     }
 
     /** @test */
@@ -45,9 +43,9 @@ class EstudantesTest extends TestCase
             'nome' => 'Eduardo',
         ];
 
-        $resposta = $this->post('/estudantes', $dados);
+        $resposta = $this->postJson('/api/estudantes', $dados);
 
-        $resposta->assertStatus(302)->assertSessionHasErrors('matricula');
+        $resposta->assertStatus(422)->assertJsonFragment(['matricula']);
     }
 
     /** @test */
@@ -55,14 +53,12 @@ class EstudantesTest extends TestCase
     {
         $estudante = factory('App\Estudante')->create();
 
-        $this->get("/estudantes/{$estudante->id}/edit")->assertStatus(200);
-
-        $resposta = $this->patch("/estudantes/{$estudante->id}", [
+        $resposta = $this->patchJson("/api/estudantes/{$estudante->id}", [
             'nome' => $novoNome = 'Teste',
             'matricula' => $estudante->matricula,
         ]);
 
-        $resposta->assertStatus(302)->assertRedirect('/estudantes');
+        $resposta->assertStatus(201);
         $this->assertDatabaseHas('estudantes', [
             'id' => $estudante->id,
             'nome' => $novoNome,

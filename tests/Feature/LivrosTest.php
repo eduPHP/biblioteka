@@ -13,7 +13,6 @@ class LivrosTest extends TestCase
     function devemos_poder_adicionar_um_livro()
     {
         $this->withoutExceptionHandling();
-        $this->get("/livros/create")->assertStatus(200);
 
         $novoLivro = factory('App\Livro')->make()->toArray();
         factory('App\Autor')->create();
@@ -42,8 +41,6 @@ class LivrosTest extends TestCase
     {
         $this->withoutExceptionHandling();
         $livro = factory('App\Livro')->create();
-
-        $this->get("/livros/{$livro->id}/edit")->assertStatus(200);
 
         $data = $livro->toArray();
         $data['titulo'] = $novoTitulo = 'Um novo Título';

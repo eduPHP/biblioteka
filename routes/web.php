@@ -35,11 +35,9 @@ Route::get('/emprestimos/create', 'EmprestimosController@create');
 
 Route::get('/secoes','SecoesController@index');
 Route::get('/api/secoes', 'Api\SecoesController@index');
-Route::post('/secoes','SecoesController@store');
+Route::post('/api/secoes','Api\SecoesController@store');
 Route::get('/secoes/{secao}','SecoesController@show');
-Route::get('/secoes/create','SecoesController@create');
-Route::patch('/secoes/{secao}','SecoesController@update');
-Route::get('/secoes/{secao}/edit','SecoesController@edit');
+Route::patch('/api/secoes/{secao}','Api\SecoesController@update');
 Route::delete('/api/secoes/{secao}','Api\SecoesController@destroy');
 
 Route::get('/editoras', 'EditorasController@index');
