@@ -20,7 +20,7 @@
                             <div class="control has-icons-right">
                                 <input class="input" :class="{'is-danger' : errors.has('nome')}"
                                        name="nome" id="nome" v-model="nome" ref="nome"
-                                       @change="errors.remove('nome')">
+                                       @change="errors.remove('nome')" v-focus>
                                 <span class="icon is-small is-right" v-if="errors.has('nome')">
                         <i class="fa fa-warning"></i>
                     </span>
@@ -94,7 +94,6 @@
 
             },
             resetForm(){
-                this.$refs.nome.focus();
                 if (!this.editora) {
                     this.$refs.form.reset();
                     return;

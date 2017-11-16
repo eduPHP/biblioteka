@@ -1,6 +1,8 @@
-import Errors from '../directives/errors'
+import Errors from '../directives/errors';
+import focus from '../directives/focus';
 
 export default {
+    directives: {focus: focus},
     replace: true,
     props: ['active'],
     data(){

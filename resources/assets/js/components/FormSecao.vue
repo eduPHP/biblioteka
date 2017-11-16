@@ -20,7 +20,7 @@
                             <div class="control has-icons-right">
                                 <input class="input" :class="{'is-danger' : errors.has('descricao')}"
                                        name="descricao" id="descricao" v-model="descricao" ref="descricao"
-                                       @change="errors.remove('descricao')">
+                                       @change="errors.remove('descricao')" v-focus>
                                 <span class="icon is-small is-right" v-if="errors.has('descricao')">
                                     <i class="fa fa-warning"></i>
                                 </span>
@@ -113,13 +113,11 @@
             resetForm() {
                 if (!this.secao) {
                     this.$refs.form.reset();
-                    this.$refs.descricao.focus();
                     return;
                 }
                 this.id = this.secao.id;
                 this.descricao = this.secao.descricao;
                 this.localizacao = this.secao.localizacao;
-                this.$refs.descricao.focus();
             }
         }
     }

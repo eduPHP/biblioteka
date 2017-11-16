@@ -2679,7 +2679,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         resetForm: function resetForm() {
-            this.$refs.nome.focus();
             if (!this.autor) {
                 this.$refs.form.reset();
                 return;
@@ -2796,7 +2795,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         resetForm: function resetForm() {
-            this.$refs.nome.focus();
             if (!this.editora) {
                 this.$refs.form.reset();
                 return;
@@ -2930,7 +2928,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         resetForm: function resetForm() {
-            this.$refs.matricula.focus();
             if (!this.estudante) {
                 this.$refs.form.reset();
                 return;
@@ -3232,7 +3229,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         resetForm: function resetForm() {
-            this.$refs.isbn.focus();
             if (!this.livro) {
                 this.$refs.form.reset();
                 this.autores = [];
@@ -3379,13 +3375,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         resetForm: function resetForm() {
             if (!this.secao) {
                 this.$refs.form.reset();
-                this.$refs.descricao.focus();
                 return;
             }
             this.id = this.secao.id;
             this.descricao = this.secao.descricao;
             this.localizacao = this.secao.localizacao;
-            this.$refs.descricao.focus();
         }
     }
 });
@@ -40164,7 +40158,8 @@ var render = function() {
                             rawName: "v-model",
                             value: _vm.descricao,
                             expression: "descricao"
-                          }
+                          },
+                          { name: "focus", rawName: "v-focus" }
                         ],
                         ref: "descricao",
                         staticClass: "input",
@@ -42387,7 +42382,8 @@ var render = function() {
                             rawName: "v-model",
                             value: _vm.nome,
                             expression: "nome"
-                          }
+                          },
+                          { name: "focus", rawName: "v-focus" }
                         ],
                         ref: "nome",
                         staticClass: "input",
@@ -42538,6 +42534,7 @@ var render = function() {
                     _c("div", { staticClass: "control has-icons-right" }, [
                       _c("input", {
                         directives: [
+                          { name: "focus", rawName: "v-focus" },
                           {
                             name: "model",
                             rawName: "v-model",
@@ -42752,7 +42749,8 @@ var render = function() {
                             rawName: "v-model",
                             value: _vm.nome,
                             expression: "nome"
-                          }
+                          },
+                          { name: "focus", rawName: "v-focus" }
                         ],
                         ref: "nome",
                         staticClass: "input",
@@ -42905,6 +42903,7 @@ var render = function() {
                         _c("div", { staticClass: "control has-icons-right" }, [
                           _c("input", {
                             directives: [
+                              { name: "focus", rawName: "v-focus" },
                               {
                                 name: "model",
                                 rawName: "v-model",
@@ -56463,6 +56462,18 @@ var Errors = function () {
 
 /***/ }),
 
+/***/ "./resources/assets/js/directives/focus.js":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = ({
+    inserted: function inserted(el) {
+        el.focus();
+    }
+});
+
+/***/ }),
+
 /***/ "./resources/assets/js/directives/loading.js":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -56546,9 +56557,12 @@ var LoadingState = function () {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__directives_errors__ = __webpack_require__("./resources/assets/js/directives/errors.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__directives_focus__ = __webpack_require__("./resources/assets/js/directives/focus.js");
+
 
 
 /* harmony default export */ __webpack_exports__["a"] = ({
+    directives: { focus: __WEBPACK_IMPORTED_MODULE_1__directives_focus__["a" /* default */] },
     replace: true,
     props: ['active'],
     data: function data() {

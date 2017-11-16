@@ -20,7 +20,7 @@
                         <label class="label" for="matricula">Matrícula</label>
                         <div class="control has-icons-right">
                             <input class="input" :class="{'is-danger' : errors.has('matricula')}"
-                                   name="matricula" id="matricula"
+                                   name="matricula" id="matricula" v-focus
                                    v-model="matricula" ref="matricula"
                                    @change="errors.remove('matricula')">
                             <span class="icon is-small is-right" v-if="errors.has('matricula')">
@@ -111,7 +111,6 @@
 
             },
             resetForm(){
-                this.$refs.matricula.focus();
                 if (!this.estudante) {
                     this.$refs.form.reset();
                     return;

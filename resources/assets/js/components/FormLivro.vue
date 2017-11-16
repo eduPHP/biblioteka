@@ -22,7 +22,7 @@
                                     <div class="control has-icons-right">
                                         <input class="input" :class="{'is-danger' : errors.has('isbn')}"
                                                @keydown.enter.prevent="search" @blur="search"
-                                               @change="errors.remove('isbn')" ref="isbn"
+                                               @change="errors.remove('isbn')" ref="isbn" v-focus
                                                name="isbn" id="isbn" v-model="isbn"> <span class="icon is-small is-right">
                                             <i class="fa fa-barcode" :class="{'fa-warning' : errors.has('isbn')}"></i>
                                         </span>
@@ -272,7 +272,6 @@
 
             },
             resetForm(){
-                this.$refs.isbn.focus();
                 if (!this.livro) {
                     this.$refs.form.reset();
                     this.autores = [];

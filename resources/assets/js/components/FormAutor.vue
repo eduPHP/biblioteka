@@ -14,19 +14,19 @@
                     <button class="delete" type="button" @click="close" aria-label="close"></button>
                 </header>
                 <section class="modal-card-body">
-                        <!-- Input Nome -->
-                        <div class="field">
-                            <label class="label" for="nome">Nome</label>
-                            <div class="control has-icons-right">
-                                <input class="input" :class="{'is-danger' : errors.has('nome')}"
-                                       name="nome" id="nome" v-model="nome" ref="nome"
-                                       @change="errors.remove('nome')">
-                                <span class="icon is-small is-right" v-if="errors.has('nome')">
-                        <i class="fa fa-warning"></i>
-                    </span>
-                            </div>
-                            <p class="help is-danger" v-if="errors.has('nome')" v-text="errors.first('nome')"></p>
+                    <!-- Input Nome -->
+                    <div class="field">
+                        <label class="label" for="nome">Nome</label>
+                        <div class="control has-icons-right">
+                            <input class="input" :class="{'is-danger' : errors.has('nome')}"
+                                   name="nome" id="nome" v-model="nome" ref="nome"
+                                   @change="errors.remove('nome')" v-focus>
+                            <span class="icon is-small is-right" v-if="errors.has('nome')">
+                                <i class="fa fa-warning"></i>
+                            </span>
                         </div>
+                        <p class="help is-danger" v-if="errors.has('nome')" v-text="errors.first('nome')"></p>
+                    </div>
                 </section>
                 <footer class="modal-card-foot">
                     <div class="field is-grouped">
@@ -94,7 +94,6 @@
 
             },
             resetForm(){
-                this.$refs.nome.focus();
                 if (!this.autor) {
                     this.$refs.form.reset();
                     return;
