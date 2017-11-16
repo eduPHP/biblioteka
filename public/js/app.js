@@ -4291,7 +4291,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.notification[data-v-0d4b040a] {\n    position: fixed;\n    bottom: 2em;\n    right: 2em;\n    max-width: 30em\n}\n.is-sucesso[data-v-0d4b040a] {\n    background-color: #23d160;\n    color: #fff;\n}\n.is-erro[data-v-0d4b040a] {\n    background-color: #ff3860;\n    color: #fff;\n}\n.is-alerta[data-v-0d4b040a] {\n    background-color: #ffdd57;\n    color: rgba(0, 0, 0, 0.7);\n}\n", ""]);
+exports.push([module.i, "\n.notification[data-v-0d4b040a] {\n    position  : fixed;\n    z-index   : 20;\n    bottom    : 2em;\n    right     : 2em;\n    max-width : 30em\n}\n.is-sucesso[data-v-0d4b040a] {\n    background-color: #23d160;\n    color: #fff;\n}\n.is-erro[data-v-0d4b040a] {\n    background-color: #ff3860;\n    color: #fff;\n}\n.is-alerta[data-v-0d4b040a] {\n    background-color: #ffdd57;\n    color: rgba(0, 0, 0, 0.7);\n}\n", ""]);
 
 // exports
 

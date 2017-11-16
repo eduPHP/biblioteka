@@ -54,10 +54,11 @@
 
 <style scoped>
     .notification {
-        position: fixed;
-        bottom: 2em;
-        right: 2em;
-        max-width: 30em
+        position  : fixed;
+        z-index   : 20;
+        bottom    : 2em;
+        right     : 2em;
+        max-width : 30em
     }
 
     .is-sucesso {
