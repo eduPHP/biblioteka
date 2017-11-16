@@ -30,7 +30,7 @@ return [
         'array'   => 'O campo :Attribute deve ter entre :min e :max itens.',
     ],
     'boolean'              => 'O campo :Attribute deve ser verdadeiro ou falso.',
-    'confirmed'            => 'O campo :Attribute de confirmação não confere.',
+    'confirmed'            => 'O campo Confirmação de :attribute não confere.',
     'date'                 => 'O campo :Attribute não é uma data válida.',
     'date_format'          => 'O campo :Attribute não corresponde ao formato :format.',
     'different'            => 'Os campos :Attribute e :other devem ser diferentes.',
@@ -118,13 +118,15 @@ return [
     */
 
     'attributes' => [
-        'estudante_id'=>'Estudante',
-        'editora_id'=>'Editora',
-        'secao_id'=>'Seção',
-        'titulo'=>'Título',
-        'descricao'=>'Descrição',
-        'edicao'=>'Edição',
+        'estudante_id'=>'estudante',
+        'editora_id'=>'editora',
+        'secao_id'=>'seção',
+        'titulo'=>'título',
+        'descricao'=>'descrição',
+        'edicao'=>'edição',
         'isbn'=>'ISBN',
+        'email'=>'e-mail',
+        'password'=>'senha',
     ],
 
 ];

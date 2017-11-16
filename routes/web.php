@@ -1,19 +1,17 @@
 <?php
 
-Route::get('/', "IndexController@index");
+Route::get('/', "IndexController@index")->name('home');
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/home', 'HomeController@index');
 Route::get('/info', 'HomeController@info');
 
-Route::get('/livros/create', 'LivrosController@create');
 Route::get('/livros/{livro}', 'LivrosController@show');
 Route::get('/api/livros/{isbn}', 'Api\LivrosController@show');
 Route::get('/api/livros/busca-isbn/{isbn}', 'Api\BuscaISBNController@show');
 Route::patch('/api/livros/{livro}', 'Api\LivrosController@update');
 Route::delete('/api/livros/{livro}', 'Api\LivrosController@destroy');
-Route::get('/livros/{livro}/edit', 'LivrosController@edit');
 Route::get('/livros', 'LivrosController@index');
 Route::post('/api/livros', 'Api\LivrosController@store');
 Route::get('/api/livros', 'Api\LivrosController@index');
