@@ -7,16 +7,8 @@ class PathFinder {
         return `/api/${this.base}`;
     }
 
-    edit(model) {
-        return `/${this.base}/${model.id}/edit`;
-    }
-
     destroy(model) {
         return `/api/${this.base}/${model.id}`;
-    }
-
-    create() {
-        return `/${this.base}/create`;
     }
 }
 

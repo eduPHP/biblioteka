@@ -56631,19 +56631,9 @@ var PathFinder = function () {
             return '/api/' + this.base;
         }
     }, {
-        key: 'edit',
-        value: function edit(model) {
-            return '/' + this.base + '/' + model.id + '/edit';
-        }
-    }, {
         key: 'destroy',
         value: function destroy(model) {
             return '/api/' + this.base + '/' + model.id;
-        }
-    }, {
-        key: 'create',
-        value: function create() {
-            return '/' + this.base + '/create';
         }
     }]);
 
@@ -56691,14 +56681,18 @@ var PathFinder = function () {
         orderBy: function orderBy(field) {
             var defaultDirection = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'asc';
 
-            var invert = defaultDirection === 'asc' ? 'desc' : 'asc';
-            var direction = this.order.direction === defaultDirection && this.order.field === field ? invert : defaultDirection;
+            var direction = this.getOrderDirection(field, defaultDirection);
 
             this.order = {
                 field: field,
                 direction: direction
             };
+
             this.fetch(1);
+        },
+        getOrderDirection: function getOrderDirection(field, defaultDirection) {
+            var invert = defaultDirection === 'asc' ? 'desc' : 'asc';
+            return this.order.direction === defaultDirection && this.order.field === field ? invert : defaultDirection;
         },
         fetch: function fetch(page) {
             var _this = this;

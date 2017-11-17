@@ -14,6 +14,7 @@ class LivroCollection extends ResourceCollection
      */
     public function toArray($request)
     {
+        self::wrap('livros');
         return parent::toArray($request);
     }
 }
