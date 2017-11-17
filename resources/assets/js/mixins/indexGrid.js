@@ -58,8 +58,9 @@ export default {
             this.filteredBy = this.search;
         },
 
-        orderBy(field) {
-            let direction = this.order.direction === 'asc' && this.order.field === field ? 'desc' : 'asc';
+        orderBy(field, defaultDirection='asc') {
+            let invert = defaultDirection === 'asc' ? 'desc' : 'asc';
+            let direction = this.order.direction === defaultDirection && this.order.field === field ? invert : defaultDirection;
 
             this.order = {
                 field,

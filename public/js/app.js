@@ -44051,7 +44051,7 @@ var render = function() {
                     staticClass: "is-2",
                     on: {
                       click: function($event) {
-                        _vm.orderBy("livros-count")
+                        _vm.orderBy("livros-count", "desc")
                       }
                     }
                   },
@@ -56689,7 +56689,10 @@ var PathFinder = function () {
             this.filteredBy = this.search;
         },
         orderBy: function orderBy(field) {
-            var direction = this.order.direction === 'asc' && this.order.field === field ? 'desc' : 'asc';
+            var defaultDirection = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'asc';
+
+            var invert = defaultDirection === 'asc' ? 'desc' : 'asc';
+            var direction = this.order.direction === defaultDirection && this.order.field === field ? invert : defaultDirection;
 
             this.order = {
                 field: field,

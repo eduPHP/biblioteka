@@ -34,7 +34,7 @@
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
                     </span>
                 </th>
-                <th @click="orderBy('livros-count')" class="is-2">
+                <th @click="orderBy('livros-count','desc')" class="is-2">
                     <span># Livros</span> <span class="icon is-small" v-if="order.field === 'livros-count'">
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
                     </span>
