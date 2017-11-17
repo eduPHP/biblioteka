@@ -39,7 +39,7 @@ export default {
     },
 
     computed: {
-        defaultOrder(){
+        defaultOrder() {
             return {
                 field: 'nome',
                 direction: 'asc'
@@ -58,15 +58,20 @@ export default {
             this.filteredBy = this.search;
         },
 
-        orderBy(field, defaultDirection='asc') {
-            let invert = defaultDirection === 'asc' ? 'desc' : 'asc';
-            let direction = this.order.direction === defaultDirection && this.order.field === field ? invert : defaultDirection;
+        orderBy(field, defaultDirection = 'asc') {
+            let direction = this.getOrderDirection(field, defaultDirection);
 
             this.order = {
                 field,
                 direction
             };
+
             this.fetch(1);
+        },
+
+        getOrderDirection(field, defaultDirection) {
+            let invert = defaultDirection === 'asc' ? 'desc' : 'asc';
+            return this.order.direction === defaultDirection && this.order.field === field ? invert : defaultDirection;
         },
 
         fetch(page) {
@@ -103,7 +108,7 @@ export default {
             history.pushState(null, document.title, '?' + update);
         }
     },
-    created(){
+    created() {
         this.paths = new PathFinder(this.basePath);
         this.order = _.clone(this.defaultOrder);
     },
