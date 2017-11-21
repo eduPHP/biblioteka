@@ -20,7 +20,8 @@
                 return `is-${this.type}`
             },
             title() {
-                return _.capitalize(this.type) + '! '
+                return '';
+//                return _.capitalize(this.type) + '! '
             }
         },
         methods: {

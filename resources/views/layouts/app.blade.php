@@ -17,7 +17,7 @@
             }
 
             .table td.has-buttons {
-                padding    : 0;
+                padding : 0;
             }
 
             .table tr td form .button, .table tr td:last-child .button {
@@ -27,92 +27,91 @@
             .mr-1 {
                 margin-right : 1em;
             }
+
             .mr-2 {
                 margin-right : 2em;
             }
-            .is-borderless{
-                border: none;
-                outline: none;
+
+            .is-borderless {
+                border  : none;
+                outline : none;
             }
-            .blended-input{
-                font-size : 1rem;
+
+            .blended-input {
+                font-size   : 1rem;
                 height      : 2.23em;
                 line-height : 1.4;
-                background: transparent;
+                background  : transparent;
             }
+
             .input > .tag > i {
-                margin-right: .3rem;
+                margin-right : .3rem;
             }
 
             .ml-1 {
                 margin-left : 1em;
             }
 
-            .row{
+            .pt-1 {
+                padding-top : 1em;
+            }
+
+            .row {
                 padding : 0 .8em;
             }
 
             .flex-1 {
                 flex : 1;
             }
+            .navbar-item.titulo{
+                font-size   : 1.5rem;
+                font-weight : 600;
+            }
         </style>
     @show
 </head>
 <body>
 <div id="app">
+    <header>
+        <nav class="navbar is-info">
+            <div class="navbar-brand">
+                <a class="navbar-item titulo" href="/">  {{ config('app.name') }} </a>
 
-    <section class="hero is-info">
-        <!-- Hero header: will stick at the top -->
-        <div class="hero-head">
-            <header class="nav">
-                <div class="container">
-                    <div class="nav-left">
-                        <a class="nav-item title is-4" href="/">  {{ config('app.name') }} </a>
-                    </div>
-                    <span class="nav-toggle">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-                    <div class="nav-right nav-menu">
-                        <!-- Authentication Links -->
-                        @guest
-                            {{--<a class="nav-item" href="{{ route('login') }}">Login</a>--}}
+                <div class="navbar-burger burger" @click="menuOpen = !menuOpen">
+                    <span></span> <span></span> <span></span>
+                </div>
+            </div>
+
+            <div class="navbar-menu" :class="{'is-active': menuOpen}">
+                <div class="navbar-start">
+
+                    @include('layouts.menu')
+
+                </div>
+
+                <div class="navbar-end">
+                    <!-- Authentication Links -->
+                    @guest
+                        <div class="nav-right nav-menu">
+                            <a class="nav-item" href="/register">Cadastre-se</a>
+                            <a class="nav-item" href="/login">Login</a>
+                        </div>
                         @else
-                            <div class="dropdown is-active">
-                                <div class="dropdown-trigger">
-                                    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
-                                        <span>{{ Auth::user()->name }}</span> <span class="icon is-small">
-        <i class="fa fa-angle-down" aria-hidden="true"></i>
-      </span>
-                                    </button>
-                                </div>
-                                <div class="dropdown-menu" id="dropdown-menu" role="menu">
-                                    <div class="dropdown-content">
-                                        <a href="{{ route('logout') }}" class="dropdown-item"
-                                           onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();"> Logout </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </div>
+                            <div class="navbar-item has-dropdown is-hoverable">
+                                <a class="navbar-link is-info"> {{ auth()->user()->nome }} </a>
+                                <div class="navbar-dropdown is-right">
+                                    <a class="navbar-item" @click="logout"> Logout </a>
+                                    <hr class="navbar-divider">
+                                    <a href="/info" class="navbar-item"> Versão 0.6.1 </a>
                                 </div>
                             </div>
-                        @endguest
-                    </div>
+                            @endguest
                 </div>
-            </header>
-        </div>
-
-        <!-- Hero footer: will stick at the bottom -->
-        <div class="hero-foot">
-            @include('layouts.menu')
-        </div>
-    </section>
+            </div>
+        </nav>
+    </header>
     <section class="section is-flex-1">
         <div class="container">
-            {{--@include('partials.message')--}}
             @yield('content')
         </div>
     </section>
@@ -120,7 +119,8 @@
         <div class="container">
             <div class="content has-text-centered">
                 <p>
-                    <strong>{{config('app.name')}}</strong> by <a href="https://rdo.blog.br">Eduardo Dalla Vecchia</a>. The website content is licensed
+                    <strong>{{config('app.name')}}</strong> by <a href="https://rdo.blog.br">Eduardo Dalla Vecchia</a>.
+                                                            The website content is licensed
                     <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY NC SA 4.0</a>.
                 </p>
                 <p>

@@ -73,7 +73,7 @@
     import Paginator from "../components/Paginator.vue";
     import Confirm from "../components/Confirm.vue";
     import indexGrid from "../mixins/indexGrid";
-    import FormLivro from "../components/FormLivro.vue"
+    import FormLivro from "../components/forms/FormLivro.vue"
 
     export default {
         mixins: [indexGrid],

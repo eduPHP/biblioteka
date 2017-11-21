@@ -72,7 +72,7 @@
 <script>
     import Paginator from "../components/Paginator.vue";
     import Confirm from "../components/Confirm.vue";
-    import FormAutor from "../components/FormAutor.vue";
+    import FormAutor from "../components/forms/FormAutor.vue";
     import indexGrid from "../mixins/indexGrid";
 
     export default {

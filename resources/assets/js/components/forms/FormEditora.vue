@@ -49,7 +49,7 @@
 </template>
 
 <script>
-    import formCommons from '../mixins/formCommons'
+    import formCommons from '../../mixins/formCommons'
 
     export default {
         mixins: [formCommons],

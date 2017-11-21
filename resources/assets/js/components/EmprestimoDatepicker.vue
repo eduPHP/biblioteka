@@ -36,11 +36,12 @@
                 flatPickr: null,
                 options: {
                     dateFormat: 'd/m/Y',
-                    inline: true,
+                    inline: false,
                     defaultDate: this.getDefaultValue(),
                     minDate: 'today',
                     maxDate: moment().add(14, 'days').format('DD/MM/YYYY'),
                     locale: Portugues.pt,
+                    static: true,
                     disable: [
                         function (date) {
                             return date.getDay() === 0;
@@ -86,3 +87,7 @@
         },
     };
 </script>
+
+<style>
+
+</style>

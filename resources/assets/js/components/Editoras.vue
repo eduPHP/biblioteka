@@ -65,7 +65,7 @@
     import Paginator from "../components/Paginator.vue";
     import Confirm from "../components/Confirm.vue";
     import indexGrid from "../mixins/indexGrid";
-    import FormEditora from "../components/FormEditora.vue";
+    import FormEditora from "../components/forms/FormEditora.vue";
 
     export default {
         mixins: [indexGrid],

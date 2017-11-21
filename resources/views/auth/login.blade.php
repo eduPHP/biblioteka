@@ -14,7 +14,11 @@
             max-width : 25rem;
             margin    : 5rem auto;
         }
-        .card-header span{
+        .card-header{
+            flex-direction : column;
+            align-items    : center;
+        }
+        .card-header h1{
             margin: 2rem auto;
         }
         .field.is-grouped{
@@ -28,7 +32,8 @@
 
     <div class="card">
         <header class="card-header">
-            <span class="is-size-3 has-text-weight-semibold">{{config('app.name')}}</span>
+            <h1 class="is-size-3 has-text-weight-semibold">{{config('app.name')}}</h1>
+            <p>Forneça suas credenciais para realizar login.</p>
         </header>
         <div class="card-content">
             <div class="content">
@@ -58,13 +63,16 @@
                 </div>
                 <!-- Form Submit -->
                 <div class="field is-grouped">
-                    <button type="submit" class="button is-info">
+                    <button type="submit" class="button is-success is-fullwidth">
                         Login
                     </button>
-
-                    <a class="button is-link" href="{{ route('password.request') }}"> Esqueceu sua senha? </a>
                 </div>
-
+                <div class="field is-grouped is-marginless">
+                    <a class="button is-link is-small" href="/password/reset"> Esqueceu sua senha? </a>
+                </div>
+                <div class="field is-grouped is-marginless">
+                    <a class="button is-link is-small" href="/register"> Não tem cadastro? </a>
+                </div>
             </div>
         </div>
     </div>

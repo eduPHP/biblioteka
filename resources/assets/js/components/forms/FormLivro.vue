@@ -180,10 +180,10 @@
 </template>
 
 <script>
-    import formCommons from '../mixins/formCommons'
-    import SelectAutores from '../components/SelectAutores.vue';
-    import SelectEditoras from '../components/SelectEditoras.vue';
-    import SelectSecoes from '../components/SelectSecoes.vue';
+    import formCommons from '../../mixins/formCommons'
+    import SelectAutores from '../SelectAutores.vue';
+    import SelectEditoras from '../SelectEditoras.vue';
+    import SelectSecoes from '../SelectSecoes.vue';
 
     export default {
         mixins: [formCommons],

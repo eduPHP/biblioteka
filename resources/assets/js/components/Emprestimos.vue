@@ -16,7 +16,7 @@
                     <input v-model="search" @keyup.enter="buscar" placeholder="Buscar..." class="input">
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
-                <a :href="paths.create()" class="button is-info">
+                <a @click="adicionar" class="button is-info">
                     <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
@@ -76,6 +76,7 @@
         <p v-if="!loading && !itens.length">Nenhum registro encontrado.</p>
         <paginator :meta="meta" @changed="fetch"></paginator>
         <confirm></confirm>
+        <criar-emprestimo :active="editando" @close="close"></criar-emprestimo>
     </div>
 </template>
 
@@ -115,9 +116,18 @@
         },
 
         methods: {
+            adicionar(){
+                this.editando = true;
+            },
+            close(refresh){
+                this.editando = false;
+                if (refresh === true){
+                    this.fetch();
+                }
+            },
             renovar(emprestimo) {
                 vueConfirm(()=>{
-                    axios.post(`${this.paths.edit(emprestimo)}/renovar`).then(response => {
+                    axios.post(`${this.paths.destroy(emprestimo)}/renovar`).then(response => {
                         emprestimo.devolucao = response.data.devolucao;
                         flash('Empréstimo renovado.', 'info')
                     });
@@ -126,7 +136,7 @@
 
             devolver(emprestimo) {
                 vueConfirm(()=>{
-                    axios.patch(`${this.paths.edit(emprestimo)}/devolver`).then(() => {
+                    axios.patch(`${this.paths.destroy(emprestimo)}/devolver`).then(() => {
                         emprestimo.devolvido = true;
                         emprestimo.devolvido_em = moment().format();
                         flash('Empréstimo devolvido.','info')

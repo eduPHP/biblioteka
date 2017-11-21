@@ -79,10 +79,12 @@
 
                 <!-- Form Submit -->
                 <div class="field is-grouped">
-                    <button type="submit" class="button is-info">
+                    <button type="submit" class="button is-success is-fullwidth">
                         Cadastrar
                     </button>
-                    <a class="button is-link" href="{{ route('login') }}"> Já tem uma conta? </a>
+                </div>
+                <div class="field is-grouped is-marginless">
+                    <a class="button is-link is-fullwidth is-small" href="{{ route('login') }}"> Já tem uma conta? </a>
                 </div>
 
             </div>

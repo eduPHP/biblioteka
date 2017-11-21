@@ -65,7 +65,7 @@
     import Paginator from "../components/Paginator.vue";
     import Confirm from "../components/Confirm.vue";
     import indexGrid from "../mixins/indexGrid";
-    import FormSecao from "../components/FormSecao.vue"
+    import FormSecao from "../components/forms/FormSecao.vue"
 
     export default {
         mixins: [indexGrid],
