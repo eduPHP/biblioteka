@@ -29,7 +29,7 @@
         <table v-if="itens.length" class="table is-fullwidth crud">
             <thead>
             <tr>
-                <th @click="orderBy('matricula')" class="is-1">
+                <th @click="orderBy('matricula')" class="is-74">
                     <span>Matrícula</span> <span class="icon is-small" v-if="order.field === 'matricula'">
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
                     </span>
@@ -100,5 +100,9 @@
 <style scoped>
     .level-left {
         display : block;
+    }
+
+    .is-74 {
+        width : 7.4rem;
     }
 </style>

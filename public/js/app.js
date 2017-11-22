@@ -4099,6 +4099,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
         fillEmpty: function fillEmpty(data) {
+            if (!data) {
+                flash('ISBN não encontrado', 'info');
+                return;
+            }
             if (!this.titulo.length && data.titulo) {
                 this.titulo = data.titulo;
             }
@@ -4174,6 +4178,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.autores = [];
                 this.editora = null;
                 this.secao = null;
+                this.titulo = '';
+                this.isbn = '';
+                this.quantidade = 1;
+                this.descricao = '';
+                this.ano = '';
+                this.edicao = '';
                 return;
             }
             this.id = this.livro.id;
@@ -4484,7 +4494,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.level-left[data-v-73a40e65] {\n    display : block;\n}\n", ""]);
+exports.push([module.i, "\n.level-left[data-v-73a40e65] {\n    display : block;\n}\n.is-74[data-v-73a40e65] {\n    width : 7.4rem;\n}\n", ""]);
 
 // exports
 
@@ -42266,7 +42276,7 @@ var render = function() {
                 _c(
                   "th",
                   {
-                    staticClass: "is-1",
+                    staticClass: "is-74",
                     on: {
                       click: function($event) {
                         _vm.orderBy("matricula")
@@ -43248,6 +43258,7 @@ var render = function() {
                 _c(
                   "th",
                   {
+                    staticClass: "is-2",
                     on: {
                       click: function($event) {
                         _vm.orderBy("isbn")

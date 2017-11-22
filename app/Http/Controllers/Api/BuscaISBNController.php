@@ -36,7 +36,7 @@ class BuscaISBNController extends Controller
         }
 
         if (!$info['totalItems']) {
-//            abort(204);
+            abort(204);
         }
 
         $volume = $info['items'][0]['volumeInfo'];

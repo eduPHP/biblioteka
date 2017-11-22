@@ -29,7 +29,7 @@
         <table v-if="itens.length" class="table is-fullwidth crud">
             <thead>
             <tr>
-                <th @click="orderBy('isbn')">
+                <th @click="orderBy('isbn')" class="is-2">
                     <span>ISBN</span> <span class="icon is-small" v-if="order.field === 'isbn'">
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
                     </span>

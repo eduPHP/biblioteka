@@ -222,6 +222,10 @@
                 });
             },
             fillEmpty(data){
+                if (!data){
+                    flash('ISBN não encontrado','info');
+                    return;
+                }
                 if (!this.titulo.length && data.titulo){
                     this.titulo = data.titulo;
                 }
@@ -297,6 +301,12 @@
                     this.autores = [];
                     this.editora = null;
                     this.secao = null;
+                    this.titulo = '';
+                    this.isbn = '';
+                    this.quantidade = 1;
+                    this.descricao = '';
+                    this.ano = '';
+                    this.edicao = '';
                     return;
                 }
                 this.id = this.livro.id;

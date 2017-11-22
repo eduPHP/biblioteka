@@ -14813,3 +14813,7 @@ html {
   opacity: 0;
 }
 
+.crud th span {
+  cursor: ns-resize;
+}
+
