@@ -6,7 +6,7 @@
     <div class="box">
         <p class="title is-4">Funcionalidades a implementar</p>
         <ul>
-            <li>Pesquisa por informações dos livros online através do ISBN</li>
+            <li><s>Pesquisa por informações dos livros online através do ISBN</s></li>
             <li><s>Componentes para adição de seções, editoras e autores</s></li>
             <li><s>Telas de confirmação para ações, exemplo devolução</s></li>
             <li>Tela de Autenticação e regras de validação de acesso</li>
