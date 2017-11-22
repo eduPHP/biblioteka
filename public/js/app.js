@@ -4086,9 +4086,32 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     methods: {
         search: function search() {
-            if (this.isbnHasNotChanged) return;
+            var _this = this;
 
-            console.log('buscando' + this.isbn);
+            if (this.isbnHasNotChanged) {
+                return;
+            }
+
+            axios.get('/api/livros/busca-isbn/' + this.isbn).then(function (_ref) {
+                var data = _ref.data;
+
+                _this.fillEmpty(data);
+            });
+        },
+        fillEmpty: function fillEmpty(data) {
+            if (!this.titulo.length && data.titulo) {
+                this.titulo = data.titulo;
+            }
+            if (!this.descricao.length && data.descricao) {
+                this.descricao = data.descricao;
+            }
+            if (!this.autores.length && data.autores.length) {
+                this.autores = data.autores;
+            }
+
+            if (!this.editora && data.editora) {
+                this.editora = data.editora;
+            }
         },
         selectAutor: function selectAutor(autores) {
             this.autores = autores;
@@ -4103,7 +4126,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.errors.remove('secao_id');
         },
         enviar: function enviar() {
-            var _this = this;
+            var _this2 = this;
 
             this.enviando = true;
             var data = {
@@ -4122,27 +4145,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             if (this.id) {
                 axios.patch('/api/livros/' + this.id, data).then(function (result) {
-                    _this.enviando = false;
+                    _this2.enviando = false;
                     if (result.status === 201) {
                         flash('Livro Modificado');
-                        _this.close(true);
+                        _this2.close(true);
                     }
                 }).catch(function (error) {
-                    _this.enviando = false;
-                    _this.errors.record(error.response.data.errors);
+                    _this2.enviando = false;
+                    _this2.errors.record(error.response.data.errors);
                 });
                 return;
             }
             axios.post('/api/livros', data).then(function (result) {
-                _this.enviando = false;
-                _this.id = result.data.livro.id;
+                _this2.enviando = false;
+                _this2.id = result.data.livro.id;
                 if (result.status === 201) {
                     flash('Livro Adicionado');
-                    _this.close(true);
+                    _this2.close(true);
                 }
             }).catch(function (error) {
-                _this.enviando = false;
-                _this.errors.record(error.response.data.errors);
+                _this2.enviando = false;
+                _this2.errors.record(error.response.data.errors);
             });
         },
         resetForm: function resetForm() {
@@ -43133,7 +43156,7 @@ var render = function() {
     [
       _c("div", { staticClass: "level" }, [
         _c("div", { staticClass: "level-left" }, [
-          _c("h1", { staticClass: "title" }, [_vm._v("Livros")]),
+          _c("h1", { staticClass: "title" }, [_vm._v("Acervo")]),
           _vm._v(" "),
           _vm.filteredBy !== ""
             ? _c("h2", { staticClass: "subtitle" }, [

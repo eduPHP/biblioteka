@@ -9,7 +9,7 @@
                 </a>
             </li>
             <li class="is-active">
-                <a><span class="icon is-small"><i class="fa fa-book"></i></span> <span>Livros</span></a>
+                <a><span class="icon is-small"><i class="fa fa-book"></i></span> <span>Acervo</span></a>
             </li>
         </ul>
     </nav>

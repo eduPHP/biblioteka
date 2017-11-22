@@ -1,6 +1,6 @@
 <a class="navbar-item{{request()->is('emprestimos*')?' is-active':''}}" href="/emprestimos"> Empréstimos </a>
 
-<a class="navbar-item{{request()->is('livros*')?' is-active':''}}" href="/livros"> Livros </a>
+<a class="navbar-item{{request()->is('acervo*')?' is-active':''}}" href="/acervo"> Acervo </a>
 
 <a class="navbar-item{{request()->is('autores*')?' is-active':''}}" href="/autores"> Autores </a>
 

@@ -2,7 +2,7 @@
     <div class="container">
         <div class="level">
             <div class="level-left">
-                <h1 class="title">Livros</h1>
+                <h1 class="title">Acervo</h1>
                 <h2 class="subtitle" v-if="filteredBy !== ''">
                     Filtrado por <span class="tag">
                         {{ filteredBy }}

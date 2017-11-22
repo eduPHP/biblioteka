@@ -213,9 +213,29 @@
         },
         methods: {
             search() {
-                if (this.isbnHasNotChanged) return;
+                if (this.isbnHasNotChanged) {
+                    return;
+                }
 
-                console.log('buscando' + this.isbn);
+                axios.get(`/api/livros/busca-isbn/${this.isbn}`).then(({data})=>{
+                    this.fillEmpty(data);
+                });
+            },
+            fillEmpty(data){
+                if (!this.titulo.length && data.titulo){
+                    this.titulo = data.titulo;
+                }
+                if (!this.descricao.length && data.descricao){
+                    this.descricao = data.descricao;
+                }
+                if (!this.autores.length && data.autores.length){
+                    this.autores = data.autores;
+                }
+
+                if (!this.editora && data.editora){
+                    this.editora = data.editora;
+                }
+
             },
             selectAutor(autores) {
                 this.autores = autores;

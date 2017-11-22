@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Autor;
+use App\Editora;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 
@@ -34,17 +36,29 @@ class BuscaISBNController extends Controller
         }
 
         if (!$info['totalItems']) {
-            abort(204);
+//            abort(204);
         }
 
         $volume = $info['items'][0]['volumeInfo'];
 
+        $autores = [];
+
+        foreach (array_wrap($volume['authors']) as $autor){
+            $busca = Autor::whereNome($autor)->first();
+            $autores[] = $busca ?? ['nome' => $autor];
+        }
+        $editora = null;
+        if (isset($volume['publisher'])){
+            $busca = Editora::whereNome($volume['publisher'])->first();
+            $editora = $busca ?? ['nome' => $volume['publisher']];
+        }
         return [
             'titulo' => $volume['title'],
-            'autores' => $volume['authors'],
-            'descricao' => isset($volume['description']) ? $volume['description'] : '',
-            'publicacao' => $volume['publishedDate'],
-            'rating' => isset($volume['averageRating']) ? $volume['averageRating'] : '',
+            'autores' => $autores,
+            'descricao' => $volume['description'] ?? '',
+            'publicacao' => $volume['publishedDate'] ?? '',
+            'editora' => $editora,
+            'rating' => $volume['averageRating'] ?? '',
             'paginas' => $volume['pageCount'],
         ];
     }
