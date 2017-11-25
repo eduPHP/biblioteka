@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Usuario;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -15,5 +16,21 @@ abstract class TestCase extends BaseTestCase
         }
 
         auth()->login($usuario);
+
+        return $this;
+    }
+
+    public function loginBibliotecario()
+    {
+        $bibliotecario = factory(Usuario::class)->states('bibliotecario')->create();
+
+        $this->logIn($bibliotecario);
+    }
+
+    public function loginNormal()
+    {
+        $usuario = factory(Usuario::class)->create();
+
+        $this->logIn($usuario);
     }
 }

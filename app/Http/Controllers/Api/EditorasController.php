@@ -26,6 +26,8 @@ class EditorasController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Editora::class);
+
         $data = $request->validate([
             'nome' => 'required'
         ]);
@@ -45,6 +47,8 @@ class EditorasController extends Controller
      */
     public function update(Request $request, Editora $editora)
     {
+        $this->authorize('edit', $editora);
+
         $data = $request->validate([
             'nome' => 'required'
         ]);
@@ -64,9 +68,11 @@ class EditorasController extends Controller
      */
     public function destroy(Editora $editora)
     {
+        $this->authorize('delete', $editora);
+
         try {
             $editora->delete();
-            return response('Removido');
+            return response('Removido', 201);
         } catch (\Exception $exception) {
             return response(['message' => 'Editora sendo referenciada em algum livro.'], 422);
         }

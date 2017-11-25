@@ -11,6 +11,8 @@ class EmprestimosController extends Controller
 {
     public function index()
     {
+        $this->authorize('view', Emprestimo::class);
+
         return new EmprestimoResource(
             Emprestimo::apiQuery()
         );
@@ -18,6 +20,8 @@ class EmprestimosController extends Controller
 
     public function store(Request $request)
     {
+        $this->authorize('create', Emprestimo::class);
+
         $dados = $request->validate([
             'livros' => 'required|exists:livros,id',
             'estudante_id' => 'required|exists:estudantes,id',
@@ -30,5 +34,14 @@ class EmprestimosController extends Controller
         }
 
         return response('adicionado', 201);
+    }
+
+    public function update(Emprestimo $emprestimo)
+    {
+        $this->authorize('devolver', $emprestimo);
+
+        $emprestimo->devolver();
+
+        return response('devolvido', 201);
     }
 }

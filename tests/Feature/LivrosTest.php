@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,12 +13,13 @@ class LivrosTest extends TestCase
     /** @test */
     function devemos_poder_adicionar_um_livro()
     {
-        $this->withoutExceptionHandling();
+
+        $this->loginBibliotecario();
 
         $novoLivro = factory('App\Livro')->make()->toArray();
         factory('App\Autor')->create();
 
-        $resposta = $this->post('/api/livros', array_merge($novoLivro, ['autores' => [1]]));
+        $resposta = $this->postJson('/api/livros', array_merge($novoLivro, ['autores' => [1]]));
 
         $resposta->assertStatus(201);
         $this->assertDatabaseHas('livros', $novoLivro);
@@ -29,7 +31,7 @@ class LivrosTest extends TestCase
     {
         $livros = factory('App\Livro', 3)->create();
 
-        $resposta = $this->get("/api/livros");
+        $resposta = $this->getJson("/api/livros");
 
         foreach ($livros as $livro) {
             $resposta->assertSee($livro->titulo);
@@ -39,7 +41,8 @@ class LivrosTest extends TestCase
     /** @test */
     function devemos_poder_editar_um_livro()
     {
-        $this->withoutExceptionHandling();
+        $this->loginBibliotecario();
+
         $livro = factory('App\Livro')->create();
 
         $data = $livro->toArray();
@@ -57,9 +60,11 @@ class LivrosTest extends TestCase
     /** @test */
     function devemos_poder_remover_um_livro()
     {
+        $this->loginBibliotecario();
+
         $livro = factory('App\Livro')->create();
 
-        $this->delete("/api/livros/{$livro->id}")->assertStatus(201);
+        $this->deleteJson("/api/livros/{$livro->id}")->assertStatus(201);
 
         $this->assertDatabaseMissing('livros', ['id' => $livro->id]);
     }
@@ -86,13 +91,15 @@ class LivrosTest extends TestCase
     /** @test */
     function ao_adicionar_um_livro_quando_enviamos_uma_string_como_autor_este_valor_deve_ser_inserido_no_banco()
     {
+        $this->loginBibliotecario();
+
         $autorExistente = factory('App\Autor')->create();
         $livro = factory('App\Livro')->make();
         $data = $livro->toArray();
         $data['autores'][] = $autorExistente->id;
         $data['autores'][] = "Novo Autor";
 
-        $resposta = $this->post('/api/livros', $data);
+        $resposta = $this->postJson('/api/livros', $data);
 
         $resposta->assertStatus(201);
         $this->assertCount(2, \App\Livro::first()->autores);
@@ -102,9 +109,11 @@ class LivrosTest extends TestCase
     /** @test */
     function ao_adicionar_um_livro_podemos_informar_o_nome_da_editora_e_este_sera_adicionado_ao_banco()
     {
+        $this->loginBibliotecario();
+
         $livro = factory('App\Livro')->make(['editora_id' => null]);
 
-        $resposta = $this->post('/api/livros', array_merge($livro->toArray(), [
+        $resposta = $this->postJson('/api/livros', array_merge($livro->toArray(), [
             'editora_id' => $editora = 'Nova Editora',
             'autores' => [factory('App\Autor')->create()->id]
         ]));
@@ -116,9 +125,11 @@ class LivrosTest extends TestCase
     /** @test */
     function ao_adicionar_um_livro_podemos_informar_o_nome_da_secao_e_este_sera_adicionado_ao_banco()
     {
+        $this->loginBibliotecario();
+
         $livro = factory('App\Livro')->make(['secao_id' => null]);
 
-        $resposta = $this->post('/api/livros', array_merge($livro->toArray(), [
+        $resposta = $this->postJson('/api/livros', array_merge($livro->toArray(), [
             'secao_id' => $secao = 'Nova Secao',
             'autores' => [factory('App\Autor')->create()->id]
         ]));

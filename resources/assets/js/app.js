@@ -21,6 +21,9 @@ const app = new Vue({
             }).catch(({data})=>{
                 flash(data, 'erro');
             });
+        },
+        voltar(){
+            window.history.back();
         }
     }
 });

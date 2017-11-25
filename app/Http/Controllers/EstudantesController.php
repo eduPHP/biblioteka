@@ -8,11 +8,8 @@ class EstudantesController extends Controller
 {
     public function index()
     {
-        return view('estudantes.index');
-    }
+        $this->authorize('view' ,Estudante::class);
 
-    public function show(Estudante $estudante)
-    {
-        return view('estudantes.show', compact('estudante'));
+        return view('estudantes.index');
     }
 }

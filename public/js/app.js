@@ -3427,7 +3427,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         expand: function expand() {
-            this.expanded = true;
+            this.expanded = !this.expanded;
         },
         selectEstudante: function selectEstudante(estudante) {
             this.estudante = estudante;
@@ -3579,7 +3579,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 }).catch(function (error) {
                     _this.enviando = false;
-                    _this.errors.record(error.response.data.errors);
+                    if (error.responser.status === 422) {
+                        _this.errors.record(error.response.data.errors);
+                        return;
+                    }
+                    flash(error.response.data.message, 'erro');
                 });
                 return;
             }
@@ -3592,7 +3596,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }).catch(function (error) {
                 _this.enviando = false;
-                _this.errors.record(error.response.data.errors);
+                if (error.response.status === 422) {
+                    _this.errors.record(error.response.data.errors);
+                    return;
+                }
+                flash(error.response.data.message, 'erro');
             });
         },
         resetForm: function resetForm() {
@@ -3695,7 +3703,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 }).catch(function (error) {
                     _this.enviando = false;
-                    _this.errors.record(error.response.data.errors);
+                    if (error.response.status === 422) {
+                        _this.errors.record(error.response.data.errors);
+                        return;
+                    }
+                    flash(error.response.data.message, 'erro');
                 });
                 return;
             }
@@ -3708,7 +3720,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }).catch(function (error) {
                 _this.enviando = false;
-                _this.errors.record(error.response.data.errors);
+                if (error.response.status === 422) {
+                    _this.errors.record(error.response.data.errors);
+                    return;
+                }
+                flash(error.response.data.message, 'erro');
             });
         },
         resetForm: function resetForm() {
@@ -4156,7 +4172,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 }).catch(function (error) {
                     _this2.enviando = false;
-                    _this2.errors.record(error.response.data.errors);
+
+                    if (error.response.status === 422) {
+                        _this2.errors.record(error.response.data.errors);
+                        return;
+                    }
+                    flash(error.response.data.message, 'erro');
                 });
                 return;
             }
@@ -4169,7 +4190,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }).catch(function (error) {
                 _this2.enviando = false;
-                _this2.errors.record(error.response.data.errors);
+
+                if (error.response.status === 422) {
+                    _this2.errors.record(error.response.data.errors);
+                    return;
+                }
+                flash(error.response.data.message, 'erro');
             });
         },
         resetForm: function resetForm() {
@@ -55524,6 +55550,9 @@ var app = new Vue({
 
                 flash(data, 'erro');
             });
+        },
+        voltar: function voltar() {
+            window.history.back();
         }
     }
 });

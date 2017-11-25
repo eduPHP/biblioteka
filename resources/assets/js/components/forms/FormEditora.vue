@@ -76,7 +76,11 @@
                         }
                     }).catch(error => {
                         this.enviando = false;
-                        this.errors.record(error.response.data.errors)
+                        if (error.response.status === 422){
+                            this.errors.record(error.response.data.errors);
+                            return;
+                        }
+                        flash(error.response.data.message, 'erro');
                     });
                     return;
                 }
@@ -89,7 +93,11 @@
                     }
                 }).catch(error => {
                     this.enviando = false;
-                    this.errors.record(error.response.data.errors)
+                    if (error.response.status === 422) {
+                        this.errors.record(error.response.data.errors)
+                        return;
+                    }
+                    flash(error.response.data.message, 'erro');
                 });
 
             },

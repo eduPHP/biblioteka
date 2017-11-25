@@ -1,35 +1,7 @@
-<!doctype html>
-<html lang="en-us">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>{{ config('app.name') }} Cadastro</title>
-    <link href="{{ mix('css/app.css') }}" rel="stylesheet">
-    <style>
-        body, html{
-            height: auto;
-        }
-        .card {
-            max-width : 35rem;
-            margin    : 5rem auto;
-        }
-        .card-header{
-            flex-direction : column;
-        }
-        .card-header span{
-            margin: 1.3rem auto 0;
-        }
-        .card-header p{
-            margin: 0 auto 1.3rem;
-        }
-        .field.is-grouped{
-            justify-content: center;
-        }
-    </style>
-</head>
-<body>
-<form method="POST" action="{{ route('register') }}">
+@extends('layouts.clean')
+@section('title','Cadastro')
+@section('content')
+    <form method="POST" action="{{ route('register') }}">
     {{ csrf_field() }}
 
     <div class="card">
@@ -90,7 +62,21 @@
             </div>
         </div>
     </div>
-</form>
+    </form>
+@endsection
+@section('style')
+    @parent
+    <style>
+        .card {
+            max-width : 35rem;
+        }
 
-</body>
-</html>
+        .card-header span {
+            margin : 1.3rem auto 0;
+        }
+
+        .card-header p {
+            margin : 0 auto 1.3rem;
+        }
+    </style>
+@stop

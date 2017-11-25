@@ -36,6 +36,8 @@ class LivrosController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Livro::class);
+
         $data = $request->validate([
             'isbn' => 'required',
             'titulo' => 'required',
@@ -63,6 +65,8 @@ class LivrosController extends Controller
      */
     public function update(Request $request, Livro $livro)
     {
+        $this->authorize('edit', $livro);
+
         $data = $request->validate([
             'isbn' => 'required',
             'titulo' => 'required',
@@ -90,6 +94,8 @@ class LivrosController extends Controller
      */
     public function destroy(Livro $livro)
     {
+        $this->authorize('remove', $livro);
+
         $livro->delete();
 
         return response('Removido', 201);

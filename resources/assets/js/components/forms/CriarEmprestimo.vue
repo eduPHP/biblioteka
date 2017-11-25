@@ -157,7 +157,7 @@
         methods: {
 
             expand(){
-                this.expanded = true;
+                this.expanded = !this.expanded;
             },
 
             selectEstudante(estudante) {

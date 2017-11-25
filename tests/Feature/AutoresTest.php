@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Autor;
+use App\Livro;
+use App\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -12,11 +15,11 @@ class AutoresTest extends TestCase
     /** @test */
     function devemos_poder_ordenar_autores_pela_quantidade_de_livros()
     {
-        factory('App\Livro')->create()->autores()->sync([
-            $a1 = factory('App\Autor')->create()->id,
+        factory(Livro::class)->create()->autores()->sync([
+            $a1 = factory(Autor::class)->create()->id,
         ]);
-        $a2 = factory('App\Autor')->create()->id;
-        factory('App\Livro', 2)->create()->each(function ($livro) use ($a2) {
+        $a2 = factory(Autor::class)->create()->id;
+        factory(Livro::class, 2)->create()->each(function ($livro) use ($a2) {
             $livro->autores()->sync([$a2]);
         });
 
@@ -34,7 +37,9 @@ class AutoresTest extends TestCase
     /** @test */
     function podemos_adicionar_um_autor()
     {
-        $data = factory('App\Autor')->raw();
+        $this->loginBibliotecario();
+
+        $data = factory(Autor::class)->raw();
 
         $resposta = $this->postJson('/api/autores', $data);
 
@@ -45,7 +50,9 @@ class AutoresTest extends TestCase
     /** @test */
     function podemos_editar_um_autor()
     {
-        $autor = factory('App\Autor')->create();
+        $this->loginBibliotecario();
+
+        $autor = factory(Autor::class)->create();
 
         $resposta = $this->patchJson("/api/autores/{$autor->id}", $data = ['nome' => 'John Doe']);
 
@@ -56,7 +63,11 @@ class AutoresTest extends TestCase
     /** @test */
     function podemos_remover_um_autor()
     {
-        $autor = factory('App\Autor')->create();
+        $this->loginBibliotecario();
+
+        $this->logIn(factory(Usuario::class)->states('bibliotecario')->create());
+
+        $autor = factory(Autor::class)->create();
 
         $resposta = $this->deleteJson("/api/autores/{$autor->id}");
 
@@ -67,9 +78,54 @@ class AutoresTest extends TestCase
     /** @test */
     function o_nome_do_autor_eh_obrigatorio()
     {
+        $this->loginBibliotecario();
+
+        $this->logIn(factory(Usuario::class)->states('bibliotecario')->create());
+
         $resposta = $this->postJson("/api/autores", ['nome' => null]);
 
         $resposta->assertStatus(422)->assertJsonFragment(['nome']);
+    }
+
+    /** @test */
+    function usuarios_nao_autorizados_nao_podem_adicionar_autores()
+    {
+        $this->loginNormal();
+
+        $this->postJson('/api/autores', $dados = [
+            'nome' => 'Novo Autor',
+        ])->assertStatus(403);
+
+        $this->assertDatabaseMissing('autores', $dados);
+    }
+
+    /** @test */
+    function usuarios_nao_autorizados_nao_podem_editar_autores()
+    {
+        $this->loginNormal();
+
+        $editora = factory(Autor::class)->create();
+
+        $this->patchJson("/api/autores/{$editora->id}", $data = [
+            'nome' => 'Changed',
+        ])->assertStatus(403);
+
+        $this->assertDatabaseMissing('autores', $data);
+    }
+
+    /** @test */
+    function usuarios_nao_autorizados_nao_podem_remover_uma_editora()
+    {
+        $this->loginNormal();
+
+        $editora = factory(Autor::class)->create();
+
+        $this->delete("/api/autores/{$editora->id}")
+            ->assertStatus(403);
+
+        $this->assertDatabaseHas('autores', [
+            'id' => $editora->id,
+        ]);
     }
 
 }

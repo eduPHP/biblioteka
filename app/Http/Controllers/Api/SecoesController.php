@@ -11,6 +11,8 @@ class SecoesController extends Controller
 {
     public function index()
     {
+        $this->authorize('view', Secao::class);
+
         $autores = Secao::apiQuery();
 
         return new SecaoCollection($autores);
@@ -25,9 +27,11 @@ class SecoesController extends Controller
      */
     public function destroy(Secao $secao)
     {
+        $this->authorize('delete', $secao);
+
         try {
             $secao->delete();
-            return response('Removido');
+            return response('Removido', 201);
         } catch (\Exception $exception) {
             return response(['message' => 'Seção sendo referenciada em algum livro.'], 422);
         }
@@ -42,6 +46,8 @@ class SecoesController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Secao::class);
+
         $data = $request->validate([
             'descricao' => 'required',
             'localizacao' => 'nullable'
@@ -62,6 +68,8 @@ class SecoesController extends Controller
      */
     public function update(Request $request, Secao $secao)
     {
+        $this->authorize('create', $secao);
+
         $data = $request->validate([
             'descricao' => 'required',
             'localizacao' => 'nullable'

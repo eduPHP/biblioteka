@@ -128,7 +128,11 @@
         </div>
     </footer>
 
-    <flash mensagem="{{ session('success') }}"></flash>
+    @if(session('error'))
+        <flash mensagem="{{ session('error') }}" tipo="erro"></flash>
+    @else
+        <flash mensagem="{{ session('success') }}"></flash>
+    @endif
 </div>
 
 <!-- Scripts -->

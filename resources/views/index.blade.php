@@ -14,7 +14,7 @@
                     <article class="tile is-child notification is-info">
                         <p class="title is-3"><a href="/livros">Livros</a></p>
                         <figure class="image is-4by2">
-                            <a href="/livros"><img src="/images/livros.jpg" alt="Livros"></a>
+                            <a href="/acervo"><img src="/images/livros.jpg" alt="Livros"></a>
                         </figure>
                     </article>
                 </div>

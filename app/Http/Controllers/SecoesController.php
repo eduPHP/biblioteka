@@ -13,18 +13,8 @@ class SecoesController extends Controller
      */
     public function index()
     {
-        return view('secoes.index');
-    }
+        $this->authorize('view', Secao::class);
 
-    /**
-     * Exibe um Secao
-     *
-     * @param Secao $secao
-     *
-     * @return \Illuminate\View\View
-     */
-    public function show(Secao $secao)
-    {
-        return view('secoes.show', compact('secao'));
+        return view('secoes.index');
     }
 }

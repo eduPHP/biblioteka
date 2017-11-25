@@ -23,6 +23,8 @@ class AutoresController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Autor::class);
+
         $data = $request->validate([
             'nome' => 'required'
         ]);
@@ -42,6 +44,8 @@ class AutoresController extends Controller
      */
     public function update(Request $request, Autor $autor)
     {
+        $this->authorize('edit', $autor);
+
         $data = $request->validate([
             'nome' => 'required'
         ]);
@@ -60,6 +64,8 @@ class AutoresController extends Controller
      */
     public function destroy(Autor $autor)
     {
+        $this->authorize('delete', $autor);
+
         try {
             $autor->delete();
             return response('Removido');
