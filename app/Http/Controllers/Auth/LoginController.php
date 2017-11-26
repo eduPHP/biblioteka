@@ -68,7 +68,9 @@ class LoginController extends Controller
      */
     protected function authenticated(Request $request, $user)
     {
-        return redirect($this->redirectTo)->with('success',"Bem vindo de volta {$user->nome}");
+        return redirect()
+            ->intended($this->redirectPath())
+            ->with('success',"Bem vindo de volta {$user->nome}");
     }
 
 }
