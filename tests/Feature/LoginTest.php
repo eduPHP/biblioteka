@@ -21,6 +21,4 @@ class LoginTest extends TestCase
 
         $this->assertEquals($usuario->id, auth()->id());
     }
-
-
 }

@@ -5,9 +5,7 @@ namespace Tests\Feature;
 use App\Emprestimo;
 use App\Estudante;
 use App\Livro;
-use App\Usuario;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\Concerns\InteractsWithExceptionHandling;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

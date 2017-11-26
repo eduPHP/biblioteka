@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Editora;
-use App\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -130,7 +129,7 @@ class EditorasTest extends TestCase
 
         $editora = factory(Editora::class)->create();
 
-        $this->delete("/api/editoras/{$editora->id}")
+        $this->deleteJson("/api/editoras/{$editora->id}")
             ->assertStatus(403);
 
         $this->assertDatabaseHas('editoras', [

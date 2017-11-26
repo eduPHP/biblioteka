@@ -41,6 +41,8 @@ Route::group(['middleware'=>'auth'], function (){
     Route::post('/api/autores', 'Api\AutoresController@store');
     Route::patch('/api/autores/{autor}', 'Api\AutoresController@update');
     Route::delete('/api/autores/{autor}', 'Api\AutoresController@destroy');
+
+    Route::get('/relatorios/mais-emprestados','RelatorioMaisEmprestadosController@index');
 });
 //Route::get('/home', 'HomeController@index');
 Route::get('/info', 'HomeController@info');

@@ -19,7 +19,7 @@ class SecoesController extends Controller
     }
 
     /**
-     * Remove um Secao
+     * Remove uma Secao
      *
      * @param Secao $secao
      *
@@ -38,7 +38,7 @@ class SecoesController extends Controller
     }
 
     /**
-     * Grava um novo Secao
+     * Grava uma nova Secao
      *
      * @param Request $request
      *
@@ -59,7 +59,7 @@ class SecoesController extends Controller
     }
 
     /**
-     * Atualiza um Secao
+     * Atualiza uma Secao
      *
      * @param Request $request
      * @param Secao $secao

@@ -77,33 +77,19 @@
             <div class="navbar-brand">
                 <a class="navbar-item titulo" href="/">  {{ config('app.name') }} </a>
 
-            <div class="navbar-burger burger" :class="{'is-active': menuOpen}" @click="menuOpen = !menuOpen">
-                <span></span> <span></span> <span></span>
+                <div class="navbar-burger burger" :class="{'is-active': menuOpen}" @click="menuOpen = !menuOpen">
+                    <span></span> <span></span> <span></span>
+                </div>
             </div>
-        </div>
+            <div class="navbar-menu" :class="{'is-active': menuOpen}">
+                <div class="navbar-start">
 
-        <div class="navbar-menu" :class="{'is-active': menuOpen}">
-            <div class="navbar-start">
+                    @include('layouts.menu')
 
-                @include('layouts.menu')
+                </div>
 
-            </div>
-
-            <div class="navbar-end">
-                <!-- Authentication Links -->
-                @guest
-                        <a class="navbar-item" href="/register">Cadastre-se</a>
-                        <a class="navbar-item" href="/login">Login</a>
-                    @else
-                        <div class="navbar-item has-dropdown is-hoverable">
-                            <a class="navbar-link"> {{ auth()->user()->nome }} </a>
-                            <div class="navbar-dropdown is-right">
-                                <a class="navbar-item" @click="logout"> Logout </a>
-                                <hr class="navbar-divider">
-                                <a href="/info" class="navbar-item"> Versão 0.6.1 </a>
-                            </div>
-                        </div>
-                    @endguest
+                <div class="navbar-end">
+                    @include('layouts.auth-links')
                 </div>
             </div>
         </nav>

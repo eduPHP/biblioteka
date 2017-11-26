@@ -94,7 +94,7 @@ class LivrosController extends Controller
      */
     public function destroy(Livro $livro)
     {
-        $this->authorize('remove', $livro);
+        $this->authorize('delete', $livro);
 
         $livro->delete();
 

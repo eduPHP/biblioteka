@@ -2,7 +2,6 @@
 
 namespace Tests\Feature;
 
-use App\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -13,7 +12,6 @@ class LivrosTest extends TestCase
     /** @test */
     function devemos_poder_adicionar_um_livro()
     {
-
         $this->loginBibliotecario();
 
         $novoLivro = factory('App\Livro')->make()->toArray();

@@ -4,7 +4,6 @@ namespace Tests\Feature;
 
 use App\Autor;
 use App\Livro;
-use App\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -65,8 +64,6 @@ class AutoresTest extends TestCase
     {
         $this->loginBibliotecario();
 
-        $this->logIn(factory(Usuario::class)->states('bibliotecario')->create());
-
         $autor = factory(Autor::class)->create();
 
         $resposta = $this->deleteJson("/api/autores/{$autor->id}");
@@ -79,8 +76,6 @@ class AutoresTest extends TestCase
     function o_nome_do_autor_eh_obrigatorio()
     {
         $this->loginBibliotecario();
-
-        $this->logIn(factory(Usuario::class)->states('bibliotecario')->create());
 
         $resposta = $this->postJson("/api/autores", ['nome' => null]);
 
@@ -104,9 +99,9 @@ class AutoresTest extends TestCase
     {
         $this->loginNormal();
 
-        $editora = factory(Autor::class)->create();
+        $autor = factory(Autor::class)->create();
 
-        $this->patchJson("/api/autores/{$editora->id}", $data = [
+        $this->patchJson("/api/autores/{$autor->id}", $data = [
             'nome' => 'Changed',
         ])->assertStatus(403);
 
@@ -114,17 +109,17 @@ class AutoresTest extends TestCase
     }
 
     /** @test */
-    function usuarios_nao_autorizados_nao_podem_remover_uma_editora()
+    function usuarios_nao_autorizados_nao_podem_remover_um_autor()
     {
         $this->loginNormal();
 
-        $editora = factory(Autor::class)->create();
+        $autor = factory(Autor::class)->create();
 
-        $this->delete("/api/autores/{$editora->id}")
+        $this->deleteJson("/api/autores/{$autor->id}")
             ->assertStatus(403);
 
         $this->assertDatabaseHas('autores', [
-            'id' => $editora->id,
+            'id' => $autor->id,
         ]);
     }
 

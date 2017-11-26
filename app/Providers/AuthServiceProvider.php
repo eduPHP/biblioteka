@@ -18,6 +18,7 @@ class AuthServiceProvider extends ServiceProvider
         'App\Emprestimo' => 'App\Policies\Emprestimo',
         'App\Editora' => 'App\Policies\Editora',
         'App\Autor' => 'App\Policies\Autor',
+        'App\Livro' => 'App\Policies\Livro',
     ];
 
     /**

@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Estudante;
-use App\Usuario;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -175,13 +174,13 @@ class EstudantesTest extends TestCase
     }
 
     /** @test */
-    function usuarios_nao_autorizados_nao_podem_remover_uma_estudante()
+    function usuarios_nao_autorizados_nao_podem_remover_um_estudante()
     {
         $this->loginNormal();
 
         $estudante = factory(Estudante::class)->create();
 
-        $this->delete("/api/estudantes/{$estudante->id}")
+        $this->deleteJson("/api/estudantes/{$estudante->id}")
             ->assertStatus(403);
 
         $this->assertDatabaseHas('estudantes', [

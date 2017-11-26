@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Traits\Sortable;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Livro extends Model
@@ -36,6 +37,25 @@ class Livro extends Model
                 '(UPPER(titulo) like ? or isbn = ?)',
                 [strtoupper("%$search%"), $search]
             );
+        }
+
+        return $query->paginate(request('perpage', 10));
+    }
+
+    public static function relatorioMaisEmprestados()
+    {
+        $query = self::selectRaw('livros.*, COUNT(emprestimos.id) as emprestimos_count')
+            ->join('emprestimos', 'livros.id', 'emprestimos.livro_id')
+            ->groupBy('livros.id')
+            ->ordered('emprestimos,desc');
+
+        if (request('periodo')) {
+            list($inicio, $final) = explode(',', request('periodo'));
+
+            $inicio = Carbon::createFromFormat('d/m/Y', $inicio)->startOfDay();
+            $final = Carbon::createFromFormat('d/m/Y', $final)->endOfDay();
+
+            $query->whereBetween('emprestado_em', [$inicio, $final]);
         }
 
         return $query->paginate(request('perpage', 10));
@@ -77,6 +97,11 @@ class Livro extends Model
     public function autores()
     {
         return $this->belongsToMany(Autor::class, 'autor_livros');
+    }
+
+    public function emprestimos()
+    {
+        return $this->hasMany(Emprestimo::class);
     }
 
     public function editora()

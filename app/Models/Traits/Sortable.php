@@ -2,14 +2,11 @@
 
 namespace App\Models\Traits;
 
-
-use Illuminate\Support\Str;
-
 trait Sortable
 {
-    public function scopeOrdered($query)
+    public function scopeOrdered($query, $orderOverride = null)
     {
-        $order = request('orderby') ?: $this->orderby;
+        $order = request('orderby') ?: $orderOverride ?: $this->orderby;
         if ($order) {
 
             $order = explode(',', $order);

@@ -1,5 +1,28 @@
 # Projeto Biblioteka
 
+
+## Versão 0.6
+### Relatórios
+- Relatório de livros mais emprestados
+
+## Versão 0.5
+### Regras de acesso
+- Formulários de registro e login
+- Proteção de rotas por autenticação
+- Aplicação da busca online por ISBN no form de adição de livros
+
+## Versão 0.4
+### Componentes Form
+- Componendes formulário
+    - Autores
+    - Livros
+    - Editoras
+    - Seções
+- Componente Flash (notificações)
+- Componentes de listagem
+- Ordenação nas listagens
+- Generalização de alguns componentes (mixins)
+
 ## Versão 0.3
 ### Cadastro de Livros
 - Componende de busca/adição de autores

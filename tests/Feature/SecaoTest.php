@@ -3,11 +3,10 @@
 namespace Tests\Feature;
 
 use App\Secao;
-use App\Usuario;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class SecaoPermissoesTest extends TestCase
+class SecaoTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -54,7 +53,7 @@ class SecaoPermissoesTest extends TestCase
 
         $secao = factory(Secao::class)->create();
 
-        $this->delete("/api/secoes/{$secao->id}")
+        $this->deleteJson("/api/secoes/{$secao->id}")
             ->assertStatus(201);
 
         $this->assertDatabaseMissing('secoes', [
@@ -106,7 +105,7 @@ class SecaoPermissoesTest extends TestCase
 
         $secao = factory(Secao::class)->create();
 
-        $this->delete("/api/secoes/{$secao->id}")
+        $this->deleteJson("/api/secoes/{$secao->id}")
             ->assertStatus(403);
 
         $this->assertDatabaseHas('secoes', [
