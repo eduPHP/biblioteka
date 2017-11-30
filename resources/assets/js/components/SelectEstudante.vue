@@ -15,7 +15,7 @@
                    @keydown.enter.prevent="select(options.length?options[optionSelected]:null)"
                    v-model="searchFor"
                    ref="search"
-                   placeholder="Digite a matrícula ou o nome para pesquisar">
+                   placeholder="Digite a matrícula ou o nome para pesquisar" v-focus>
             <span class="icon is-small is-left" v-if="!selected"><i class="fa fa-user"></i></span>
         </div>
         <div class="select2-search" v-if="opened">
@@ -23,7 +23,8 @@
             <button type="button" class="button is-white option" v-if="noMatches"
                     @blur="close"
                     :class="{'is-info':optionSelected===0}"
-                    @click="editar({nome: searchFor})">"{{ searchFor }}" não encontrado, clique para adicionar</button>
+                    @click="editar({nome: searchFor})">"{{ searchFor }}" não encontrado, clique para adicionar
+            </button>
             <button type="button" class="button is-white option" v-for="(estudante, index) in options"
                     :class="{'is-info':index===optionSelected}"
                     @blur="close"
@@ -32,35 +33,39 @@
                 Exibindo {{ meta.from }} a {{ meta.to }} de um total de {{ meta.total }} resultados
             </span>
         </div>
-        <form-estudante @adicionado="selected = $event" :estudante="editResource" :active="editando" @close="fecharEdicao($event)"></form-estudante>
+        <form-estudante @adicionado="adicionado($event)" :estudante="editResource" :active="editando" @close="fecharEdicao($event)"></form-estudante>
     </div>
 </template>
 <script>
     import typeAheadPointer from '../mixins/typeAheadPointer';
     import FormEstudante from "../components/forms/FormEstudante.vue";
     import formActions from "../mixins/formActions";
+    import focus from '../directives/focus';
 
     export default {
         mixins: [typeAheadPointer, formActions],
         components: {'form-estudante': FormEstudante},
+        directives: {focus: focus},
         name: 'select-estudante',
         props: ['estudante'],
-        data(){
+
+        data() {
             return {
                 selected: null,
                 options: [],
                 meta: {},
                 opened: false,
-                searchFor:'',
+                searchFor: '',
                 searching: false
             }
         },
+
         watch: {
-            searchFor(){
+            searchFor() {
                 this.open();
             },
-            opened(val){
-                if (!val){
+            opened(val) {
+                if (!val) {
                     this.searchFor = '';
                 }
             },
@@ -68,23 +73,36 @@
                 this.selected = this.estudante;
             }
         },
+
         methods: {
+            adicionado(estudante){
+                this.options.push(estudante);
+                this.select(estudante);
+            },
+
             open() {
                 if (this.searchFor.length > 1) {
                     this.opened = true;
                 }
             },
-            unselect(){
+
+            unselect() {
                 this.selected = null;
                 this.$emit('selected', null);
             },
-            select(estudante){
+
+            select(estudante) {
+                if (estudante === null) {
+                    this.editar({nome: this.searchFor});
+                    return;
+                }
+
                 if (this.optionSelected === -1 && this.options.length === 1) {
                     estudante = this.options[0];
                 }
 
-                if (!estudante || typeof estudante === 'undefined'){
-                    this.$emit('error','Selecione um estudante');
+                if (!estudante || typeof estudante === 'undefined') {
+                    this.$emit('error', 'Selecione um estudante');
                     this.typeAheadEscape();
                     return;
                 }
@@ -94,17 +112,19 @@
 
                 this.typeAheadEscape();
             },
-            close(e){
-                if (e.relatedTarget){
+
+            close(e) {
+                if (e.relatedTarget) {
                     let classes = e.relatedTarget.getAttribute('class');
                     this.opened = !!classes.match(/option/);
                 }
             },
-            search(page=1, e){
-                if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Escape'){
+
+            search(page = 1, e) {
+                if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Escape') {
                     return;
                 }
-                if (this.searching || this.searchFor.length < 2){
+                if (this.searching || this.searchFor.length < 2) {
                     return;
                 }
                 this.searching = true;
@@ -115,20 +135,18 @@
                     this.meta = data.meta;
                 }).catch(() => {
                     this.searching = false;
-                    flash('Erro ao buscar estudantes','danger')
+                    flash('Erro ao buscar estudantes', 'danger')
                 });
             }
         },
-        created(){
+
+        created() {
             this.selected = this.estudante;
-        },
-        mounted() {
-            this.$refs.search.focus();
         }
     }
 </script>
 
-<style lang="sass" scoped>
+<style lang="sass">
     .input-addon
         margin : 0 0 0.5em
 
@@ -144,12 +162,12 @@
         align-items : baseline
         z-index : 5
         .button
-            width: 100%
-            justify-content: left
+            width : 100%
+            justify-content : left
         .help
-            padding-left: 1em
+            padding-left : 1em
     .tag, .tag .fa
-            margin-right : 0.5em
+        margin-right : 0.5em
     .is-danger .input
         border-color : #ff3860
 

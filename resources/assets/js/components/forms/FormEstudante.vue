@@ -99,10 +99,10 @@
                 }
                 axios.post('/api/estudantes', data).then(result => {
                     this.enviando = false;
-                    this.id = result.data.estudante.id;
                     if (result.status === 201) {
-                        flash('Estudante Adicionado');
+                        this.id = result.data.estudante.id;
                         this.$emit('adicionado', result.data.estudante);
+                        flash('Estudante Adicionado');
                         this.close();
                     }
                 }).catch(error => {

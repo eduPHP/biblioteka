@@ -33,7 +33,7 @@ class EmprestimosController extends Controller
             Emprestimo::emprestar($dados);
         }
 
-        return response('adicionado', 201);
+        return response('Empréstimo adicionado', 201);
     }
 
     public function update(Emprestimo $emprestimo)
@@ -42,6 +42,6 @@ class EmprestimosController extends Controller
 
         $emprestimo->devolver();
 
-        return response('devolvido', 201);
+        return response('Empréstimo devolvido', 201);
     }
 }

@@ -2981,6 +2981,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_forms_FormEstudante_vue__ = __webpack_require__("./resources/assets/js/components/forms/FormEstudante.vue");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_forms_FormEstudante_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_forms_FormEstudante_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__mixins_formActions__ = __webpack_require__("./resources/assets/js/mixins/formActions.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__directives_focus__ = __webpack_require__("./resources/assets/js/directives/focus.js");
 //
 //
 //
@@ -3018,6 +3019,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+
 
 
 
@@ -3026,8 +3029,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
     mixins: [__WEBPACK_IMPORTED_MODULE_0__mixins_typeAheadPointer__["a" /* default */], __WEBPACK_IMPORTED_MODULE_2__mixins_formActions__["a" /* default */]],
     components: { 'form-estudante': __WEBPACK_IMPORTED_MODULE_1__components_forms_FormEstudante_vue___default.a },
+    directives: { focus: __WEBPACK_IMPORTED_MODULE_3__directives_focus__["a" /* default */] },
     name: 'select-estudante',
     props: ['estudante'],
+
     data: function data() {
         return {
             selected: null,
@@ -3038,6 +3043,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             searching: false
         };
     },
+
 
     watch: {
         searchFor: function searchFor() {
@@ -3052,7 +3058,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.selected = this.estudante;
         }
     },
+
     methods: {
+        adicionado: function adicionado(estudante) {
+            this.options.push(estudante);
+            this.select(estudante);
+        },
         open: function open() {
             if (this.searchFor.length > 1) {
                 this.opened = true;
@@ -3063,6 +3074,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$emit('selected', null);
         },
         select: function select(estudante) {
+            if (estudante === null) {
+                this.editar({ nome: this.searchFor });
+                return;
+            }
+
             if (this.optionSelected === -1 && this.options.length === 1) {
                 estudante = this.options[0];
             }
@@ -3110,11 +3126,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         }
     },
+
     created: function created() {
         this.selected = this.estudante;
-    },
-    mounted: function mounted() {
-        this.$refs.search.focus();
     }
 });
 
@@ -3865,10 +3879,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             axios.post('/api/estudantes', data).then(function (result) {
                 _this.enviando = false;
-                _this.id = result.data.estudante.id;
                 if (result.status === 201) {
-                    flash('Estudante Adicionado');
+                    _this.id = result.data.estudante.id;
                     _this.$emit('adicionado', result.data.estudante);
+                    flash('Estudante Adicionado');
                     _this.close();
                 }
             }).catch(function (error) {
@@ -4498,7 +4512,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 /***/ }),
 
-/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue":
+/***/ "./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/css-base.js")(undefined);
@@ -4506,7 +4520,7 @@ exports = module.exports = __webpack_require__("./node_modules/css-loader/lib/cs
 
 
 // module
-exports.push([module.i, "\n.input-addon[data-v-7ae4cd70] {\n  margin: 0 0 0.5em;\n}\n.select2-search[data-v-7ae4cd70] {\n  border: 1px solid #d4d4d4;\n  background: #fff;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  border-top: none;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  z-index: 5;\n}\n.select2-search .button[data-v-7ae4cd70] {\n    width: 100%;\n    -webkit-box-pack: left;\n        -ms-flex-pack: left;\n            justify-content: left;\n}\n.select2-search .help[data-v-7ae4cd70] {\n    padding-left: 1em;\n}\n.tag[data-v-7ae4cd70], .tag .fa[data-v-7ae4cd70] {\n  margin-right: 0.5em;\n}\n.is-danger .input[data-v-7ae4cd70] {\n  border-color: #ff3860;\n}\n", ""]);
+exports.push([module.i, "\n.input-addon {\n  margin: 0 0 0.5em;\n}\n.select2-search {\n  border: 1px solid #d4d4d4;\n  background: #fff;\n  width: 100%;\n  position: absolute;\n  left: 0;\n  border-top: none;\n  display: -webkit-box;\n  display: -ms-flexbox;\n  display: flex;\n  -webkit-box-orient: vertical;\n  -webkit-box-direction: normal;\n      -ms-flex-direction: column;\n          flex-direction: column;\n  -webkit-box-align: baseline;\n      -ms-flex-align: baseline;\n          align-items: baseline;\n  z-index: 5;\n}\n.select2-search .button {\n    width: 100%;\n    -webkit-box-pack: left;\n        -ms-flex-pack: left;\n            justify-content: left;\n}\n.select2-search .help {\n    padding-left: 1em;\n}\n.tag, .tag .fa {\n  margin-right: 0.5em;\n}\n.is-danger .input {\n  border-color: #ff3860;\n}\n", ""]);
 
 // exports
 
@@ -42637,7 +42651,7 @@ if (false) {
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7ae4cd70\",\"hasScoped\":true,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue":
+/***/ "./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7ae4cd70\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -42680,7 +42694,8 @@ var render = function() {
                   rawName: "v-model",
                   value: _vm.searchFor,
                   expression: "searchFor"
-                }
+                },
+                { name: "focus", rawName: "v-focus" }
               ],
               ref: "search",
               staticClass: "input",
@@ -42791,7 +42806,7 @@ var render = function() {
                       _vm._v(
                         '"' +
                           _vm._s(_vm.searchFor) +
-                          '" não encontrado, clique para adicionar'
+                          '" não encontrado, clique para adicionar\n        '
                       )
                     ]
                   )
@@ -42834,7 +42849,7 @@ var render = function() {
         attrs: { estudante: _vm.editResource, active: _vm.editando },
         on: {
           adicionado: function($event) {
-            _vm.selected = $event
+            _vm.adicionado($event)
           },
           close: function($event) {
             _vm.fecharEdicao($event)
@@ -45202,23 +45217,23 @@ if(false) {
 
 /***/ }),
 
-/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue":
+/***/ "./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue":
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue");
+var content = __webpack_require__("./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue");
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("54234626", content, false);
+var update = __webpack_require__("./node_modules/vue-style-loader/lib/addStylesClient.js")("67ec6e34", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js?indentedSyntax!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./SelectEstudante.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js?indentedSyntax!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./SelectEstudante.vue");
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js?indentedSyntax!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./SelectEstudante.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/sass-loader/lib/loader.js?indentedSyntax!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./SelectEstudante.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -57187,19 +57202,19 @@ module.exports = Component.exports
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":true,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue")
+  __webpack_require__("./node_modules/vue-style-loader/index.js!./node_modules/css-loader/index.js!./node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-7ae4cd70\",\"scoped\":false,\"hasInlineConfig\":true}!./node_modules/sass-loader/lib/loader.js?indentedSyntax!./node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue")
 }
 var normalizeComponent = __webpack_require__("./node_modules/vue-loader/lib/component-normalizer.js")
 /* script */
 var __vue_script__ = __webpack_require__("./node_modules/babel-loader/lib/index.js?{\"cacheDirectory\":true,\"presets\":[[\"env\",{\"modules\":false,\"targets\":{\"browsers\":[\"> 2%\"],\"uglify\":true}}]],\"plugins\":[\"transform-object-rest-spread\"]}!./node_modules/vue-loader/lib/selector.js?type=script&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue")
 /* template */
-var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7ae4cd70\",\"hasScoped\":true,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue")
+var __vue_template__ = __webpack_require__("./node_modules/vue-loader/lib/template-compiler/index.js?{\"id\":\"data-v-7ae4cd70\",\"hasScoped\":false,\"buble\":{\"transforms\":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0&bustCache!./resources/assets/js/components/SelectEstudante.vue")
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
 var __vue_styles__ = injectStyle
 /* scopeId */
-var __vue_scopeId__ = "data-v-7ae4cd70"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
