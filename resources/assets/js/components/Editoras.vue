@@ -12,11 +12,11 @@
 
             </div>
             <div class="level-right">
-                <div class="control has-icons-right mr-1">
+                <div class="control has-icons-right">
                     <input v-model="search" @keyup.enter="buscar" placeholder="Buscar..." class="input">
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
-                <a @click="editar" class="button is-info">
+                <a v-if="can('create-editoras')" @click="editar" class="button is-info ml-1">
                     <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
@@ -34,7 +34,7 @@
                        <i class="fa" :class="order.direction === 'asc' ? 'fa-angle-up':'fa-angle-down'" aria-hidden="true"></i>
                     </span>
                 </th>
-                <th></th>
+                <th v-if="can('edit-editoras') || can('delete-editoras')" class="actions"></th>
             </tr>
             </thead>
             <tbody>
@@ -42,11 +42,11 @@
                 <td>
                     {{editora.nome}}
                 </td>
-                <td class="has-buttons">
+                <td v-if="can('edit-editoras') || can('delete-editoras')" class="has-buttons">
                     <div class="level">
-                        <a @click="editar(editora)" title="Editar" class="button is-info level-left">
+                        <a v-if="can('edit-editoras')" @click="editar(editora)" title="Editar" class="button is-info level-left">
                             <i class="fa fa-pencil"></i> </a>
-                        <button @click="remover(editora)" title="Remover" class="button is-danger level-right">
+                        <button v-if="can('delete-editoras')" @click="remover(editora)" title="Remover" class="button is-danger level-right">
                             <i class="fa fa-trash"></i>
                         </button>
                     </div>

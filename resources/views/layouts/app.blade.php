@@ -11,9 +11,8 @@
     @section('style')
         <link href="{{ mix('css/app.css') }}" rel="stylesheet">
         <style>
-            .table.crud th:last-child {
+            th.actions {
                 width      : 5rem;
-                text-align : center;
             }
 
             .table td.has-buttons {
@@ -67,8 +66,15 @@
                 font-size   : 1.5rem;
                 font-weight : 600;
             }
+
+            .is-active-styled {
+                background-color : #2366d1;
+            }
         </style>
     @show
+    <script>
+        window.User = {!! auth()->user() !!};
+    </script>
 </head>
 <body>
 <div id="app">

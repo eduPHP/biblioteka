@@ -5,7 +5,6 @@
                 <input class="input"
                        :options="options"
                        :name="name"
-                       :value="interVal"
                        :placeholder="placeholder"
                        type="hidden"
                        v-model="interVal"

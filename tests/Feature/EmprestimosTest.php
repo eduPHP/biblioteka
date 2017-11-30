@@ -43,7 +43,6 @@ class EmprestimosTest extends TestCase
         ]);
     }
 
-
     /** @test */
     function um_bibliotecario_pode_adicionar_emprestimo_de_multiplos_livros()
     {

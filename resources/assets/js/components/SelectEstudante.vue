@@ -23,7 +23,7 @@
             <button type="button" class="button is-white option" v-if="noMatches"
                     @blur="close"
                     :class="{'is-info':optionSelected===0}"
-                    @click="select({nome: searchFor})">"{{ searchFor }}" não encontrado, clique para adicionar</button>
+                    @click="editar({nome: searchFor})">"{{ searchFor }}" não encontrado, clique para adicionar</button>
             <button type="button" class="button is-white option" v-for="(estudante, index) in options"
                     :class="{'is-info':index===optionSelected}"
                     @blur="close"
@@ -32,13 +32,17 @@
                 Exibindo {{ meta.from }} a {{ meta.to }} de um total de {{ meta.total }} resultados
             </span>
         </div>
+        <form-estudante @adicionado="selected = $event" :estudante="editResource" :active="editando" @close="fecharEdicao($event)"></form-estudante>
     </div>
 </template>
 <script>
     import typeAheadPointer from '../mixins/typeAheadPointer';
+    import FormEstudante from "../components/forms/FormEstudante.vue";
+    import formActions from "../mixins/formActions";
 
     export default {
-        mixins: [typeAheadPointer],
+        mixins: [typeAheadPointer, formActions],
+        components: {'form-estudante': FormEstudante},
         name: 'select-estudante',
         props: ['estudante'],
         data(){

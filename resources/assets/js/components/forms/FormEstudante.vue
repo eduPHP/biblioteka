@@ -101,7 +101,8 @@
                     this.enviando = false;
                     this.id = result.data.estudante.id;
                     if (result.status === 201) {
-                        flash('Estudante Adicionado')
+                        flash('Estudante Adicionado');
+                        this.$emit('adicionado', result.data.estudante);
                         this.close();
                     }
                 }).catch(error => {

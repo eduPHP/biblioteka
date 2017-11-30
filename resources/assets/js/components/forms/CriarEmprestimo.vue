@@ -217,6 +217,12 @@
                     flash('Erro ao tentar adicionar empréstimo', 'erro');
                 });
             }
+        },
+        created(){
+            events.$on('estudante-created', (estudante) => {
+                console.log(estudante);
+                this.selected = estudante;
+            });
         }
     };
 </script>

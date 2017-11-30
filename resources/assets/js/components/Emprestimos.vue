@@ -12,11 +12,11 @@
 
             </div>
             <div class="level-right">
-                <div class="control has-icons-right mr-1">
+                <div class="control has-icons-right">
                     <input v-model="search" @keyup.enter="buscar" placeholder="Buscar..." class="input">
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
-                <a @click="adicionar" class="button is-info">
+                <a v-if="can('create-emprestimos')" @click="adicionar" class="button is-info ml-1">
                     <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
 
@@ -62,10 +62,10 @@
                     Devolvido {{ emprestimo.devolvido_em | forHumans }}
                 </td>
                 <td class="has-buttons" v-else>
-                    <div class="level">
-                        <a @click="renovar(emprestimo)" title="Renovar" class="button is-white level-left">
+                    <div class="level" v-if="can('renew-emprestimos') || can('return-emprestimos')">
+                        <a v-if="can('renew-emprestimos')" @click="renovar(emprestimo)" title="Renovar" class="button is-white level-left">
                             <i class="fa fa-recycle"></i> </a>
-                        <button @click="devolver(emprestimo)" title="Devolver" class="button is-white level-right">
+                        <button v-if="can('return-emprestimos')" @click="devolver(emprestimo)" title="Devolver" class="button is-white level-right">
                             <i class="fa fa-arrow-circle-o-down"></i>
                         </button>
                     </div>

@@ -13,6 +13,7 @@ class PathFinder {
 }
 
 import formActions from "../mixins/formActions";
+import Auth from '../directives/auth';
 
 export default {
     mixins: [formActions],
@@ -26,7 +27,8 @@ export default {
             meta: {},
             basePath: 'base',
             itens: [],
-            paths: {}
+            paths: {},
+            auth: new Auth(window.User)
         }
     },
 
@@ -46,6 +48,10 @@ export default {
         }
     },
     methods: {
+        can(action){
+            return this.auth.can(action)
+        },
+
         buscar() {
             this.filteredBy = this.search;
         },
