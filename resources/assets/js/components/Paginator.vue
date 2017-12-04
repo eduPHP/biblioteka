@@ -22,15 +22,13 @@
                 page: 1,
                 total: 0,
                 lastPage: 1,
-                perPage:  10,
-                pages: []
+                pages: [1]
             };
         },
         watch: {
             meta(){
                 this.page = this.meta.current_page;
                 this.lastPage = this.meta.last_page;
-                this.perPage = this.meta.per_page;
                 this.parsePages();
             },
             page() {
@@ -40,30 +38,31 @@
         methods: {
             parsePages() {
                 this.pages = [];
+                let pagesLimit = 3;
 
-                if (this.lastPage < this.perPage * 2 + 6) {
+                if (this.lastPage < pagesLimit * 2 + 6) {
                     for (let i = 1; i < this.lastPage + 1; i++) {
                         this.pages.push(i);
                     }
                 }
-                else if (this.page < this.perPage * 2 + 1) {
-                    for (let i = 1; i < this.perPage * 2 + 4; i++) {
+                else if (this.page < pagesLimit * 2 + 1) {
+                    for (let i = 1; i < pagesLimit * 2 + 4; i++) {
                         this.pages.push(i);
                     }
                     this.pages.push('...');
                     this.pages.push(this.lastPage);
                 }
-                else if (this.page > this.lastPage - this.perPage * 2) {
+                else if (this.page > this.lastPage - pagesLimit * 2) {
                     this.pages.push(1);
                     this.pages.push('...');
-                    for (let i = this.lastPage - this.perPage * 2 - 2; i < this.lastPage + 1; i++) {
+                    for (let i = this.lastPage - pagesLimit * 2 - 2; i < this.lastPage + 1; i++) {
                         this.pages.push(i);
                     }
                 }
                 else {
                     this.pages.push(1);
                     this.pages.push('...');
-                    for (let i = this.page - this.perPage; i < this.page + this.perPage + 1; i++) {
+                    for (let i = this.page - pagesLimit; i < this.page + pagesLimit + 1; i++) {
                         this.pages.push(i);
                     }
                     this.pages.push('...');
@@ -73,8 +72,3 @@
         }
     }
 </script>
-<style>
-    /*.pagination-list {*/
-        /*justify-content : flex-end;*/
-    /*}*/
-</style>

@@ -14,6 +14,7 @@ class PathFinder {
 
 import formActions from "../mixins/formActions";
 import Auth from '../directives/auth';
+import QueryOn from '../directives/query'
 
 export default {
     mixins: [formActions],
@@ -28,7 +29,8 @@ export default {
             basePath: 'base',
             itens: [],
             paths: {},
-            auth: new Auth(window.User)
+            auth: new Auth(window.User),
+            query: null
         }
     },
 
@@ -38,17 +40,24 @@ export default {
                 field: 'nome',
                 direction: 'asc'
             };
+        },
+        indexPath() {
+            return this.paths.index();
+        },
+
+        defaultQuery(){
+            return [];
         }
     },
 
     watch: {
         filteredBy() {
             this.search = '';
-            this.fetch(this.filteredBy === '' ? 1 : null);
+            this.fetch(1);
         }
     },
     methods: {
-        can(action){
+        can(action) {
             return this.auth.can(action)
         },
 
@@ -76,34 +85,22 @@ export default {
             if (this.loading) {
                 return;
             }
-            let query = [];
-            if (!page) {
-                let pageInQuery = location.search.match(/page=(\d+)/);
-                page = pageInQuery ? parseInt(pageInQuery[1]) : 1;
-            }
-            if (page > 1) query.push(`page=${page}`);
 
-            query.push(`orderby=${this.order.field},${this.order.direction}`);
+            if (!page) page = this.query.get('page', 1);
+            this.query.add('page', page);
+
+            this.query.add('orderby', `${this.order.field},${this.order.direction}`);
             if (this.filteredBy !== '') {
-                query.push(`q=${this.filteredBy}`);
+                this.query.add('q', this.filteredBy);
             }
 
             this.loading = true;
-            axios.get(`${this.paths.index()}?${query.join('&')}`).then(response => {
+            axios.get(`${this.indexPath}?${this.query.full()}`).then(response => {
                 this.itens = response.data[this.basePath];
                 this.meta = response.data.meta;
                 this.loading = false;
             });
-            this.updateLocation(query);
-        },
-        updateLocation(query) {
-            let update = query.join('&');
-            if (update === `orderby=${this.defaultOrder.field},${this.defaultOrder.direction}`) {
-                history.pushState(null, document.title, location.href.split("?")[0]);
-                return;
-            }
-
-            history.pushState(null, document.title, '?' + update);
+            this.query.setLocation(`orderby=${this.defaultOrder.field},${this.defaultOrder.direction}`);
         }
     },
     created() {
@@ -111,16 +108,17 @@ export default {
         this.order = _.clone(this.defaultOrder);
     },
     mounted() {
-        let searchInQuery = location.search.match(/q=([^&]+)/);
-        let orderInQuery = location.search.match(/orderby=([a-z]+),(asc|desc)/);
-        if (orderInQuery) {
+        this.query = new QueryOn();
+        this.query.parse();
+        if (this.query.has('orderby')) {
+            let orderInQuery = this.query.match('orderby', /([a-z]+),(asc|desc)/);
             this.order = {
                 field: orderInQuery[1],
                 direction: orderInQuery[2]
             };
         }
-        if (searchInQuery) {
-            this.filteredBy = searchInQuery[1];
+        if (this.query.has('q')) {
+            this.filteredBy = this.query.get('q');
             return;
         }
         this.fetch();

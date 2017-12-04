@@ -1,5 +1,11 @@
 class Auth {
     constructor(user) {
+        if (!user){
+            user = {
+                nome: 'Visitante',
+                grupo: 'guest'
+            };
+        }
         this.user = user;
         this.all = [
             'view-emprestimos',
@@ -29,6 +35,11 @@ class Auth {
             'view-relatorios'
         ];
         this.permissions = {
+            guest: [
+                'view-acervo',
+                'view-autores',
+                'view-editoras',
+            ],
             usuario: [
                 'view-acervo',
                 'view-autores',

@@ -1,92 +1,82 @@
 <template>
-    <div class="datepicker">
-        <div class="field">
-            <div class="control has-icons-left">
-                <input class="input"
-                       :options="options"
-                       :name="name"
-                       :placeholder="placeholder"
-                       type="hidden"
-                       v-model="interVal"
-                       ref="pickrInput">
-                <span class="icon is-small is-left"><i class="fa fa-calendar"></i></span>
-            </div>
-
-        </div>
-    </div>
+    <datepicker
+            :inline="inline"
+            :calendar-button="true"
+            :bootstrap-styling="false"
+            input-class="input"
+            :placeholder="placeholder"
+            v-model="selecionada"
+            format="dd/MM/yyyy"
+            language="pt-br"
+            :disabled="disabled"
+            :highlighted="highlighted"
+            wrapper-class="control has-icons-left"
+            calendar-button-icon="fa fa-calendar-o"
+            ref="datepick"
+    ></datepicker>
 </template>
 <script>
-    import Flatpickr from 'flatpickr';
-    import Portugues from "flatpickr/dist/l10n/pt";
-    import moment from 'moment';
-    import 'moment/locale/pt-br';
+    import moment from 'moment'
+    import 'moment/locale/pt-br'
+    import Datepicker from 'vuejs-datepicker'
 
     export default {
-        props: {
-            name: String,
-            placeholder: String,
-            val: String,
-            value: String
-        },
-
+        name: 'emprestimo-datepicker',
+        props: ['date', 'required', 'placeholder'],
+        components: {Datepicker},
         data() {
             return {
-                interVal: this.value,
-                flatPickr: null,
-                options: {
-                    dateFormat: 'd/m/Y',
-                    inline: false,
-                    defaultDate: this.getDefaultValue(),
-                    minDate: 'today',
-                    maxDate: moment().add(14, 'days').format('DD/MM/YYYY'),
-                    locale: Portugues.pt,
-                    static: true,
-                    disable: [
-                        function (date) {
-                            return date.getDay() === 0;
+                selecionada: this.date,
+                inline: false,
+                disabled: {
+                    "to": moment().subtract(1, 'days').toDate(),
+                    "from": moment().add(14, 'days').toDate(),
+                    customPredictor(date) {
+                        if (date.getDay() === 0) {
+                            return true
                         }
-                    ],
-                },
-            };
+                    }
+                }
+            }
         },
 
-        methods: {
-            getDefaultValue(){
-                let value = this.value ? moment(this.value, "DD/MM/YYYY"):moment().add(7,'days');
-                if(value.day() === 0){
-                    value = value.day(1);
+        computed: {
+            highlighted(){
+                return {
+                    "from": moment().startOf('day').toDate(),
+                    "to": moment(this.selecionada).toDate(),
                 }
-                return value.format("DD/MM/YYYY");
-            },
-            changeVal() {
-                this.$emit('input', this.interVal);
-            },
-            handleClear() {
-                this.flatPickr && this.flatPickr.clear();
-            },
+            }
         },
 
         watch: {
-            interVal(val) {
-                this.interVal = val;
-                this.$emit('input', this.interVal);
+            selecionada() {
+                return this.$emit('changed', this.selecionada);
             },
-        },
-
-        mounted() {
-            const pickrEl = this.$refs.pickrInput;
-            this.flatPickr = new Flatpickr(pickrEl, this.options);
-        },
-
-        beforeDestroy() {
-            if (this.flatPickr) {
-                this.flatPickr.destroy();
-                this.flatPickr = null;
+            date() {
+                this.selecionada = this.date;
             }
         },
-    };
+        methods: {
+            onOpen(){
+                this.$emit('opened');
+            }
+        }
+    }
+
 </script>
 
 <style>
-
+    .vdp-datepicker__calendar-button {
+        color           : #dbdbdb;
+        height          : 2.25em;
+        pointer-events  : none;
+        position        : absolute;
+        top             : 0;
+        width           : 2.25em;
+        z-index         : 4;
+        align-items     : center;
+        display         : inline-flex;
+        justify-content : center;
+    }
 </style>

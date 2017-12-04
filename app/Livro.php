@@ -12,6 +12,7 @@ class Livro extends Model
 
     protected $guarded = [];
     protected $orderby = "titulo";
+    protected $appends = ['disponiveis'];
 
     public static function findByIsbn($isbn)
     {
@@ -42,9 +43,12 @@ class Livro extends Model
         return $query->paginate(request('perpage', 10));
     }
 
-    public static function relatorioMaisEmprestados()
+    public static function relatorioMaisEmprestados($limit = 10)
     {
-        $query = self::selectRaw('livros.*, COUNT(emprestimos.id) as emprestimos_count')
+        $query = self::selectRaw('livros.*,
+          COUNT(emprestimos.id) as emprestimos_count,
+          max(emprestimos.emprestado_em) as ultimo_emprestimo, 
+          min(emprestimos.emprestado_em) as primeiro_emprestimo')
             ->join('emprestimos', 'livros.id', 'emprestimos.livro_id')
             ->groupBy('livros.id')
             ->ordered('emprestimos,desc');
@@ -52,13 +56,17 @@ class Livro extends Model
         if (request('periodo')) {
             list($inicio, $final) = explode(',', request('periodo'));
 
-            $inicio = Carbon::createFromFormat('d/m/Y', $inicio)->startOfDay();
-            $final = Carbon::createFromFormat('d/m/Y', $final)->endOfDay();
+            $inicio = $inicio ?
+                Carbon::createFromFormat('d/m/Y', $inicio)->startOfDay():
+                Carbon::now()->startOfMonth()->startOfDay();
+            $final = $final ?
+                Carbon::createFromFormat('d/m/Y', $final)->endOfDay():
+                Carbon::now()->endOfDay();
 
             $query->whereBetween('emprestado_em', [$inicio, $final]);
         }
 
-        return $query->paginate(request('perpage', 10));
+        return $query->paginate(request('perpage', $limit));
     }
 
     public function atualizar($data)
@@ -112,5 +120,14 @@ class Livro extends Model
     public function secao()
     {
         return $this->belongsTo(Secao::class);
+    }
+
+    public function getDisponiveisAttribute()
+    {
+        if (!$this->exists){
+            return 0;
+        }
+
+        return $this->quantidade - $this->emprestimos()->count();
     }
 }

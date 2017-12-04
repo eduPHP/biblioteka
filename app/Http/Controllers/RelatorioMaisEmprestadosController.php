@@ -3,13 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Livro;
+use Illuminate\Support\Facades\Cache;
 
 class RelatorioMaisEmprestadosController extends Controller
 {
     public function index()
     {
-        $livros = Livro::relatorioMaisEmprestados();
+        return view('relatorios.livros.mais-emprestados');
+    }
 
-        return view('relatorios.livros.mais-emprestados', compact('livros'));
+    public function show()
+    {
+        return Cache::remember(auth()->id().'.mais-emprestados.'.md5(json_encode(request()->all())), 10, function (){
+            $livros = Livro::relatorioMaisEmprestados(1000);
+
+            $pdf = \PDF::loadView('relatorios.livros.mais-emprestados-print', compact('livros'));
+
+            return $pdf->stream();
+        });
     }
 }

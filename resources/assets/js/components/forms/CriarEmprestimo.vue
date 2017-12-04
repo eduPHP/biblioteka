@@ -10,7 +10,7 @@
                         <a @click="expand" aria-label="expand"><i class="fa fa-window-maximize" :class="{'fa-window-minimize':expanded}"></i></a>
                         <button class="delete" type="button" @click="close" aria-label="close"></button>
                     </header>
-                    <section class="modal-card-body">
+                    <section class="modal-card-body" ref="modalBody">
                         <div class="columns is-block-tablet">
 
                             <div class="column is-12-tablet">
@@ -103,7 +103,11 @@
                                 <!-- Input Devolucao -->
                                 <div class="field">
                                     <h2 class="label">Devolução</h2>
-                                    <emprestimo-datepicker placeholder="Devolução" v-model="devolucao"></emprestimo-datepicker>
+                                    <emprestimo-datepicker
+                                            placeholder="Devolução"
+                                            :date.sync="devolucao"
+                                            @change="devolucao = $event"
+                                    ></emprestimo-datepicker>
                                 </div>
                             </div>
                         </div>
@@ -139,12 +143,13 @@
         mixins: [formCommons],
         name: 'criar-emprestimo',
         components: {
+            EmprestimoDatepicker,
             "emprestimo-datepicker": EmprestimoDatepicker,
             "select-estudante": SelectEstudante
         },
         data() {
             return {
-                devolucao: moment().add(7, 'days').format('DD/MM/YYYY'),
+                devolucao: moment().add(7, 'days').toDate(),
                 estudante: null,
                 livroSearch: '',
                 livros: [],
@@ -187,6 +192,10 @@
                     this.loading.done('livros');
                     if (response.status === 404) {
                         return this.isbnNotFound = response.data;
+                    }
+                    if (response.data.livros.disponiveis <= 0){
+                        flash("Livro Indisponível", "alerta");
+                        return;
                     }
                     this.livros.unshift(response.data.livros);
                 });

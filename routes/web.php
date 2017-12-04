@@ -31,8 +31,6 @@ Route::group(['middleware'=>'auth'], function (){
     Route::patch('/api/secoes/{secao}', 'Api\SecoesController@update');
     Route::delete('/api/secoes/{secao}', 'Api\SecoesController@destroy');
 
-    Route::get('/editoras', 'EditorasController@index');
-    Route::get('/api/editoras', 'Api\EditorasController@index');
     Route::post('/api/editoras', 'Api\EditorasController@store');
     Route::get('/editoras/{editora}', 'EditorasController@show');
     Route::patch('/api/editoras/{editora}', 'Api\EditorasController@update');
@@ -43,6 +41,8 @@ Route::group(['middleware'=>'auth'], function (){
     Route::delete('/api/autores/{autor}', 'Api\AutoresController@destroy');
 
     Route::get('/relatorios/mais-emprestados','RelatorioMaisEmprestadosController@index');
+    Route::get('api/relatorios/mais-emprestados','Api\RelatorioMaisEmprestadosController@index');
+    Route::get('/relatorios/mais-emprestados/download', 'RelatorioMaisEmprestadosController@show');
 });
 //Route::get('/home', 'HomeController@index');
 Route::get('/info', 'HomeController@info');
@@ -50,6 +50,8 @@ Route::get('/info', 'HomeController@info');
 Route::get('/acervo', 'LivrosController@index');
 Route::get('/api/livros/{isbn}', 'Api\LivrosController@show');
 Route::get('/api/livros', 'Api\LivrosController@index');
+Route::get('/editoras', 'EditorasController@index');
+Route::get('/api/editoras', 'Api\EditorasController@index');
 
 
 Route::get('/api/autores','Api\AutoresController@index');

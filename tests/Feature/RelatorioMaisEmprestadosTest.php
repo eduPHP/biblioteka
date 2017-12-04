@@ -22,19 +22,19 @@ class RelatorioMaisEmprestadosTest extends TestCase
             factory(Emprestimo::class, rand(1, 3))->create(['livro_id' => $livro->id]);
         });
 
-        $resposta = $this->getJson("/relatorios/mais-emprestados");
+        $resposta = $this->getJson("/api/relatorios/mais-emprestados");
 
-        $livros = $resposta->getOriginalContent()->getData()['livros'];
-        $numero = $livros[0]->emprestimos_count;
+        $livros = $resposta->json()['livros'];
+        $numero = $livros[0]['emprestimos_count'];
         foreach ($livros as $livro) {
-            $resposta->assertSee($livro->titulo);
+            $resposta->assertSee($livro['titulo']);
             $this->assertTrue(
-                $livro->emprestimos_count <= $numero,
+                $livro['emprestimos_count'] <= $numero,
                 'A lista não está ordenada corretamente'
             );
-            $numero = $livro->emprestimos_count;
+            $numero = $livro['emprestimos_count'];
         }
-        $this->assertEquals(3, $livros->total());
+        $this->assertEquals(3, $resposta->json()['meta']['total']);
     }
 
     /** @test */
@@ -54,17 +54,16 @@ class RelatorioMaisEmprestadosTest extends TestCase
         $data1 = Carbon::now()->subWeek()->format('d/m/Y');
         $data2 = Carbon::now()->format('d/m/Y');
         $this->loginBibliotecario();
-        $resposta = $this->getJson("/relatorios/mais-emprestados?periodo={$data1},{$data2}");
+        $resposta = $this->getJson("/api/relatorios/mais-emprestados?periodo={$data1},{$data2}");
 
         //então devemos ter uma lista dos livros do primeiro periodo
-        $livros = $resposta->getOriginalContent()->getData()['livros'];
-        $this->assertEquals(3, $livros->total());
+        $livros = $resposta->json()['meta'];
+        $this->assertEquals(3, $livros['total']);
     }
 
     /** @test */
     function ordenar_relatorio_de_livros_mais_emprestado_por_quantidade_de_emprestimos()
     {
-        $this->withoutExceptionHandling();
         //sendo que temos um livro que foi emprestado 1x, e outro que foi emprestado 2x
         $livro1x = factory(Livro::class)->create()->id;
         factory(Emprestimo::class, 1)->create([
@@ -92,5 +91,23 @@ class RelatorioMaisEmprestadosTest extends TestCase
         //então devemos ter o emprestado 1x no topo da lista
         $this->assertEquals($livro1x, $livros[0]->id);
         $this->assertEquals($livro2x, $livros[1]->id);
+    }
+
+    /** @test */
+    function o_relatorio_pode_ser_acessado_como_pdf()
+    {
+        $this->loginBibliotecario();
+
+        $resposta = $this->get("/relatorios/mais-emprestados/download");
+
+        $resposta->assertStatus(200);
+    }
+
+    /** @test */
+    function usuarios_sem_permissao_nao_podem_acessar_relatorios()
+    {
+        $resposta = $this->get("/relatorios/mais-emprestados/download");
+
+        $resposta->assertRedirect('/login');
     }
 }

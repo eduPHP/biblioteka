@@ -31,6 +31,7 @@ class Livro extends Resource
             'secao'=>$this->secao,
             'ano'=>$this->ano,
             'edicao'=>$this->edicao,
+            'disponiveis'=>$this->disponiveis,
         ];
     }
 }

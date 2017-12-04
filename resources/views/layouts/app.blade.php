@@ -70,10 +70,14 @@
             .is-active-styled {
                 background-color : #2366d1;
             }
+
+            .b-b-1{
+                border-bottom: 1px solid #ccc;
+            }
         </style>
     @show
     <script>
-        window.User = {!! auth()->user() !!};
+        window.User = {!! auth()->check() ? auth()->user() : 'null' !!};
     </script>
 </head>
 <body>
