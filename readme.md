@@ -62,3 +62,9 @@
 ### Devolução de livros
 - Procurar livros emprestados pelo isbn
 - Devolver livros selecionado
+
+
+### A implementar:
+- controle de quantidade por exemplar
+- cadastro de entidades
+- area do aluno
