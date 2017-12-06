@@ -3,19 +3,27 @@
         <div class="level">
             <div class="level-left">
                 <h1 class="title">Emprestimos</h1>
-                <h2 class="subtitle" v-if="filteredBy !== ''">
-                    Filtrado por <span class="tag">
+                <div class="filters">
+                    <h2 class="subtitle" v-if="query.has('q') || query.has('atrasados')">
+                        Filtrado por <span class="tag" v-if="query.has('q')">
                         {{ filteredBy }}
-                        <button class="delete is-small" @click="filteredBy = ''"></button>
-                    </span>
-                </h2>
-
+                        <button class="delete is-small" @click="query.remove('q'); filteredBy=''"></button>
+                        </span>
+                        <span class="tag" v-if="query.has('atrasados')">
+                            Devolução atrasada
+                            <button class="delete is-small" @click="atrasados(false)"></button>
+                        </span>
+                    </h2>
+                </div>
             </div>
             <div class="level-right">
                 <div class="control has-icons-right">
                     <input v-model="search" @keyup.enter="buscar" placeholder="Buscar..." class="input">
                     <span class="icon is-small is-right"><i class="fa fa-search"></i></span>
                 </div>
+                <a v-if="!query.has('atrasados')" @click="atrasados(true)" class="button is-warning ml-1">
+                    <span class="icon"><i class="fa fa-clock-o"></i></span> <span>Atrasados</span>
+                </a>
                 <a v-if="can('create-emprestimos')" @click="adicionar" class="button is-info ml-1">
                     <span class="icon"><i class="fa fa-plus"></i></span> <span>Adicionar</span> </a>
             </div>
@@ -55,7 +63,7 @@
                 <td>
                     {{emprestimo.estudante.nome}}
                 </td>
-                <td v-if="!emprestimo.devolvido">
+                <td v-if="!emprestimo.devolvido" :class="{'is-warning': isPast(emprestimo.devolucao)}">
                     {{ emprestimo.devolucao | forHumans | capitalize }}
                 </td>
                 <td colspan="2" v-if="emprestimo.devolvido">
@@ -116,6 +124,17 @@
         },
 
         methods: {
+            isPast(date){
+                return moment().isAfter(date)
+            },
+            atrasados(mostrar){
+                if (mostrar){
+                    this.query.add('atrasados',this.query.has('q')?2:1)
+                } else {
+                    this.query.remove('atrasados')
+                }
+                this.fetch(1)
+            },
             adicionar(){
                 this.editando = true;
             },

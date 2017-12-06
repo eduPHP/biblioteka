@@ -1,5 +1,5 @@
 <template>
-    <div class="modal" :class="{'is-active': active }">
+    <div class="modal is-active" v-if="active">
         <div class="modal-background"></div>
         <div class="modal-card modal-confirm">
             <header class="modal-card-head">
@@ -7,7 +7,7 @@
             </header>
             <footer class="modal-card-foot">
                 <div class="flex-1"></div>
-                <button class="button is-success has-icons" @click="accept">
+                <button class="button is-success has-icons" @click="accept" v-focus>
                     <span class="icon"><i class="fa" :class="icon"></i></span> <span v-text="button"></span>
                 </button>
                 <button class="button" @click="close">Cancel</button>
@@ -17,7 +17,10 @@
 </template>
 
 <script>
+    import focus from '../directives/focus'
+
     export default {
+        directives: {focus},
         name: 'confirm',
         data() {
             return {

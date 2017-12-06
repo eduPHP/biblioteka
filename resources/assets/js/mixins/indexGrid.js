@@ -30,7 +30,7 @@ export default {
             itens: [],
             paths: {},
             auth: new Auth(window.User),
-            query: null
+            query: new QueryOn()
         }
     },
 

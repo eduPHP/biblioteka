@@ -128,6 +128,7 @@ class Livro extends Model
             return 0;
         }
 
-        return $this->quantidade - $this->emprestimos()->count();
+        return $this->quantidade - $this->emprestimos()
+                ->whereNull('devolvido_em')->count();
     }
 }

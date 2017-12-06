@@ -37,6 +37,16 @@ class Emprestimo extends Model
             });
         }
 
+        if (!request('atrasados') && !$search) {
+            $query->where('devolucao', '>' , Carbon::now());
+        } elseif (request('atrasados') == 2) {
+            $query->where('devolucao', '<' , Carbon::now())
+                ->whereNull('devolvido_em');
+        } elseif (request('atrasados') >= 1 && !$search) {
+            $query->where('devolucao', '<' , Carbon::now())
+                ->whereNull('devolvido_em');
+        }
+
         return $query->paginate(request('perpage', 10));
     }
 

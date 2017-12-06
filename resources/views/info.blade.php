@@ -11,7 +11,7 @@
             <li><s>Telas de confirmação para ações, exemplo devolução</s></li>
             <li><s>Tela de Autenticação e regras de validação de acesso</s></li>
             <li>Tela de acesso para estudantes com permissão para renovação/reservas</li>
-            <li>Relatórios de livros mais emprestados, menos emprestados e empréstimos com devolução atrasada</li>
+            <li><s>Relatórios de livros mais emprestados, menos emprestados e empréstimos com devolução atrasada</s></li>
         </ul>
     </div>
 @endsection

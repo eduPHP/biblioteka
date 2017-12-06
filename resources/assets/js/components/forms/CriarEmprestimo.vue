@@ -57,12 +57,27 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="content mt-1">
-                                            <button class="button is-info is-small" type="button">Adicionar</button>
-                                        </div>
+                                        <!--<div class="content mt-1">-->
+                                            <!--<button class="button is-info is-small" type="button">Adicionar</button>-->
+                                        <!--</div>-->
                                     </div>
 
-                                    <div class="card-content has-border-bottom" v-if="!livros.length && !isbnNotFound && !loading.has('livros')">
+                                    <div class="card-content has-border-bottom" v-if="indisponivel">
+                                        <div class="level">
+                                            <div class="level-left">
+                                                <div>
+                                                    <h4 class="title is-6 has-text-warning">
+                                                        Livro "{{ indisponivel.titulo }}" está indisponível
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="content mt-1">-->
+                                        <!--<button class="button is-info is-small" type="button">Adicionar</button>-->
+                                        <!--</div>-->
+                                    </div>
+
+                                    <div class="card-content has-border-bottom" v-if="!livros.length && !indisponivel && !isbnNotFound && !loading.has('livros')">
                                         <div class="content">
                                             <h3>Informe um ISBN para pesquisar... <i class="fa fa-arrow-up"></i></h3>
                                         </div>
@@ -155,6 +170,7 @@
                 livros: [],
                 loading: new LoadingState(),
                 isbnNotFound: false,
+                indisponivel: null,
                 expanded: false
             }
         },
@@ -182,6 +198,7 @@
 
                 this.loading.set('livros');
                 this.isbnNotFound = false;
+                this.indisponivel = null;
                 this.errors.remove('livros');
 
                 axios.get(`/api/livros/${this.livroSearch}`, {
@@ -193,11 +210,11 @@
                     if (response.status === 404) {
                         return this.isbnNotFound = response.data;
                     }
-                    if (response.data.livros.disponiveis <= 0){
-                        flash("Livro Indisponível", "alerta");
-                        return;
+                    if (response.data.livros.disponiveis > 0){
+                        this.livros.unshift(response.data.livros);
+                    } else {
+                        return this.indisponivel = response.data.livros;
                     }
-                    this.livros.unshift(response.data.livros);
                 });
 
                 this.livroSearch = '';
@@ -217,7 +234,7 @@
                         return livro.id;
                     }),
                     estudante_id: this.estudante ? this.estudante.id : null,
-                    devolucao: this.devolucao
+                    devolucao: moment(this.devolucao).format('L')
                 }).then(response => {
                     flash(response.data);
                     this.close(true);

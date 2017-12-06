@@ -70,10 +70,10 @@
 </template>
 
 <script>
-    import Paginator from "../components/Paginator.vue";
-    import Confirm from "../components/Confirm.vue";
     import FormAutor from "../components/forms/FormAutor.vue";
     import indexGrid from "../mixins/indexGrid";
+    import Confirm from "../components/Confirm.vue";
+    import Paginator from "../components/Paginator.vue";
 
     export default {
         mixins: [indexGrid],
