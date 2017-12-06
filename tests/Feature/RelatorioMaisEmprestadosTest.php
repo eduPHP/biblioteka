@@ -77,20 +77,20 @@ class RelatorioMaisEmprestadosTest extends TestCase
         ]);
         $this->loginBibliotecario();
         //quando acessamos o endpoint relatorios/mais-emprestados?orderby=emprestimos,desc
-        $resposta = $this->getJson("/relatorios/mais-emprestados?orderby=emprestimos,desc");
+        $resposta = $this->getJson("/api/relatorios/mais-emprestados?orderby=emprestimos,desc");
 
-        $livros = $resposta->getOriginalContent()->getData()['livros'];
+        $livros = $resposta->json()['livros'];
         //então devemos ter o emprestado 2x no topo da lista
-        $this->assertEquals($livro2x, $livros[0]->id);
-        $this->assertEquals($livro1x, $livros[1]->id);
+        $this->assertEquals($livro2x, $livros[0]['id']);
+        $this->assertEquals($livro1x, $livros[1]['id']);
 
         //quando acessamos o endpoint relatorios/mais-emprestados?orderby=emprestimos
-        $resposta = $this->getJson("/relatorios/mais-emprestados?orderby=emprestimos");
+        $resposta = $this->getJson("/api/relatorios/mais-emprestados?orderby=emprestimos");
 
-        $livros = $resposta->getOriginalContent()->getData()['livros'];
+        $livros = $resposta->json()['livros'];
         //então devemos ter o emprestado 1x no topo da lista
-        $this->assertEquals($livro1x, $livros[0]->id);
-        $this->assertEquals($livro2x, $livros[1]->id);
+        $this->assertEquals($livro1x, $livros[0]['id']);
+        $this->assertEquals($livro2x, $livros[1]['id']);
     }
 
     /** @test */

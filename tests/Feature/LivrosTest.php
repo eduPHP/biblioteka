@@ -20,7 +20,7 @@ class LivrosTest extends TestCase
         $resposta = $this->postJson('/api/livros', array_merge($novoLivro, ['autores' => [1]]));
 
         $resposta->assertStatus(201);
-        $this->assertDatabaseHas('livros', $novoLivro);
+        $this->assertDatabaseHas('livros', array_only($novoLivro,['id','titulo']));
         $this->assertCount(1, \App\Livro::first()->autores);
     }
 
